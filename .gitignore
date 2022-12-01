@@ -1,0 +1,8 @@
+/env/
+/logs/
+/mbert_mutated_classes/
+/mbert_output/
+/pre-trained/
+/test/res/exampleclass/DummyProject/.idea/
+/test/res/exampleclass/DummyProject/target/
+.idea/
