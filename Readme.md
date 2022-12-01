@@ -12,6 +12,7 @@ You can find more detailed information in the following links:
 ### Masking and CodeBERT invocation: https://github.com/Ahmedfir/cbnt
 ### Code naturalness ranking: https://github.com/Ahmedfir/CodeBERT-nt
 ### Condition seeding: https://github.com/Ahmedfir/mbert-additive-patterns.git
+### Evaluation on Defects4J: https://github.com/Ahmedfir/mBERT-nt-evaluation
 
 ## run μBERT-nt:
 
@@ -35,7 +36,7 @@ So you will have to include them in your `$PYTHONPATH` i.e.:
 - You can run μBERT via `mbertntcall/mbert_generate_mutants_runner.py` script. 
 The minimum required arguments are the project path and the target classes to mutate.
 i.e. `python3 mbert_generate_mutants_runner.py -repo_path path/to/your/project -target_classes path/to/class1,path/to/class2`.
-Please check the `get_args()` method for more information on the required parameters. 
+Please check the `get_args()` method for more information on other optional parameters. 
 - We provide also a shell script as example to run the tool from commandline:  `gen_mutants.sh`.
 We set it up to generate mutants for a class: `DummyClass.java` available under `test` folder.
 You can adapt the script to your needs.
