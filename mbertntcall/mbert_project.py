@@ -47,6 +47,10 @@ class MbertProject:
         copy.repo_path = join(repos_path, Path(self.repo_path).name)
         return copy
 
+    def copy_content_from(self, src_dir):
+        destination = shutil.copytree(src_dir, self.repo_path)
+        log.info('copied {0} to {1}'.format(src_dir, destination))
+
     def copy(self, number):
         return [self.cp(n) for n in range(number)]
 
@@ -57,7 +61,7 @@ class MbertProject:
     def compile_command(self) -> str:
         return "JAVA_HOME='" + self.jdk + "' -cp " + self.class_path
 
-    def test_command(self) -> str:
+    def test_command(self, *args, **kargs) -> str:
         return "JAVA_HOME='" + self.jdk + "' -cp " + self.test_class_path
 
     def on_has_compiled(self, output) -> bool:

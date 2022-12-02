@@ -20,7 +20,7 @@ log.addHandler(logging.StreamHandler(sys.stdout))
 class MbertRequestImpl(MbertAdditivePatternsLocationsRequest):
     def __init__(self, project: MbertProject, max_processes_number=4, *args, **kargs):
         super(MbertRequestImpl, self).__init__(*args, **kargs)
-        self.project = project
+        self.project: MbertProject = project
         self.max_processes_number = max_processes_number
         self.projects = None
         self.remove_project_on_exit = True
@@ -56,10 +56,10 @@ class MbertRequestImpl(MbertAdditivePatternsLocationsRequest):
         copies_project = self.project.copy(self.max_processes_number - 1)
         for p in copies_project:
             try:
-                p.checkout()
+                p.copy_content_from(self.project.repo_path)
                 self.projects.append(p)
             except BaseException as e:
-                log.error('could not checkout project {0}'.format(p), e)
+                log.error('could not copy project {0}'.format(p), e)
                 break
 
     def process_mutants(self, mutants: List[ReplacementMutant]):
