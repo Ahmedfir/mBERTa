@@ -6,13 +6,49 @@ Source-code base of: μBERT-nt.
 
 μBERT-nt generates mutants based on CodeBERT predictions.
 
-You can find more detailed information in the following links:
 
-### AST parsing and location selection: https://github.com/Ahmedfir/mBERT-locations/
-### Masking and CodeBERT invocation: https://github.com/Ahmedfir/cbnt
-### Code naturalness ranking: https://github.com/Ahmedfir/CodeBERT-nt
-### Condition seeding: https://github.com/Ahmedfir/mbert-additive-patterns.git
-### Evaluation on Defects4J: https://github.com/Ahmedfir/mBERT-nt-evaluation
+We have implemented our approach as modules in different repositories. 
+If you just want to generate mutants using μBERT-nt, you can skip these details and pass to the next subsection.
+Otherwise, here's a quick summary of how we implemented our approach:
+
+### AST parsing and location selection:
+_Repo_ **(java)**: https://github.com/Ahmedfir/mBERT-locations/
+
+In this step we parse the input java classes and extract the main business-logic nodes to mutate.
+You can either clone and build the code yourself or use our released standalone jar directly.
+In https://github.com/Ahmedfir/cbnt we incorporate the jar and call it directly from the python side, 
+to extract the tokens.
+ 
+### Masking and CodeBERT invocation: 
+_Repo_ **(python)**: https://github.com/Ahmedfir/cbnt
+
+This repo contains the core implementation of our approach.
+It provides APIs to mask tokens, invoke CodeBERT to predict alternative replacements for them and process them, 
+i.e. putting them in place in the original program for compilation and test, 
+or computing their cosine-embeddings similarity with the original version.  
+
+### Code naturalness ranking: 
+_Repo_ **(python)**: https://github.com/Ahmedfir/CodeBERT-nt
+
+This repo contains the code base and evaluation material used to study the code-naturalness via CodeBERT.
+It invokes the two previous components.
+We incorporate it in our approach to rank the statements by ascendant naturalness, 
+in order to favour the mutation on unnatural locations. 
+
+### Condition seeding:
+_Repo_ **(java)**: https://github.com/Ahmedfir/mbert-additive-patterns.git
+
+This repo contains the source-code responsible of proposing new alternative masked conditions, 
+to the ones originally provided in the input program.
+Our approach then invokes CodeBERT to predict the masked tokens of these proposed new conditions.
+You can either clone and build the code yourself or use our released standalone jar directly,
+i.e. it's available under `mbertntcall/mBERT-addconditions` in this same repo. 
+
+### Evaluation on Defects4J: 
+_Repo_ **(python)**: https://github.com/Ahmedfir/mBERT-nt-evaluation
+
+This repo contains our code and evaluation materials of μBERT-nt on defects4j bugs.
+
 
 ## run μBERT-nt:
 
