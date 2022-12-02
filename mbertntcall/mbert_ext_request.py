@@ -39,7 +39,8 @@ class MbertAdditivePatternsLocationsRequest:
                  job_config=NOCOSINE_JOB_CONFIG,
                  progress_file='p_log.out',
                  force_reload=False,
-                 auto_path_adapt=True):
+                 auto_path_adapt=True,
+                 simple_only=False):
         self.repo_path: str = str(Path(repo_path).absolute())
         self.file_requests = file_requests
         self.output_dir = output_dir
@@ -58,9 +59,10 @@ class MbertAdditivePatternsLocationsRequest:
         self.mutants_csv_file = join(mutants_output_dir, mutants_test_csv_file)
         self.job_config = job_config
         self.auto_path_adapt = auto_path_adapt
+        self.simple_only = simple_only
 
     def has_call_output(self) -> bool:
-        return self.has_locs_output() and self.has_ap_mc_output()
+        return self.has_locs_output() and (self.simple_only or self.has_ap_mc_output())
 
     def has_locs_output(self) -> bool:
         return isfile(self.locs_output_file)
@@ -134,7 +136,7 @@ class MbertAdditivePatternsLocationsRequest:
             if not self._call_mbert_locs(jdk_path, mbert_locs_jar_path):
                 self.on_exit('exit_call_mbert_locs')
                 return None
-        if not self.has_ap_mc_output():
+        if not self.simple_only and not self.has_ap_mc_output():
             if not self._call_mbert_ap_mc(jdk_path, mbert_ap_mc_jar_path):
                 log.error("call_mbert_ap_mc failed!")
         self.postprocess()
@@ -250,7 +252,7 @@ class MbertAdditivePatternsLocationsRequest:
         if normal_mutants_raw is not None:
             replacement_mutants = normal_mutants_raw.get_mutants_to_exec(
                 self.mutants_csv_file)
-            if self.has_ap_mc_output():
+            if not self.simple_only and self.has_ap_mc_output():
                 start_mutant_id = normal_mutants_raw.last_id() + 1
                 additive_mutants_raw = self.predict_on_mbert_ap_mc(start_mutant_id)
                 replacement_mutants = replacement_mutants + additive_mutants_raw.get_mutants_to_exec(

@@ -11,7 +11,11 @@ public class DummyClass {
     }
 
     public int addCalc(int int1, int int2) {
-        return int1 + int2;
+        if (int1 == int2){
+            return 2 * int1;
+        } else{
+            return int1 + int2;
+        }
     }
 
     public static void main(String... args) {
