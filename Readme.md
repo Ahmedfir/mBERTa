@@ -72,7 +72,8 @@ So you will have to include them in your `$PYTHONPATH` i.e.:
 - You can run μBERT via `mbertntcall/mbert_generate_mutants_runner.py` script. 
 The minimum required arguments are the project path and the target classes to mutate.
 i.e. `python3 mbert_generate_mutants_runner.py -repo_path path/to/your/project -target_classes path/to/class1,path/to/class2`.
-Please check the `get_args()` method for more information on other optional parameters. 
+Please check the `get_args()` method for more information on other optional parameters, i.e. 
+to get simple replacement mutants only (similar to μBERT ones: https://github.com/rdegiovanni/mBERT), you can pass `-simple_only True` as param.
 - We provide also a shell script as example to run the tool from commandline:  `gen_mutants.sh`.
 We set it up to generate mutants for a class: `DummyClass.java` available under `test` folder.
 You can adapt the script to your needs.
