@@ -8,6 +8,7 @@ from typing import List
 import pandas as pd
 from pandas import DataFrame
 
+from cb.code_bert_mlm import MAX_TOKENS
 from mbertntcall.json_ap_mc_parser import ApMcListFileLocations, predict_ap_mc_locs
 from cb import PREDICTIONS_FILE_NAME, predict_json_locs, CodeBertMlmFillMask, ListFileLocations
 from cb.job_config import NOCOSINE_JOB_CONFIG
@@ -40,7 +41,8 @@ class MbertAdditivePatternsLocationsRequest:
                  progress_file='p_log.out',
                  force_reload=False,
                  auto_path_adapt=True,
-                 simple_only=False):
+                 simple_only=False,
+                 max_size=MAX_TOKENS):
         self.repo_path: str = str(Path(repo_path).absolute())
         self.file_requests = file_requests
         self.output_dir = output_dir
@@ -60,6 +62,7 @@ class MbertAdditivePatternsLocationsRequest:
         self.job_config = job_config
         self.auto_path_adapt = auto_path_adapt
         self.simple_only = simple_only
+        self.pred_max_size = max_size
 
     def has_call_output(self) -> bool:
         return self.has_locs_output() and (self.simple_only or self.has_ap_mc_output())
@@ -153,7 +156,7 @@ class MbertAdditivePatternsLocationsRequest:
             cbm = CodeBertMlmFillMask()
             if not isdir(self.preds_output_dir):
                 makedirs(self.preds_output_dir)
-            results = predict_json_locs(self.locs_output_file, cbm, self.job_config)
+            results = predict_json_locs(self.locs_output_file, cbm, self.job_config, max_size=self.pred_max_size)
             json = results.json()
             save_zipped_pickle(json, self.locs_preds_pickle_file)
         else:
@@ -168,7 +171,7 @@ class MbertAdditivePatternsLocationsRequest:
             cbm = CodeBertMlmFillMask()
             if not isdir(self.preds_output_dir):
                 makedirs(self.preds_output_dir)
-            results = predict_ap_mc_locs(self.ap_mc_output_file, cbm, start_mutant_id)
+            results = predict_ap_mc_locs(self.ap_mc_output_file, cbm, start_mutant_id, max_size=self.pred_max_size)
             json = results.json()
             save_zipped_pickle(json, self.ap_mc_preds_pickle_file)
         else:

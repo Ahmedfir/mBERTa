@@ -79,7 +79,8 @@ class ApMcPredicates(BaseModel):
                 self.stripped_unique_preds = self.unique_predictions
         return self.stripped_unique_preds
 
-    def process_locs(self, cbm: CodeBertMlmFillMask, file_string: str, start_mutant_id):
+    def process_locs(self, cbm: CodeBertMlmFillMask, file_string: str, start_mutant_id: int,
+                     max_size: int = MAX_TOKENS):
         self.start_mutant_id = start_mutant_id
         if self.methodStartPos >= 0 and self.methodEndPos >= 0:
             method_start = self.methodStartPos
@@ -93,7 +94,7 @@ class ApMcPredicates(BaseModel):
                                                                                   self.lineNumber))
             return
 
-        max_tokens_to_add = MAX_TOKENS
+        max_tokens_to_add = max_size
         method_before_str = file_string[max(0, method_start - max_tokens_to_add):method_start - 1]
         method_after_str = file_string[method_end + 1:min(method_end + 1 + max_tokens_to_add, len(file_string) - 1)]
         method_before_tokens = [] if len(method_before_str.strip()) == 0 else cbm.tokenize(method_before_str)
@@ -104,12 +105,12 @@ class ApMcPredicates(BaseModel):
             nmp_masked_method = file_string[method_start:self.start] + nmp + file_string[
                                                                              self.end: method_end + 1]
             nmp_masked_method_tokens = cbm.tokenize(nmp_masked_method)
-            if len(nmp_masked_method_tokens) < MAX_TOKENS:
+            if len(nmp_masked_method_tokens) < max_size:
                 nmp_masked_method_tokens, method_before_tokens, method_after_tokens = surround_method(
-                    nmp_masked_method_tokens, method_before_tokens, method_after_tokens, MAX_TOKENS)
-            if len(nmp_masked_method_tokens) > MAX_TOKENS:
-                start_cutting_index, nmp_masked_method_tokens = cut_method(nmp_masked_method_tokens, MAX_TOKENS,
-                                                                           int(MAX_TOKENS / 3), MASK)
+                    nmp_masked_method_tokens, method_before_tokens, method_after_tokens, max_size)
+            if len(nmp_masked_method_tokens) > max_size:
+                start_cutting_index, nmp_masked_method_tokens = cut_method(nmp_masked_method_tokens, max_size,
+                                                                           int(max_size / 3), MASK)
             reqs.append(nmp_masked_method_tokens)
 
         # predict
@@ -153,13 +154,13 @@ class ApMcFileLocations(BaseModel):
     allMaskedPredicates: List[ApMcPredicates]
     start_mutant_id = -1
 
-    def process_locs(self, cbm: CodeBertMlmFillMask, start_mutant_id):
+    def process_locs(self, cbm: CodeBertMlmFillMask, start_mutant_id, max_size=MAX_TOKENS):
         self.start_mutant_id = start_mutant_id
         log.info('pred : file {0}'.format(self.javaFile.path))
         try:
             file_string = load_file(self.javaFile.path)
             for pred in self.allMaskedPredicates:
-                pred.process_locs(cbm, file_string, self.start_mutant_id)
+                pred.process_locs(cbm, file_string, self.start_mutant_id, max_size=max_size)
                 self.start_mutant_id = pred.start_mutant_id
         except UnicodeDecodeError:
             log.exception('Failed to load file : {0}'.format(self.javaFile.path))
@@ -169,10 +170,10 @@ class ApMcListFileLocations(BaseModel):
     fileRequests: List[ApMcFileLocations]
     start_mutant_id = -1
 
-    def process_locs(self, cbm, start_mutant_id):
+    def process_locs(self, cbm, start_mutant_id, max_size=MAX_TOKENS):
         self.start_mutant_id = start_mutant_id
         for file_loc in self.fileRequests:
-            file_loc.process_locs(cbm, self.start_mutant_id)
+            file_loc.process_locs(cbm, self.start_mutant_id, max_size=max_size)
             self.start_mutant_id = file_loc.start_mutant_id
 
     @staticmethod
@@ -240,10 +241,10 @@ class ApMcListFileLocations(BaseModel):
         return result
 
 
-def predict_ap_mc_locs(sc_json_file: str, cbm: CodeBertMlmFillMask = None, start_mutant_id=0):
+def predict_ap_mc_locs(sc_json_file: str, cbm: CodeBertMlmFillMask = None, start_mutant_id=0, max_size=MAX_TOKENS):
     if cbm is None:
         cbm = CodeBertMlmFillMask()
     file_locs: ApMcListFileLocations = ApMcListFileLocations.parse_file(sc_json_file)
     print('++++++ attempt process json {0} ++++++'.format(sc_json_file))
-    file_locs.process_locs(cbm, start_mutant_id)
+    file_locs.process_locs(cbm, start_mutant_id, max_size=max_size)
     return file_locs
