@@ -13,8 +13,8 @@ from mbertntcall.json_ap_mc_parser import ApMcListFileLocations, predict_ap_mc_l
 from cb import PREDICTIONS_FILE_NAME, predict_json_locs, CodeBertMlmFillMask, ListFileLocations
 from cb.job_config import NOCOSINE_JOB_CONFIG
 from cb.replacement_mutants import ReplacementMutant
-from cbnt.locs_request import LOCATIONS_FILE_NAME, MUTANTS_OUTPUT_CSV, MBERT_LOCATIONS_JAR
-from cbnt.rank_lines import order_lines_by_naturalness
+from codebertnt.locs_request import LOCATIONS_FILE_NAME, MUTANTS_OUTPUT_CSV, BUSINESS_LOCATIONS_JAR
+from codebertnt.rank_lines import order_lines_by_naturalness
 from utils.cmd_utils import shellCallTemplate
 from utils.file_read_write import write_csv_row
 from utils.file_search import contains
@@ -126,7 +126,7 @@ class MbertAdditivePatternsLocationsRequest:
     def preprocess(self) -> bool:
         return isdir(self.repo_path)
 
-    def call(self, jdk_path: str, mbert_locs_jar_path: str = MBERT_LOCATIONS_JAR,
+    def call(self, jdk_path: str, mbert_locs_jar_path: str = BUSINESS_LOCATIONS_JAR,
              mbert_ap_mc_jar_path: str = MBERT_ADDITIVE_PATTERNS_JAR) -> str:
         self.print_progress('info', 'call')
         if not self.force_reload and self.has_executed():

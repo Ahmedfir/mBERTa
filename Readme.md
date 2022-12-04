@@ -12,11 +12,11 @@ If you just want to generate mutants using μBERT-nt, you can skip these details
 Otherwise, here's a quick summary of how we implemented our approach:
 
 ### AST parsing and location selection:
-_Repo_ **(java)**: https://github.com/Ahmedfir/mBERT-locations/
+_Repo_ **(java)**: https://github.com/Ahmedfir/java-business-locations.git
 
 In this step we parse the input java classes and extract the main business-logic nodes to mutate.
 You can either clone and build the code yourself or use our released standalone jar directly.
-In https://github.com/Ahmedfir/cbnt we incorporate the jar and call it directly from the python side, 
+In https://github.com/Ahmedfir/CodeBERT-nt we incorporate the jar and call it directly from the python side, 
 to extract the tokens.
  
 ### Masking and CodeBERT invocation: 
@@ -26,6 +26,8 @@ This repo contains the core implementation of our approach.
 It provides APIs to mask tokens, invoke CodeBERT to predict alternative replacements for them and process them, 
 i.e. putting them in place in the original program for compilation and test, 
 or computing their cosine-embeddings similarity with the original version.  
+It has been first developed to provide APIs for the code-naturalness study, 
+and we continued extending it for this project' needs.  
 
 ### Code naturalness ranking: 
 _Repo_ **(python)**: https://github.com/Ahmedfir/CodeBERT-nt
@@ -45,7 +47,9 @@ You can either clone and build the code yourself or use our released standalone 
 i.e. it's available under `mbertntcall/mBERT-addconditions` in this same repo. 
 
 ### Evaluation on Defects4J: 
-_Repo_ **(python)**: https://github.com/Ahmedfir/mBERT-nt-evaluation
+_Main repo_ **(python)**: https://github.com/Ahmedfir/mBERT-nt-evaluation
+https://github.com/Ahmedfir/mu-FD-simulation.git
+
 
 This repo contains our code and evaluation materials of μBERT-nt on defects4j bugs.
 
@@ -54,18 +58,18 @@ This repo contains our code and evaluation materials of μBERT-nt on defects4j b
 
 ### pre-requirements:
 
-- Python 3.8+: This code has only been tested with Python version 3.8 and above. You can try older versions if you want...
-- Python environment: you can use conda or pip to create an environement using `requirements.txt`. If you decide to use pip, just call `setup.sh`.
+- Python 3.7+: This code has only been tested with Python version 3.7 and above. You can try older versions if you want...
+- Python environment: you can use conda or pip to create an environement using `requirements.txt`. If you decide to use pip, just call `env_setup.sh`.
 - Java 8: This code has only been tested with Java 8 and above. You can try older versions if you want...
 - Dependencies: You will have to clone some repos or call `setup.sh` and it will be done. 
-It depends on `https://github.com/Ahmedfir/cbnt` and `https://github.com/Ahmedfir/commons` implementations.
+It depends on `https://github.com/Ahmedfir/cbnt`, `https://github.com/Ahmedfir/CodeBERT-nt` and `https://github.com/Ahmedfir/commons` implementations.
 So you will have to include them in your `$PYTHONPATH` i.e.:
   - if you want to use PyCharm: 
-  go to `Preferences` > `Project:flakent` > `Project structure` > `+` > `path/to/cloned/cbnt`. 
-  Then similarly for `commons`: > `+` > `path/to/cloned/commons`
+  go to `Preferences` > `Project:mBERT-mt` > `Project structure` > `+` > `path/to/cloned/cbnt`. 
+  Then similarly for `commons`: > `+` > `path/to/cloned/commons` and for `CodeBERT-nt`: > `+` > `path/to/cloned/CodeBERT-nt`.
  
-  - if you just want to run the tool via shell: 
-  you need to add the dependencies to your `$PYTHONPATH`: `export path/to/cloned/commons:path/to/cloned/cbnt:$PYTHONPATH`
+  - if you just want to run the tool via shell (see the `gen_mutants.sh` script): 
+  you need to add the dependencies to your `$PYTHONPATH`: `export path/to/cloned/commons:path/to/cloned/cbnt:path/to/cloned/CodeBERT-nt:$PYTHONPATH`
 
 ### mutants generation
 

@@ -4,7 +4,7 @@
 DIR="${BASH_SOURCE%/*}"
 if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
 ROOT=$DIR
-echo ROOT FOLDER: /Users/ahmed.khanfir/PycharmProjects/mBERT-nt/test/res/exampleclass/chart
+echo ROOT FOLDER: $ROOT
 
 # path to clone dependencies.
 dependencies_dir=${1}
@@ -16,6 +16,7 @@ fi
 
 COMMONS_ROOT="$dependencies_dir/commons/"
 CBNT_ROOT="$dependencies_dir/cbnt/"
+CBNAT_ROOT="$dependencies_dir/CodeBERT-nt/"
 
 # python env.
 pushd $ROOT
@@ -23,7 +24,7 @@ pushd $ROOT
 popd
 
 # python path. Not needed if you checked out the dependencies in this same repo, i.e. using the setup.sh script.
-export PYTHONPATH=$COMMONS_ROOT:$CBNT_ROOT:$ROOT:$PYTHONPATH
+export PYTHONPATH=$COMMONS_ROOT:$CBNT_ROOT:$CBNAT_ROOT:$ROOT:$PYTHONPATH
 
 python3 mbertntcall/mbert_generate_mutants_runner.py \
 -repo_path "$ROOT/test/res/exampleclass/DummyProject" \

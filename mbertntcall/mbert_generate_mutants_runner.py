@@ -5,7 +5,7 @@ from os import makedirs
 from os.path import join, isfile, expanduser, isdir
 from pathlib import Path
 
-from cbnt.locs_request import MbertFileRequest
+from codebertnt.locs_request import BusinessFileRequest
 from mbertntcall.output_mutants_mbert_ext_request_impl import OutputMutatedClasses
 
 log = logging.getLogger(__name__)
@@ -19,9 +19,10 @@ def get_args():
                         help='project name - by default the repo name.')
     parser.add_argument('-repo_path', dest='repo_path', help='target repo/project path.')
     parser.add_argument('-target_classes', dest='target_classes', help="classes to mutate separated by ','.")
-    parser.add_argument('-output_dir', dest='output_dir', help="classes to mutate separated by ','.",
+    parser.add_argument('-output_dir', dest='output_dir', help="output directory.",
                         default='mbert_output')
     parser.add_argument('-mutated_classes_output_path', dest='mutated_classes_output_path',
+                        help="output directory of the mutated classes.",
                         default='mbert_mutated_classes')
     parser.add_argument('-java_home', dest='java_home', help='java home path', default=os.getenv("JAVA_HOME"))
     parser.add_argument('-all_lines', dest='all_lines', default=True)
@@ -47,7 +48,7 @@ def get_args():
 
 def create_mbert_request(files, mutated_classes_output_dir: str, repo_path, output_dir: str, simple_only,
                          max_processes_number: int = 4) -> OutputMutatedClasses:
-    reqs = {MbertFileRequest(file) for file in files}
+    reqs = {BusinessFileRequest(file) for file in files}
     return OutputMutatedClasses(mutated_classes_output_dir, max_processes_number, reqs, repo_path, output_dir,
                                 simple_only=simple_only)
 
