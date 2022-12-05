@@ -42,7 +42,8 @@ class MbertAdditivePatternsLocationsRequest:
                  force_reload=False,
                  auto_path_adapt=True,
                  simple_only=False,
-                 max_size=MAX_TOKENS):
+                 max_size=MAX_TOKENS,
+                 mutant_classes_output_dir=None, patch_diff=False, java_file=False):
         self.repo_path: str = str(Path(repo_path).absolute())
         self.file_requests = file_requests
         self.output_dir = output_dir
@@ -63,6 +64,9 @@ class MbertAdditivePatternsLocationsRequest:
         self.auto_path_adapt = auto_path_adapt
         self.simple_only = simple_only
         self.pred_max_size = max_size
+        self.mutated_classes_output_dir = mutant_classes_output_dir
+        self.patch_diff = patch_diff
+        self.java_file = java_file
 
     def has_call_output(self) -> bool:
         return self.has_locs_output() and (self.simple_only or self.has_ap_mc_output())
@@ -178,7 +182,7 @@ class MbertAdditivePatternsLocationsRequest:
             results = ApMcListFileLocations.parse_raw(load_zipped_pickle(self.ap_mc_preds_pickle_file))
         return results
 
-    def process_mutants(self, mutants: List[ReplacementMutant]):
+    def process_mutants(self, mutants: List[ReplacementMutant], mutant_classes_output_dir=None, patch_diff=False, java_file=False):
         raise Exception("implement this to process your mutants!")
 
     def csv_header(self):

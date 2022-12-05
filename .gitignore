@@ -7,3 +7,5 @@
 /test/res/exampleclass/DummyProject/target/
 .idea/
 /test/res/output/
+/mbertntcall/pre-trained/
+/mbertntcall/logs/

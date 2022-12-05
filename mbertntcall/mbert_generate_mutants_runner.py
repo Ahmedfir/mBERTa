@@ -49,7 +49,10 @@ def get_args():
 def create_mbert_request(files, mutated_classes_output_dir: str, repo_path, output_dir: str, simple_only,
                          max_processes_number: int = 4) -> OutputMutatedClasses:
     reqs = {BusinessFileRequest(file) for file in files}
-    return OutputMutatedClasses(mutated_classes_output_dir, max_processes_number, reqs, repo_path, output_dir,
+    return OutputMutatedClasses(max_processes_number, reqs, repo_path, output_dir,
+                                mutant_classes_output_dir=mutated_classes_output_dir,
+                                java_file=True,
+                                patch_diff=True,
                                 simple_only=simple_only)
 
 
