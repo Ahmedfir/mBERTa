@@ -18,12 +18,12 @@ log.addHandler(logging.StreamHandler(sys.stdout))
 
 
 class MbertRequestImpl(MbertAdditivePatternsLocationsRequest):
-    def __init__(self, project: MbertProject, max_processes_number=4, *args, **kargs):
+    def __init__(self, project: MbertProject, max_processes_number=4, remove_project_on_exit=True, *args, **kargs):
         super(MbertRequestImpl, self).__init__(*args, **kargs)
         self.project: MbertProject = project
         self.max_processes_number = max_processes_number
         self.projects = None
-        self.remove_project_on_exit = True
+        self.remove_project_on_exit = remove_project_on_exit
 
     def preprocess(self) -> bool:
         # checkout fixed version of the project and check that it's valid, i.e. compiles and all tests are passing.
@@ -62,7 +62,8 @@ class MbertRequestImpl(MbertAdditivePatternsLocationsRequest):
                 log.error('could not copy project {0}'.format(p), e)
                 break
 
-    def process_mutants(self, mutants: List[ReplacementMutant], mutant_classes_output_dir=None, patch_diff=False, java_file=False):
+    def process_mutants(self, mutants: List[ReplacementMutant], mutant_classes_output_dir=None, patch_diff=False,
+                        java_file=False):
         self.projects = [self.project]
         if len(mutants) > self.max_processes_number:
             # create copies of the repo to parallellise the mutants processing.
@@ -81,7 +82,8 @@ class MbertRequestImpl(MbertAdditivePatternsLocationsRequest):
 
                 futures = {
                     executor.submit(self.process_mutant, mutant, self.repo_path, self.projects, self.mutants_csv_file,
-                                    output_csv_lock, mutant_classes_output_dir, patch_diff, java_file): mutant.id for mutant in mutants}
+                                    output_csv_lock, mutant_classes_output_dir, patch_diff, java_file): mutant.id for
+                    mutant in mutants}
                 for future in concurrent.futures.as_completed(futures):
                     kwargs = {
                         'total': len(futures),
