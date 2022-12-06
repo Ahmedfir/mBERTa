@@ -8,17 +8,17 @@ from typing import List
 import pandas as pd
 from pandas import DataFrame
 
-from cb.code_bert_mlm import MAX_TOKENS
-from mbertntcall.json_ap_mc_parser import ApMcListFileLocations, predict_ap_mc_locs
 from cb import PREDICTIONS_FILE_NAME, predict_json_locs, CodeBertMlmFillMask, ListFileLocations
+from cb.code_bert_mlm import MAX_TOKENS
 from cb.job_config import NOCOSINE_JOB_CONFIG
 from cb.replacement_mutants import ReplacementMutant
 from codebertnt.locs_request import LOCATIONS_FILE_NAME, MUTANTS_OUTPUT_CSV, BUSINESS_LOCATIONS_JAR
 from codebertnt.rank_lines import order_lines_by_naturalness
+from commons.pickle_utils import save_zipped_pickle, load_zipped_pickle
+from mbertntcall.json_ap_mc_parser import ApMcListFileLocations, predict_ap_mc_locs
 from utils.cmd_utils import shellCallTemplate
 from utils.file_read_write import write_csv_row
 from utils.file_search import contains
-from commons.pickle_utils import save_zipped_pickle, load_zipped_pickle
 
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
@@ -182,7 +182,8 @@ class MbertAdditivePatternsLocationsRequest:
             results = ApMcListFileLocations.parse_raw(load_zipped_pickle(self.ap_mc_preds_pickle_file))
         return results
 
-    def process_mutants(self, mutants: List[ReplacementMutant], mutant_classes_output_dir=None, patch_diff=False, java_file=False):
+    def process_mutants(self, mutants: List[ReplacementMutant], mutant_classes_output_dir=None, patch_diff=False,
+                        java_file=False):
         raise Exception("implement this to process your mutants!")
 
     def csv_header(self):
@@ -285,7 +286,8 @@ class MbertAdditivePatternsLocationsRequest:
                         m.file_path = self.repo_path + m.file_path.split(repo_dir)[1]
                         assert isfile(m.file_path), 'auto_path_adapt failed to fix absolute mutant file path \n' \
                                                     '-> adapted path : {0}'.format(m.file_path)
-            self.process_mutants(replacement_mutants)
+            self.process_mutants(replacement_mutants, mutant_classes_output_dir=self.mutated_classes_output_dir,
+                                 patch_diff=self.patch_diff, java_file=self.java_file)
         else:
             self.on_exit('has_treated_all_mutants')
 

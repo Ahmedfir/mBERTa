@@ -39,7 +39,7 @@ class MbertRequestImpl(MbertAdditivePatternsLocationsRequest):
         mutant.file_path = mutant.file_path.replace(repo_path, p.repo_path)
         try:
             #  compile and execute the mutant
-            mutant.compile_execute(p, mutant_classes_output_dir, patch_diff, java_file)
+            mutant.compile_execute(p, mutant_classes_output_dir, patch_diff=patch_diff, java_file=java_file)
         finally:
             #  unlock project
             p.lock.release()
@@ -81,7 +81,7 @@ class MbertRequestImpl(MbertAdditivePatternsLocationsRequest):
                     p.set_lock(lock)
 
                 futures = {
-                    executor.submit(self.process_mutant, mutant, self.repo_path, self.projects, self.mutants_csv_file,
+                    executor.submit(MbertRequestImpl.process_mutant, mutant, self.repo_path, self.projects, self.mutants_csv_file,
                                     output_csv_lock, mutant_classes_output_dir, patch_diff, java_file): mutant.id for
                     mutant in mutants}
                 for future in concurrent.futures.as_completed(futures):
