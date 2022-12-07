@@ -21,7 +21,6 @@ from utils.file_read_write import write_csv_row
 from utils.file_search import contains
 
 log = logging.getLogger(__name__)
-log.setLevel(logging.INFO)
 log.addHandler(logging.StreamHandler(sys.stdout))
 
 MBERT_ADDITIVE_PATTERNS_JAR = join(Path(__file__).parent,
@@ -225,7 +224,12 @@ class MbertAdditivePatternsLocationsRequest:
                 log.error("Couldn't find file:" + self.mutants_csv_file)
                 return False, None
             exec_results = pd.read_csv(self.mutants_csv_file)
+            assert len(exec_results) == exec_results['id'].nunique()
+            # executed mutant ids - to know if we're done with the exec step or not.
+            treated_ids = list(exec_results['id'].unique())
+
             if compilable_only:
+                # we keep only the exec results of the compilable ones.
                 exec_results = exec_results[exec_results['compilable']]
                 if len(exec_results) <= 0:
                     log.error("all mutants are not compilable:" + self.mutants_csv_file)
@@ -233,24 +237,25 @@ class MbertAdditivePatternsLocationsRequest:
             mutants_df = self.normal_mutants_to_df(project_name, version)
             if not self.has_ap_mc_preds_output():
                 log.error("Couldn't find file:" + self.ap_mc_preds_pickle_file)
-            else:
-                additive_mutants_df = self.additive_mutants_to_df(project_name, version, executed_mutants_ids=list(
-                    exec_results['id'].unique()))
+            else: # todo debug this and see what's happening ? how was this working before?
+                additive_mutants_df = self.additive_mutants_to_df(project_name, version, executed_mutants_ids=treated_ids)
                 mutants_df = pd.concat([mutants_df, additive_mutants_df], ignore_index=True)
-            merged_df = pd.merge(mutants_df, exec_results, how="inner", left_on=['id'], right_on=['id'])
-            size_diff = len(mutants_df) - len(merged_df) - len(mutants_df[mutants_df['match_org'] == True])
-            assert len(mutants_df) == mutants_df['id'].nunique()
-            assert len(merged_df) == merged_df['id'].nunique()
-            assert len(exec_results) == exec_results['id'].nunique()
-            if size_diff != 0:
-                missing_ids = [i for i in mutants_df['id'].unique() if i not in merged_df['id'].unique()]
-                log.error(
-                    str(size_diff) + " mutants were not treated for " + self.repo_path + " : \n ")
-                log.debug('mutant ids : ' + str(missing_ids))
 
-                return False, merged_df
-            else:
-                save_zipped_pickle(merged_df, intermediate_pickle_file)
+            # check that everything has been treated
+            assert len(mutants_df) == mutants_df['id'].nunique()
+            missing_ids = [i for i in mutants_df['id'].unique() if i not in treated_ids]
+            if len(missing_ids) > 0:
+                log.error(
+                    str(missing_ids) + " mutants were not treated for " + self.repo_path + " : \n ")
+                log.debug('mutant ids : ' + str(missing_ids))
+                return False, None
+
+            # merge the exec results with the predictions.
+            # this dataset may be smaller if you pick only compilable mutants.
+            merged_df = pd.merge(mutants_df, exec_results, how="inner", left_on=['id'], right_on=['id'])
+            assert len(merged_df) == merged_df['id'].nunique()
+
+            save_zipped_pickle(merged_df, intermediate_pickle_file)
         else:
             merged_df = load_zipped_pickle(intermediate_pickle_file)
         return True, merged_df

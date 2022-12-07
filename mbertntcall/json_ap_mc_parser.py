@@ -181,8 +181,8 @@ class ApMcListFileLocations(BaseModel):
         if executed_mutants_ids is not None and len(mutant_ids) > 1 and len(executed_mutants_ids) > 0:
             intersection = set(mutant_ids).intersection(set(executed_mutants_ids))
             if len(intersection) >= 1:
-                return list(intersection)[0]
-        return mutant_ids[0]
+                return sorted(list(intersection))[0]
+        return sorted(mutant_ids)[0]
 
     # todo filter by astmttype
     # todo check unique predicates
@@ -190,7 +190,7 @@ class ApMcListFileLocations(BaseModel):
         return pd.DataFrame(
             [vars(Mutant(proj_bug_id, mutant.id, mutant.cosine, mutant.rank, version, mutant.match_org, mutant.score,
                          fileP.javaFile.path, '', '', maskedPredicates.lineNumber,
-                         False, str(maskedPredicates.astStmtType), maskedPredicates.is_masked_on_added(m)))
+                         False, str(maskedPredicates.astStmtType), maskedPredicates.is_masked_on_added(m), old_val=maskedPredicates.codeString, new_val=m))
 
              for fileP in self.fileRequests
              for maskedPredicates in fileP.allMaskedPredicates
@@ -228,12 +228,12 @@ class ApMcListFileLocations(BaseModel):
             already_treated_mutant_ids = set(already_treated_mutant_df['id'].unique())
 
         for fileP in self.fileRequests:
-            mutants = [ReplacementMutant(maskedPredicates.unique_predictions[m][0], fileP.javaFile.path,
+            mutants = [ReplacementMutant(sorted(maskedPredicates.get_unique_preds()[m])[0], fileP.javaFile.path,
                                          maskedPredicates.start, maskedPredicates.end, m)
 
                        for maskedPredicates in fileP.allMaskedPredicates
-                       for m in maskedPredicates.unique_predictions.keys()
-                       if already_treated_mutant_ids.isdisjoint(set(maskedPredicates.unique_predictions[m]))
+                       for m in maskedPredicates.get_unique_preds().keys()
+                       if already_treated_mutant_ids.isdisjoint(set(maskedPredicates.get_unique_preds()[m]))
                        ]
             if len(mutants) > 0:
                 result.append(FileReplacementMutants(fileP.javaFile.path, mutants))
