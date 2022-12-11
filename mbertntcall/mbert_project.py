@@ -41,7 +41,10 @@ class MbertProject:
     def cp(self, n):
         repos_path = join(self.repos_path, 'c_' + str(n))
         if not isdir(repos_path):
-            makedirs(repos_path)
+            try:
+                makedirs(repos_path)
+            except FileExistsError:
+                log.debug("two threads created the directory concurrently.")
         copy = deepcopy(self)
         copy.repos_path = repos_path
         copy.repo_path = join(repos_path, Path(self.repo_path).name)

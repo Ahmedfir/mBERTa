@@ -158,7 +158,10 @@ class MbertAdditivePatternsLocationsRequest:
         elif self.force_reload or not self.has_locs_preds_output():
             cbm = CodeBertMlmFillMask()
             if not isdir(self.preds_output_dir):
-                makedirs(self.preds_output_dir)
+                try:
+                    makedirs(self.preds_output_dir)
+                except FileExistsError:
+                    log.debug("two threads created the directory concurrently.")
             results = predict_json_locs(self.locs_output_file, cbm, self.job_config, max_size=self.pred_max_size)
             json = results.json()
             save_zipped_pickle(json, self.locs_preds_pickle_file)
@@ -173,7 +176,10 @@ class MbertAdditivePatternsLocationsRequest:
         elif self.force_reload or not self.has_ap_mc_preds_output():
             cbm = CodeBertMlmFillMask()
             if not isdir(self.preds_output_dir):
-                makedirs(self.preds_output_dir)
+                try:
+                    makedirs(self.preds_output_dir)
+                except FileExistsError:
+                    log.debug("two threads created the directory concurrently.")
             results = predict_ap_mc_locs(self.ap_mc_output_file, cbm, start_mutant_id, max_size=self.pred_max_size)
             json = results.json()
             save_zipped_pickle(json, self.ap_mc_preds_pickle_file)
@@ -282,7 +288,10 @@ class MbertAdditivePatternsLocationsRequest:
         if not self.has_treated_all_mutants(replacement_mutants):
             if not isfile(self.mutants_csv_file):
                 if not isdir(self.mutants_output_dir):
-                    makedirs(self.mutants_output_dir)
+                    try:
+                        makedirs(self.mutants_output_dir)
+                    except FileExistsError:
+                        log.debug("two threads created the directory concurrently.")
                 self.create_output_csv()
             if self.auto_path_adapt:
                 for m in replacement_mutants:

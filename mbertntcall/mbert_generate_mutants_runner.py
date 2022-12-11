@@ -66,9 +66,15 @@ def create_request(repo_path, target, output_dir, mutated_classes_output_path, c
     output_dir = join(expanduser(output_dir), target)
     mutated_classes_output_path = join(expanduser(mutated_classes_output_path), target)
     if not isdir(output_dir):
-        makedirs(output_dir)
+        try:
+            makedirs(output_dir)
+        except FileExistsError:
+            log.debug("two threads created the directory concurrently.")
     if not isdir(mutated_classes_output_path):
-        makedirs(mutated_classes_output_path)
+        try:
+            makedirs(mutated_classes_output_path)
+        except FileExistsError:
+            log.debug("two threads created the directory concurrently.")
 
     return create_mbert_request(class_files, mutated_classes_output_path, repo_path, output_dir, simple_only,
                                 max_processes)
