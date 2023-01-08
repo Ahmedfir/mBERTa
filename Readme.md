@@ -1,14 +1,13 @@
-# μBERT-nt: Mutation Testing using Pre-Trained Language Models
 
 ## Description: 
 
-Source-code base of: μBERT-nt.
+reimplementation and extension of: μBERT.
 
-μBERT-nt generates mutants based on CodeBERT predictions.
+μBERT generates mutants based on CodeBERT predictions.
 
 
 We have implemented our approach as modules in different repositories. 
-If you just want to generate mutants using μBERT-nt, you can skip these details and pass to the next subsection.
+If you just want to generate mutants using μBERT, you can skip these details and pass to the next subsection.
 Otherwise, here's a quick summary of how we implemented our approach:
 
 ### AST parsing and location selection:
@@ -20,6 +19,7 @@ In https://github.com/Ahmedfir/CodeBERT-nt we incorporate the jar and call it di
 to extract the tokens.
  
 ### Masking and CodeBERT invocation: 
+
 _Repo_ **(python)**: https://github.com/Ahmedfir/cbnt
 
 This repo contains the core implementation of our approach.
@@ -29,13 +29,11 @@ or computing their cosine-embeddings similarity with the original version.
 It has been first developed to provide APIs for the code-naturalness study, 
 and we continued extending it for this project' needs.  
 
-### Code naturalness ranking: 
 _Repo_ **(python)**: https://github.com/Ahmedfir/CodeBERT-nt
 
 This repo contains the code base and evaluation material used to study the code-naturalness via CodeBERT.
 It invokes the two previous components.
-We incorporate it in our approach to rank the statements by ascendant naturalness, 
-in order to favour the mutation on unnatural locations. 
+We incorporate it in our approach and continued adapting it provide required APIs for mutation. 
 
 ### Condition seeding:
 _Repo_ **(java)**: https://github.com/Ahmedfir/mbert-additive-patterns.git
@@ -47,14 +45,15 @@ You can either clone and build the code yourself or use our released standalone 
 i.e. it's available under `mbertntcall/mBERT-addconditions` in this same repo. 
 
 ### Evaluation on Defects4J: 
-_Main repo_ **(python)**: https://github.com/Ahmedfir/mBERT-nt-evaluation
+- [ ] in progress: This repo contains our code and evaluation materials of μBERT on defects4j bugs.
+_Main repo_ **(python)**: 
 https://github.com/Ahmedfir/mu-FD-simulation.git
+https://github.com/Ahmedfir/a12stats
 
 
-This repo contains our code and evaluation materials of μBERT-nt on defects4j bugs.
 
 
-## run μBERT-nt:
+## run μBERT:
 
 ### pre-requirements:
 
@@ -89,7 +88,7 @@ You can adapt the script to your needs.
   - figure out if the compilation worked or not in `on_has_compiled(self, compilation_output)`
   - similarly, a command to run the tests `test_comand(self)`
   - and, extract the failing tests if any `on_tests_run(self, test_exec_output)`
-  - you can find an example implementation (`D4jProject`)  under `https://github.com/Ahmedfir/mBERT-nt-evaluation`
+  - you can find an example implementation (`D4jProject`)  under [ ] TODO
 - Then you need to create a request via `mbertntcall.mbert_ext_request_impl.MbertRequestImpl.__init__` with this project as param. Then calling this request, same as 
 in method `mbertntcall.mbert_generate_mutants_runner.create_mbert_request` in the class `mbertntcall/mbert_generate_mutants_runner.py`.
 
