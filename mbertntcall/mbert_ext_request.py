@@ -146,7 +146,9 @@ class MbertAdditivePatternsLocationsRequest:
             if not self._call_mbert_ap_mc(jdk_path, mbert_ap_mc_jar_path):
                 log.error("call_mbert_ap_mc failed!")
         self.postprocess()
+        # self.postprocess() is comnpiling and executing the tests.
         self.on_exit('done')
+        # next lines will make sure that "has_treated_all_mutants" flag is added to the progress file.
         if self.has_treated_all_mutants(self.get_remaining_mutants_to_process()):
             self.on_exit('has_treated_all_mutants')
         return self.locs_output_file
@@ -241,10 +243,39 @@ class MbertAdditivePatternsLocationsRequest:
                     log.error("all mutants are not compilable:" + self.mutants_csv_file)
                     return False, None
             mutants_df = self.normal_mutants_to_df(project_name, version)
+            # SPOON limitations cause some issues in fixing the position of tokens to mask.
+            # can_be_buggy_positioning = {'CtVariableWriteImpl', 'CtTypeReferenceImpl', 'CtInvocationImpl',
+            #                             'CtSuperAccessImpl'}
+            # #  CtTypeReferenceImpl CtInvocationImpl Lang_38
+            # #  CtInvocationImpl for <init> this(c
+            # # Math_106 'CtVariableWriteImpl'
+            # # fixmeMath_106 'CtSuperAccessImpl'
+            # can_be_different = {'CtVariableReadImpl', 'CtBinaryOperatorImpl', 'CtAssignmentImpl', 'CtUnaryOperatorImpl',
+            #                     'CtConditionalImpl', 'CtOperatorAssignmentImpl', 'CtLiteralImpl', 'CtFieldReadImpl',
+            #                     'CtArrayReadImpl'}
+            # can_be_different.update(can_be_buggy_positioning)
+            # # pnly check 'CtFieldReferenceImpl'
+            # # very weak check
+            # excluded_df = mutants_df[~(mutants_df['nodeType'].isin(can_be_different))
+            #                          & (mutants_df.apply(lambda row:
+            #                                              not row['node'].replace(' ', '').replace('(', '').replace(')',
+            #                                                                                                        '').endswith(
+            #                                                  row['old_val'].replace(' ', '').replace('(', '').replace(
+            #                                                      ')', '')), axis=1))
+            #                          & ~((mutants_df['nodeType'] == 'CtThisAccessImpl') & (mutants_df['old_val'].str.endswith('this')))
+            # ]
+            #
+            # if len(excluded_df) > 0:
+            #     print('---- discarded {0}  : SPOON issues in mapping locations : for these node types : {1}'.format(
+            #         project_name, excluded_df['nodeType'].unique().tolist()))
+            #     print('{0} in {1}'.format(str(len(excluded_df)), project_name))
+            # return False, None
+
             if not self.has_ap_mc_preds_output():
                 log.error("Couldn't find file:" + self.ap_mc_preds_pickle_file)
-            else: # todo debug this and see what's happening ? how was this working before?
-                additive_mutants_df = self.additive_mutants_to_df(project_name, version, executed_mutants_ids=treated_ids)
+            else:  # todo debug this and see what's happening ? how was this working before?
+                additive_mutants_df = self.additive_mutants_to_df(project_name, version,
+                                                                  executed_mutants_ids=treated_ids)
                 mutants_df = pd.concat([mutants_df, additive_mutants_df], ignore_index=True)
 
             # check that everything has been treated

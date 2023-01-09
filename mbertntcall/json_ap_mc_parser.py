@@ -56,7 +56,7 @@ class ApMcPredicates(BaseModel):
         return " ".join(s.split()).replace(" ", "")
 
     def is_masked_on_added(self, pred):
-        return self._remove_spaces(pred).startswith(self._remove_spaces(self.codeString))
+        return self._remove_spaces(self.codeString) in self._remove_spaces(pred)
 
     # todo add an accessor to unique_predictions
     def get_unique_preds(self):
@@ -184,13 +184,14 @@ class ApMcListFileLocations(BaseModel):
                 return sorted(list(intersection))[0]
         return sorted(mutant_ids)[0]
 
-    # todo filter by astmttype
-    # todo check unique predicates
     def to_mutants(self, proj_bug_id, version, no_duplicates=True, executed_mutants_ids: List[int] = None) -> DataFrame:
         return pd.DataFrame(
             [vars(Mutant(proj_bug_id, mutant.id, mutant.cosine, mutant.rank, version, mutant.match_org, mutant.score,
                          fileP.javaFile.path, '', '', maskedPredicates.lineNumber,
-                         False, str(maskedPredicates.astStmtType), maskedPredicates.is_masked_on_added(m), old_val=maskedPredicates.codeString, new_val=m))
+                         False, str(maskedPredicates.astStmtType), 'condition_seeding',
+                         maskedPredicates.start, maskedPredicates.end,
+                         masked_on_added=maskedPredicates.is_masked_on_added(m),
+                         old_val=maskedPredicates.codeString, new_val=m))
 
              for fileP in self.fileRequests
              for maskedPredicates in fileP.allMaskedPredicates
