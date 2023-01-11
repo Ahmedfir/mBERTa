@@ -1,0 +1,3 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/InlineCostEstimator.java,"{104, 105, 102, 103}",0
+1,src/com/google/javascript/jscomp/InlineCostEstimator.java,{102},1

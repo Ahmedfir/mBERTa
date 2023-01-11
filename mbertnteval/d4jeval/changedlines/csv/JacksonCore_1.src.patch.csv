@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/main/java/com/fasterxml/jackson/core/io/NumberInput.java,"{295, 297, 298, 299, 309, 311, 312, 313, 316, 317, 318}",0
+1,src/main/java/com/fasterxml/jackson/core/util/TextBuffer.java,"{394, 390}",0
+2,src/main/java/com/fasterxml/jackson/core/io/NumberInput.java,"{295, 296, 305, 306, 308}",1
+3,src/main/java/com/fasterxml/jackson/core/util/TextBuffer.java,"{394, 390}",1

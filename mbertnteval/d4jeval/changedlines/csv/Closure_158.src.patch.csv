@@ -1,0 +1,7 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,"{197, 198, 199, 200, 201, 1614, 1615, 1616, 1617, 1619, 1620, 1621, 1622, 1623, 1496, 1626, 1628, 1501, 1502, 1629, 1630, 1632, 1633, 1634, 1635}",0
+1,src/com/google/javascript/jscomp/CommandLineRunner.java,"{395, 396, 397, 398, 399, 400, 401, 402, 530, 404, 405, 406, 407, 408, 409, 26, 411, 412, 410, 414, 415, 416, 417, 418, 419, 420, 421, 546, 423, 424, 425, 427, 428, 429, 430, 432, 434, 436, 437, 438, 439, 440, 599, 95, 96, 234, 240, 246}",0
+2,src/com/google/javascript/jscomp/DiagnosticGroups.java,"{185, 186, 189, 22}",0
+3,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,"{197, 198, 199, 200, 201, 202, 1497, 1628, 1502, 1503, 1632, 1633, 1504, 1505, 1506, 1507, 1508, 1509, 1631, 1510, 1511, 1512, 1513, 1514, 1515, 1516}",1
+4,src/com/google/javascript/jscomp/CommandLineRunner.java,"{389, 390, 391, 392, 231, 393, 394, 236, 395, 396, 485, 552, 241, 553, 554, 500, 26, 94}",1
+5,src/com/google/javascript/jscomp/DiagnosticGroups.java,"{192, 23, 186, 187, 188}",1

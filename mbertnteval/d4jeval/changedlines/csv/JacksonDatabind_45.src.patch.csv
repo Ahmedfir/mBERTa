@@ -1,0 +1,3 @@
+index,file,lines,version
+0,src/main/java/com/fasterxml/jackson/databind/ser/std/DateTimeSerializerBase.java,"{64, 63}",0
+1,src/main/java/com/fasterxml/jackson/databind/ser/std/DateTimeSerializerBase.java,{63},1

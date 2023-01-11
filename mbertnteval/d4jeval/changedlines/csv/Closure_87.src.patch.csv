@@ -1,0 +1,3 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java,"{544, 545, 523, 530, 531, 535, 536, 537, 538, 539, 540, 541, 543}",0
+1,src/com/google/javascript/jscomp/PeepholeSubstituteAlternateSyntax.java,"{529, 523, 532, 533}",1

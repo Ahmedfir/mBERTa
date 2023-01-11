@@ -1,0 +1,9 @@
+index,file,lines,version
+0,src/java/org/apache/commons/cli2/Option.java,"{217, 206}",0
+1,src/java/org/apache/commons/cli2/commandline/WriteableCommandLineImpl.java,"{74, 75, 76, 77, 78}",0
+2,src/java/org/apache/commons/cli2/option/GroupImpl.java,{92},0
+3,src/java/org/apache/commons/cli2/option/OptionImpl.java,"{129, 130, 131, 36, 133, 134, 135}",0
+4,src/java/org/apache/commons/cli2/Option.java,"{216, 206}",1
+5,src/java/org/apache/commons/cli2/commandline/WriteableCommandLineImpl.java,{74},1
+6,src/java/org/apache/commons/cli2/option/GroupImpl.java,{92},1
+7,src/java/org/apache/commons/cli2/option/OptionImpl.java,"{128, 129, 36}",1

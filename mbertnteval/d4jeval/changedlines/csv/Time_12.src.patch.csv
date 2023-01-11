@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/main/java/org/joda/time/LocalDate.java,"{210, 244, 213, 246, 247, 248, 249}",0
+1,src/main/java/org/joda/time/LocalDateTime.java,"{199, 202, 237, 239, 240, 241, 242}",0
+2,src/main/java/org/joda/time/LocalDate.java,"{210, 243, 212, 244}",1
+3,src/main/java/org/joda/time/LocalDateTime.java,"{201, 236, 237, 199}",1

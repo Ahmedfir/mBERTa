@@ -1,0 +1,7 @@
+index,file,lines,version
+0,gson/src/main/java/com/google/gson/internal/bind/JsonTreeWriter.java,"{162, 163, 164, 165, 166, 167, 168}",0
+1,gson/src/main/java/com/google/gson/internal/bind/TypeAdapters.java,{164},0
+2,gson/src/main/java/com/google/gson/stream/JsonWriter.java,"{480, 481, 482, 483, 484, 476, 477, 478, 479}",0
+3,gson/src/main/java/com/google/gson/internal/bind/JsonTreeWriter.java,{162},1
+4,gson/src/main/java/com/google/gson/internal/bind/TypeAdapters.java,"{168, 165, 166, 167}",1
+5,gson/src/main/java/com/google/gson/stream/JsonWriter.java,{476},1

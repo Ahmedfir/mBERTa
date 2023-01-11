@@ -1,0 +1,3 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/FunctionInjector.java,"{696, 721}",0
+1,src/com/google/javascript/jscomp/FunctionInjector.java,"{704, 700, 701, 698, 697, 730, 731, 732, 699, 702, 703}",1

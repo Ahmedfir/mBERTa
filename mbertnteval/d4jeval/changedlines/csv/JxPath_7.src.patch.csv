@@ -1,0 +1,11 @@
+index,file,lines,version
+0,src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThan.java,"{32, 18, 31}",0
+1,src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThanOrEqual.java,"{32, 33, 18}",0
+2,src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThan.java,"{32, 18, 31}",0
+3,src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThanOrEqual.java,"{32, 33, 18}",0
+4,src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java,"{19, 20, 21, 23, 24, 25, 26, 40, 41, 42, 43, 53, 55, 56, 57, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 77, 78, 79, 80, 81, 82, 83, 84, 85, 87, 88, 89, 90, 91, 92, 93, 94, 95, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 110, 111, 112, 113, 114}",0
+5,src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThan.java,"{33, 34, 35, 36, 19, 20}",1
+6,src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationGreaterThanOrEqual.java,"{34, 35, 36, 37, 19, 20}",1
+7,src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThan.java,"{33, 34, 35, 36, 19, 20}",1
+8,src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationLessThanOrEqual.java,"{34, 35, 36, 37, 19, 20}",1
+9,src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationRelationalExpression.java,"{19, 31, 39}",1

@@ -1,0 +1,3 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/InlineObjectLiterals.java,"{225, 182, 183, 184, 185, 186, 187, 188, 189, 157}",0
+1,src/com/google/javascript/jscomp/InlineObjectLiterals.java,"{216, 157, 181}",1

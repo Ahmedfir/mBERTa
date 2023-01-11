@@ -1,0 +1,7 @@
+index,file,lines,version
+0,src/java/org/apache/commons/cli2/WriteableCommandLine.java,{47},0
+1,src/java/org/apache/commons/cli2/commandline/WriteableCommandLineImpl.java,"{132, 134, 137, 138, 139, 141, 142}",0
+2,src/java/org/apache/commons/cli2/option/ArgumentImpl.java,{144},0
+3,src/java/org/apache/commons/cli2/WriteableCommandLine.java,{47},1
+4,src/java/org/apache/commons/cli2/commandline/WriteableCommandLineImpl.java,"{132, 133, 135}",1
+5,src/java/org/apache/commons/cli2/option/ArgumentImpl.java,{144},1

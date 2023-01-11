@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/TypeCheck.java,"{184, 1040, 234}",0
+1,src/com/google/javascript/jscomp/TypeValidator.java,"{596, 597, 598, 599, 600, 601, 602, 604, 605, 606, 607, 608, 609, 610, 611, 612, 613, 110, 111, 112, 113, 114, 115, 116, 124, 125}",0
+2,src/com/google/javascript/jscomp/TypeCheck.java,"{1056, 1057, 1058, 185, 191, 186, 187, 190, 242, 188, 189, 1049, 1050, 1051, 1052, 1053, 1054, 1055}",1
+3,src/com/google/javascript/jscomp/TypeValidator.java,"{117, 588, 589, 110}",1

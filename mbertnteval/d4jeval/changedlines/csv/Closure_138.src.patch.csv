@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/ClosureReverseAbstractInterpreter.java,"{216, 207}",0
+1,src/com/google/javascript/jscomp/TypeInference.java,"{640, 645, 646, 647, 648, 650, 654, 632, 638, 639}",0
+2,src/com/google/javascript/jscomp/ClosureReverseAbstractInterpreter.java,"{208, 218}",1
+3,src/com/google/javascript/jscomp/TypeInference.java,"{643, 644, 647, 632, 633, 639}",1

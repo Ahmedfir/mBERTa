@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/java/org/apache/commons/jxpath/ri/model/dom/DOMAttributeIterator.java,"{84, 87, 151, 88, 90, 91}",0
+1,src/java/org/apache/commons/jxpath/ri/model/jdom/JDOMAttributeIterator.java,"{69, 72, 80, 81, 116}",0
+2,src/java/org/apache/commons/jxpath/ri/model/dom/DOMAttributeIterator.java,"{91, 84, 87, 88, 89, 155, 92, 93, 94, 95}",1
+3,src/java/org/apache/commons/jxpath/ri/model/jdom/JDOMAttributeIterator.java,"{74, 82, 117, 70}",1

@@ -1,0 +1,3 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/TypeInference.java,"{1059, 1036, 1038, 1055}",0
+1,src/com/google/javascript/jscomp/TypeInference.java,"{1059, 1060, 1061, 1036, 1038, 1055}",1

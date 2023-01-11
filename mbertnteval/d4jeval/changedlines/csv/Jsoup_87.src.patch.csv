@@ -1,0 +1,9 @@
+index,file,lines,version
+0,src/main/java/org/jsoup/nodes/Element.java,"{140, 141, 142}",0
+1,src/main/java/org/jsoup/parser/HtmlTreeBuilder.java,"{355, 420, 581, 517, 649, 618, 378, 337, 689, 347, 569, 570, 315, 476}",0
+2,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,"{768, 897, 772, 774, 398, 399, 1296, 402, 531, 1173, 662, 538, 926, 675, 954, 315, 699, 574, 319, 1089, 711, 721, 339, 598, 1240, 731, 1244, 1246, 353, 1383, 745, 1388, 1007, 1393, 372, 1269, 887, 633, 1018, 1271, 1277}",0
+3,src/main/java/org/jsoup/parser/Tag.java,"{4, 46, 47, 48, 18, 30}",0
+4,src/main/java/org/jsoup/nodes/Element.java,{140},1
+5,src/main/java/org/jsoup/parser/HtmlTreeBuilder.java,"{355, 420, 581, 517, 649, 618, 378, 337, 689, 347, 569, 570, 315, 476}",1
+6,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,"{768, 897, 772, 774, 398, 399, 1296, 402, 531, 1173, 662, 538, 926, 675, 954, 315, 699, 574, 319, 1089, 711, 721, 339, 598, 1240, 731, 1244, 1246, 353, 1383, 745, 1388, 1007, 1393, 372, 1269, 887, 633, 1018, 1271, 1277}",1
+7,src/main/java/org/jsoup/parser/Tag.java,"{17, 43, 4, 28}",1

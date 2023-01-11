@@ -1,0 +1,7 @@
+index,file,lines,version
+0,src/main/java/org/joda/time/DateTimeZone.java,"{936, 937, 938, 939, 940, 941, 942, 943, 944}",0
+1,src/main/java/org/joda/time/chrono/ZonedChronology.java,"{448, 481, 460, 528, 467, 436, 540}",0
+2,src/main/java/org/joda/time/field/LenientDateTimeField.java,{75},0
+3,src/main/java/org/joda/time/DateTimeZone.java,{936},1
+4,src/main/java/org/joda/time/chrono/ZonedChronology.java,"{448, 481, 460, 528, 467, 436, 540}",1
+5,src/main/java/org/joda/time/field/LenientDateTimeField.java,{75},1

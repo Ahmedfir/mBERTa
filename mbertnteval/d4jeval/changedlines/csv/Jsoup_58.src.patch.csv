@@ -1,0 +1,7 @@
+index,file,lines,version
+0,src/main/java/org/jsoup/Jsoup.java,{250},0
+1,src/main/java/org/jsoup/parser/Parser.java,"{129, 130, 131, 132}",0
+2,src/main/java/org/jsoup/safety/Cleaner.java,"{79, 80, 17, 83, 84, 85, 86, 87, 88, 89, 90, 91}",0
+3,src/main/java/org/jsoup/Jsoup.java,{250},1
+4,src/main/java/org/jsoup/parser/Parser.java,{129},1
+5,src/main/java/org/jsoup/safety/Cleaner.java,"{81, 17, 78}",1

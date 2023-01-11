@@ -1,0 +1,7 @@
+index,file,lines,version
+0,src/main/java/com/fasterxml/jackson/databind/introspect/JacksonAnnotationIntrospector.java,"{579, 580, 582, 583, 584, 585}",0
+1,src/main/java/com/fasterxml/jackson/databind/introspect/ObjectIdInfo.java,"{64, 25, 66, 65}",0
+2,src/main/java/com/fasterxml/jackson/databind/ser/std/BeanSerializerBase.java,"{432, 433, 435}",0
+3,src/main/java/com/fasterxml/jackson/databind/introspect/JacksonAnnotationIntrospector.java,"{579, 580, 582}",1
+4,src/main/java/com/fasterxml/jackson/databind/introspect/ObjectIdInfo.java,"{25, 63}",1
+5,src/main/java/com/fasterxml/jackson/databind/ser/std/BeanSerializerBase.java,"{432, 433, 435}",1

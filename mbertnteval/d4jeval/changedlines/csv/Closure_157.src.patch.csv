@@ -1,0 +1,7 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/CodeGenerator.java,"{660, 661, 664, 665, 666, 669, 670, 673, 674, 675, 676, 677, 678, 343, 344, 351, 352, 353, 354, 355, 356, 736, 737, 738, 739, 740, 741, 742, 743, 744, 745, 747, 748, 749, 750, 751, 752, 753, 754, 755}",0
+1,src/com/google/javascript/jscomp/RenamePrototypes.java,"{336, 377}",0
+2,src/com/google/javascript/jscomp/parsing/IRFactory.java,"{256, 257, 258, 259, 260, 261, 262, 263, 265, 266, 269, 270, 271, 272, 273, 274, 364, 365, 366, 368, 369, 371, 255}",0
+3,src/com/google/javascript/jscomp/CodeGenerator.java,"{350, 654, 656, 657, 658, 659, 724, 725, 662, 663, 666, 343}",1
+4,src/com/google/javascript/jscomp/RenamePrototypes.java,"{336, 377}",1
+5,src/com/google/javascript/jscomp/parsing/IRFactory.java,"{256, 353, 258, 355, 255, 347, 349, 350, 351}",1

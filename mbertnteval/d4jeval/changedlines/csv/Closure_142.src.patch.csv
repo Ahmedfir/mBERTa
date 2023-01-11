@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/CoalesceVariableNames.java,"{108, 109, 110}",0
+1,src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java,"{1168, 1169, 1185}",0
+2,src/com/google/javascript/jscomp/CoalesceVariableNames.java,{108},1
+3,src/com/google/javascript/jscomp/parsing/JsDocInfoParser.java,"{1168, 1183}",1

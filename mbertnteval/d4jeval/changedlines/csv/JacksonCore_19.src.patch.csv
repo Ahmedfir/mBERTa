@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java,"{1418, 1419, 1420, 1421}",0
+1,src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java,"{1544, 1545, 1546, 1547}",0
+2,src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java,{1418},1
+3,src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java,{1544},1

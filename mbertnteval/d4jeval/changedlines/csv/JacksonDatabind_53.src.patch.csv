@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/main/java/com/fasterxml/jackson/databind/type/TypeBindings.java,"{302, 431, 432, 305, 306, 433, 434, 436, 437, 439, 440, 438, 442, 443, 445, 446, 447, 448, 449, 450, 452, 453, 454, 456, 457, 458, 459, 460, 461, 462, 463, 464, 465, 466, 468, 469, 470, 471, 472}",0
+1,src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java,"{385, 387, 389, 393, 1170, 1171, 1172, 1173, 1174, 1175, 1176, 1177, 1179, 447, 448, 451, 452, 453, 454, 455, 456, 457, 458, 459, 460, 461, 462, 463, 464, 465, 467, 468, 1239, 117}",0
+2,src/main/java/com/fasterxml/jackson/databind/type/TypeBindings.java,"{428, 429, 302, 430, 304}",1
+3,src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java,"{385, 386, 388, 392, 393, 394, 395, 396, 397, 398, 399, 400, 401, 402, 1162, 1165, 456, 1225, 458, 459, 1226, 1160, 1227, 1161, 117}",1

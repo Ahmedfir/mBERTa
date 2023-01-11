@@ -1,0 +1,3 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/TypeValidator.java,"{400, 401, 365, 381}",0
+1,src/com/google/javascript/jscomp/TypeValidator.java,"{385, 366, 367, 368, 405, 406, 407, 409}",1

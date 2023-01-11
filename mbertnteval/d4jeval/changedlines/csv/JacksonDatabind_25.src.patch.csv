@@ -1,0 +1,9 @@
+index,file,lines,version
+0,src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java,{1757},0
+1,src/main/java/com/fasterxml/jackson/databind/deser/DeserializerCache.java,{477},0
+2,src/main/java/com/fasterxml/jackson/databind/jsontype/impl/TypeDeserializerBase.java,{177},0
+3,src/main/java/com/fasterxml/jackson/databind/module/SimpleAbstractTypeResolver.java,{80},0
+4,src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java,{1757},1
+5,src/main/java/com/fasterxml/jackson/databind/deser/DeserializerCache.java,{477},1
+6,src/main/java/com/fasterxml/jackson/databind/jsontype/impl/TypeDeserializerBase.java,{177},1
+7,src/main/java/com/fasterxml/jackson/databind/module/SimpleAbstractTypeResolver.java,{80},1

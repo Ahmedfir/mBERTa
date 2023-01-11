@@ -1,18 +1,11 @@
 #!/bin/bash -l
 
-# containing folder.
-DIR="${BASH_SOURCE%/*}"
-if [[ ! -d "$DIR" ]]; then DIR="$PWD"; fi
-ROOT=$DIR
-echo ROOT FOLDER: $ROOT
-
 # path to clone dependencies.
 dependencies_dir=${1}
-if [ -z "$dependencies_dir" ]; then
-  pushd $ROOT/..
-      dependencies_dir="$PWD/mbert_dependencies"
-  popd
-fi
+
+. def_dependencies.sh "$dependencies_dir"
+activate_python_env
+export_python_path
 
 # clone dependencies.
 echo "cloning dependencies into $dependencies_dir"

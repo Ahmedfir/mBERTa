@@ -1,0 +1,3 @@
+index,file,lines,version
+0,src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerFactory.java,"{843, 844, 845, 846, 143, 849, 850, 852, 853, 854, 855, 856, 857, 858, 859}",0
+1,src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerFactory.java,"{842, 844, 143}",1

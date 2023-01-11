@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/main/java/org/jsoup/UncheckedIOException.java,"{10, 11, 12}",0
+1,src/main/java/org/jsoup/parser/CharacterReader.java,"{37, 38, 39, 455, 461, 462, 464, 465, 466, 467, 469, 470}",0
+2,src/main/java/org/jsoup/UncheckedIOException.java,{10},1
+3,src/main/java/org/jsoup/parser/CharacterReader.java,"{452, 37, 457, 458, 459}",1

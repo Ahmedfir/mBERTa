@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java,"{3429, 3430, 3431, 2510, 2511, 2512}",0
+1,src/main/java/com/fasterxml/jackson/databind/util/TokenBuffer.java,"{196, 197, 966, 198, 199, 972, 973, 80, 983, 189, 190}",0
+2,src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java,"{3426, 2510}",1
+3,src/main/java/com/fasterxml/jackson/databind/util/TokenBuffer.java,"{193, 964, 973, 80, 188, 959}",1

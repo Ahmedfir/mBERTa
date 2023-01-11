@@ -1,0 +1,15 @@
+index,file,lines,version
+0,src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java,"{297, 298, 299, 364, 301, 365, 366, 368}",0
+1,src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java,"{97, 156}",0
+2,src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java,"{98, 163}",0
+3,src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveInputStream.java,"{80, 105}",0
+4,src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java,"{79, 143}",0
+5,src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java,"{90, 156}",0
+6,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java,"{65, 185}",0
+7,src/main/java/org/apache/commons/compress/archivers/ArchiveStreamFactory.java,"{360, 297, 298, 361}",1
+8,src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveInputStream.java,"{97, 155}",1
+9,src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java,"{162, 98}",1
+10,src/main/java/org/apache/commons/compress/archivers/dump/DumpArchiveInputStream.java,"{80, 104}",1
+11,src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveInputStream.java,"{142, 79}",1
+12,src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java,"{90, 155}",1
+13,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveInputStream.java,"{184, 65}",1

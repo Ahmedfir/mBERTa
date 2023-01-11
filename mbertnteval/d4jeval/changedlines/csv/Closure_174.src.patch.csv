@@ -1,0 +1,7 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/JsAst.java,"{96, 82, 100}",0
+1,src/com/google/javascript/jscomp/NodeUtil.java,"{2368, 2369, 2371, 2367}",0
+2,src/com/google/javascript/jscomp/ScopedAliases.java,"{356, 357, 389, 365, 366, 367, 368, 379}",0
+3,src/com/google/javascript/jscomp/JsAst.java,"{82, 99, 95}",1
+4,src/com/google/javascript/jscomp/NodeUtil.java,"{2368, 2367}",1
+5,src/com/google/javascript/jscomp/ScopedAliases.java,"{386, 356, 357, 365, 366, 377}",1

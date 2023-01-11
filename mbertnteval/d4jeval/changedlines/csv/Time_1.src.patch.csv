@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/main/java/org/joda/time/Partial.java,"{224, 225, 230, 217, 218, 219, 220, 221, 222, 223}",0
+1,src/main/java/org/joda/time/field/UnsupportedDurationField.java,{226},0
+2,src/main/java/org/joda/time/Partial.java,"{217, 221}",1
+3,src/main/java/org/joda/time/field/UnsupportedDurationField.java,"{227, 228, 229}",1

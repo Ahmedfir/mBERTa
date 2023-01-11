@@ -1,0 +1,9 @@
+index,file,lines,version
+0,src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java,{335},0
+1,src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java,{125},0
+2,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,{529},0
+3,src/main/java/org/apache/commons/compress/changes/ChangeSetPerformer.java,{128},0
+4,src/main/java/org/apache/commons/compress/archivers/cpio/CpioArchiveOutputStream.java,{336},1
+5,src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java,{126},1
+6,src/main/java/org/apache/commons/compress/archivers/zip/ZipArchiveOutputStream.java,{530},1
+7,src/main/java/org/apache/commons/compress/changes/ChangeSetPerformer.java,{128},1

@@ -1,0 +1,3 @@
+index,file,lines,version
+0,src/main/java/com/fasterxml/jackson/databind/ObjectReader.java,"{1476, 1577, 1578, 1579, 1580, 1581, 1583, 1584, 1585, 1586, 1587, 1588, 1589, 1590}",0
+1,src/main/java/com/fasterxml/jackson/databind/ObjectReader.java,"{1577, 1578, 1476}",1

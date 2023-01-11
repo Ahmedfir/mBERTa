@@ -1,0 +1,3 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,"{907, 908, 1074, 1075, 1076, 1077, 1078, 1079, 1080, 1081, 1082, 1083, 1084, 1085, 1086}",0
+1,src/com/google/javascript/jscomp/PeepholeFoldConstants.java,"{1074, 907, 908}",1

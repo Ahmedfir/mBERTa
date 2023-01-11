@@ -1,0 +1,13 @@
+index,file,lines,version
+0,src/com/google/javascript/rhino/jstype/ArrowType.java,"{204, 206, 177, 209, 187}",0
+1,src/com/google/javascript/rhino/jstype/EquivalenceMethod.java,"{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 40, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83}",0
+2,src/com/google/javascript/rhino/jstype/FunctionType.java,"{908, 909, 918, 919, 792, 890}",0
+3,src/com/google/javascript/rhino/jstype/JSType.java,"{514, 547, 582, 520, 552, 568, 492, 557, 528, 594, 531, 500, 532, 567, 600, 569, 570, 574}",0
+4,src/com/google/javascript/rhino/jstype/RecordType.java,"{266, 204, 277, 118, 126}",0
+5,src/com/google/javascript/rhino/jstype/UnionType.java,"{334, 335, 340, 347, 349}",0
+6,src/com/google/javascript/rhino/jstype/ArrowType.java,"{204, 206, 177, 209, 187}",1
+7,/dev/null,set(),1
+8,src/com/google/javascript/rhino/jstype/FunctionType.java,"{908, 909, 918, 792, 890}",1
+9,src/com/google/javascript/rhino/jstype/JSType.java,"{545, 514, 580, 550, 520, 555, 492, 528, 592, 531, 500, 565, 566, 598, 571, 572}",1
+10,src/com/google/javascript/rhino/jstype/RecordType.java,"{204, 268, 205, 118, 280, 126}",1
+11,src/com/google/javascript/rhino/jstype/UnionType.java,"{334, 335, 340, 347, 349}",1

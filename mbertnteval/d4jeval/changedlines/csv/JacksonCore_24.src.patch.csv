@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/main/java/com/fasterxml/jackson/core/base/ParserBase.java,"{869, 870, 871, 872, 873, 889}",0
+1,src/main/java/com/fasterxml/jackson/core/base/ParserMinimalBase.java,"{586, 590, 591, 592, 593, 594, 565, 569, 570, 571, 572, 573}",0
+2,src/main/java/com/fasterxml/jackson/core/base/ParserBase.java,"{871, 869, 870, 887}",1
+3,src/main/java/com/fasterxml/jackson/core/base/ParserMinimalBase.java,"{582, 583, 587, 565, 566, 570}",1

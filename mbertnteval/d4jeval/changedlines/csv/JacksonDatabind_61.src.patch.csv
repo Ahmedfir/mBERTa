@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java,"{232, 233, 234}",0
+1,src/main/java/com/fasterxml/jackson/databind/jsontype/impl/StdTypeResolverBuilder.java,"{74, 75, 107, 108, 76, 109}",0
+2,src/main/java/com/fasterxml/jackson/databind/ObjectMapper.java,{232},1
+3,src/main/java/com/fasterxml/jackson/databind/jsontype/impl/StdTypeResolverBuilder.java,"{104, 74}",1

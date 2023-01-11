@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/AmbiguateProperties.java,"{355, 551, 556, 365, 209, 593, 594, 595, 596, 597, 598}",0
+1,src/com/google/javascript/jscomp/TypedScopeCreator.java,"{560, 563, 564, 565, 566, 567, 568, 569, 570}",0
+2,src/com/google/javascript/jscomp/AmbiguateProperties.java,"{356, 553, 366, 558, 210, 594, 595, 596, 597, 599}",1
+3,src/com/google/javascript/jscomp/TypedScopeCreator.java,"{560, 563}",1

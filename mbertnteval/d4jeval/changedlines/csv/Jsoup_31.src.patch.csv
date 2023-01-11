@@ -1,0 +1,7 @@
+index,file,lines,version
+0,src/main/java/org/jsoup/parser/Token.java,{171},0
+1,src/main/java/org/jsoup/parser/TokeniserState.java,{1094},0
+2,src/main/java/org/jsoup/parser/XmlTreeBuilder.java,"{67, 68, 69, 70, 71, 72, 73}",0
+3,src/main/java/org/jsoup/parser/Token.java,{171},1
+4,src/main/java/org/jsoup/parser/TokeniserState.java,{1094},1
+5,src/main/java/org/jsoup/parser/XmlTreeBuilder.java,{67},1

@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer.java,{147},0
+1,src/java/org/apache/commons/jxpath/ri/model/jdom/JDOMNodePointer.java,{391},0
+2,src/java/org/apache/commons/jxpath/ri/model/dom/DOMNodePointer.java,"{147, 148}",1
+3,src/java/org/apache/commons/jxpath/ri/model/jdom/JDOMNodePointer.java,{391},1

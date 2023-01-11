@@ -1,0 +1,3 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/MinimizeExitPoints.java,{140},0
+1,src/com/google/javascript/jscomp/MinimizeExitPoints.java,"{144, 141, 142, 143}",1

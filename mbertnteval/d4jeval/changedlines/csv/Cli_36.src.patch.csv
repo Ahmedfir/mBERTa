@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/main/java/org/apache/commons/cli/OptionGroup.java,"{21, 37, 23}",0
+1,src/main/java/org/apache/commons/cli/Options.java,"{60, 23}",0
+2,src/main/java/org/apache/commons/cli/OptionGroup.java,"{24, 37, 22}",1
+3,src/main/java/org/apache/commons/cli/Options.java,"{24, 61}",1

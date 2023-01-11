@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/org/mockito/internal/creation/MockSettingsImpl.java,"{24, 20, 23, 76}",0
+1,src/org/mockito/internal/util/MockUtil.java,"{46, 47, 48, 50, 19}",0
+2,src/org/mockito/internal/creation/MockSettingsImpl.java,"{74, 20, 22}",1
+3,src/org/mockito/internal/util/MockUtil.java,"{19, 45, 46}",1

@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/main/java/org/jsoup/parser/TokenQueue.java,"{289, 290, 291}",0
+1,src/main/java/org/jsoup/select/QueryParser.java,"{41, 42, 43, 38}",0
+2,src/main/java/org/jsoup/parser/TokenQueue.java,{289},1
+3,src/main/java/org/jsoup/select/QueryParser.java,"{40, 38}",1

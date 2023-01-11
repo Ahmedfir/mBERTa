@@ -1,9 +1,18 @@
 
-## Description: 
-
-reimplementation and extension of: μBERT.
-
+# Efficient Mutation Testing via Pre-Trained Language Models
 μBERT generates mutants based on CodeBERT predictions.
+This repo contains the implementation and replication package.  
+
+![μBERT workflow](img.jpeg)
+
+available at: https://doi.org/10.48550/arXiv.2208.06042
+
+    @article{khanfir2022mbert,
+      title={Efficient Mutation Testing via Pre-Trained Language Models},
+      author={Khanfir, Ahmed and Renzo, Degiovanni and Papadakis, Mike and Traon, Yves Le},
+      journal={arXiv preprint arXiv:2301.03543},
+      year={2023}
+    }
 
 
 We have implemented our approach as modules in different repositories. 
@@ -45,12 +54,13 @@ You can either clone and build the code yourself or use our released standalone 
 i.e. it's available under `mbertntcall/mBERT-addconditions` in this same repo. 
 
 ### Evaluation on Defects4J: 
-- [ ] in progress: This repo contains our code and evaluation materials of μBERT on defects4j bugs.
+- The `eval` repo contains our code to run μBERT and PiTest on defects4j bugs.
+- To run the fault detection simulations we used:
 _Main repo_ **(python)**: 
 https://github.com/Ahmedfir/mu-FD-simulation.git
+- To run our statistical tests we used:
 https://github.com/Ahmedfir/a12stats
-
-
+- Do not hesitate to contact as if you need any further support.
 
 
 ## run μBERT:
@@ -83,18 +93,21 @@ You can adapt the script to your needs.
 
 ### Customisation 
 
+- We provide our example scripts and configurations to generate mutants for defects4j under `mbertnteval/d4jeval/mbert`.
 - Depending on your build configuration you will need to implement the class `MbertProject` under `mbert_project.py` accordingly. Particularly:
   - you should give a way to compile the project in `compile_comand(self)`
   - figure out if the compilation worked or not in `on_has_compiled(self, compilation_output)`
   - similarly, a command to run the tests `test_comand(self)`
   - and, extract the failing tests if any `on_tests_run(self, test_exec_output)`
-  - you can find an example implementation (`D4jProject`)  under [ ] TODO
+  - you can find an example implementation (`D4jProject`)  under `eval`
 - Then you need to create a request via `mbertntcall.mbert_ext_request_impl.MbertRequestImpl.__init__` with this project as param. Then calling this request, same as 
 in method `mbertntcall.mbert_generate_mutants_runner.create_mbert_request` in the class `mbertntcall/mbert_generate_mutants_runner.py`.
 
-
-
-
-
-
-
+### Evaluation:
+- We provide our scripts and configurations to generate mutants on defects4j version under `mbertnteval`
+- You can call `mbertnteval/d4jeval/exec_pid_bid.sh` to run either our tool or the used baselines. 
+You may need to adapt or provide your own config files instead of the `*_config.yml` ones provided under `mbertnteval/d4jeval/mbert` and `mbertnteval/d4jeval/pit`.
+Here are example commands calling the `mbertnteval/d4jeval/exec_pid_bid.sh` script, to generate mutants for Cli 13, using:
+  - mBERT (All): you can call `./exec_pid_bid.sh ~/PycharmProjects/mBERTa/mbertnteval/d4jeval/mbert/d4j_process_pid_bid.py Cli_13.src.patch.csv ~/PycharmProjects/mBERTa/mbertnteval/d4jeval/mbert/mbert_config.yml`
+  - PiTest (All): you can call `./exec_pid_bid.sh ~/PycharmProjects/mBERTa/mbertnteval/d4jeval/pit/d4j_process_pid_bid.py Cli_13.src.patch.csv ~/PycharmProjects/mBERTa/mbertnteval/d4jeval/pit/pit_config.yml`
+  - PiTest-rv (All): you can call `./exec_pid_bid.sh ~/PycharmProjects/mBERTa/mbertnteval/d4jeval/pit/d4j_process_pid_bid.py Cli_13.src.patch.csv ~/PycharmProjects/mBERTa/mbertnteval/d4jeval/pit/pit_rv_config.yml`

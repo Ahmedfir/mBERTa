@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/FunctionToBlockMutator.java,"{152, 153}",0
+1,src/com/google/javascript/jscomp/RenameLabels.java,{215},0
+2,src/com/google/javascript/jscomp/FunctionToBlockMutator.java,{152},1
+3,src/com/google/javascript/jscomp/RenameLabels.java,{215},1

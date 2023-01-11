@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/type/SemanticReverseAbstractInterpreter.java,"{394, 301, 430, 302, 431, 432, 348, 407, 408, 410, 412, 349}",0
+1,src/com/google/javascript/rhino/jstype/JSType.java,"{883, 884, 885}",0
+2,src/com/google/javascript/jscomp/type/SemanticReverseAbstractInterpreter.java,"{394, 301, 430, 302, 431, 432, 433, 434, 348, 407, 408, 410, 412, 349}",1
+3,src/com/google/javascript/rhino/jstype/JSType.java,{883},1

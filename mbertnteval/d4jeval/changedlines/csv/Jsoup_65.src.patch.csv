@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/main/java/org/jsoup/parser/HtmlTreeBuilder.java,"{360, 364}",0
+1,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,"{1098, 1099, 1036, 1037, 1038, 1100}",0
+2,src/main/java/org/jsoup/parser/HtmlTreeBuilder.java,"{360, 364}",1
+3,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,"{1096, 1036}",1

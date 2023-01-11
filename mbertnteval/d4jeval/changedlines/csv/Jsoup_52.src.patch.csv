@@ -1,0 +1,7 @@
+index,file,lines,version
+0,src/main/java/org/jsoup/helper/DataUtil.java,"{112, 111}",0
+1,src/main/java/org/jsoup/nodes/XmlDeclaration.java,"{46, 53, 54, 55, 56}",0
+2,src/main/java/org/jsoup/parser/XmlTreeBuilder.java,"{3, 77, 78, 79, 80}",0
+3,src/main/java/org/jsoup/helper/DataUtil.java,"{112, 113, 115, 116, 117, 118}",1
+4,src/main/java/org/jsoup/nodes/XmlDeclaration.java,"{68, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61}",1
+5,src/main/java/org/jsoup/parser/XmlTreeBuilder.java,"{3, 76, 77}",1

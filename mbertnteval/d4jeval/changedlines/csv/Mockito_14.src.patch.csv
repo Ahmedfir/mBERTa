@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/org/mockito/internal/MockHandler.java,"{81, 20, 77}",0
+1,src/org/mockito/internal/MockitoCore.java,"{74, 23}",0
+2,src/org/mockito/internal/MockHandler.java,"{20, 76, 79}",1
+3,src/org/mockito/internal/MockitoCore.java,"{73, 23}",1

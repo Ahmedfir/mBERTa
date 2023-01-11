@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/main/java/com/fasterxml/jackson/databind/introspect/POJOPropertiesCollector.java,"{7, 732, 733, 734, 735}",0
+1,src/main/java/com/fasterxml/jackson/databind/introspect/POJOPropertyBuilder.java,"{683, 644}",0
+2,src/main/java/com/fasterxml/jackson/databind/introspect/POJOPropertiesCollector.java,"{731, 7}",1
+3,src/main/java/com/fasterxml/jackson/databind/introspect/POJOPropertyBuilder.java,"{683, 644}",1

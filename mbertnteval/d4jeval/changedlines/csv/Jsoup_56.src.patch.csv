@@ -1,0 +1,11 @@
+index,file,lines,version
+0,src/main/java/org/jsoup/nodes/DocumentType.java,"{32, 33, 34, 71, 72, 74, 45, 46, 15, 48, 49, 50, 51, 52, 53, 54}",0
+1,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,{23},0
+2,src/main/java/org/jsoup/parser/Token.java,"{35, 47, 58, 59, 60}",0
+3,src/main/java/org/jsoup/parser/TokeniserState.java,"{1195, 1198}",0
+4,src/main/java/org/jsoup/parser/XmlTreeBuilder.java,{100},0
+5,src/main/java/org/jsoup/nodes/DocumentType.java,"{39, 40, 15, 56, 57, 29}",1
+6,src/main/java/org/jsoup/parser/HtmlTreeBuilderState.java,{23},1
+7,src/main/java/org/jsoup/parser/Token.java,"{56, 35, 46}",1
+8,src/main/java/org/jsoup/parser/TokeniserState.java,"{1195, 1197}",1
+9,src/main/java/org/jsoup/parser/XmlTreeBuilder.java,{100},1

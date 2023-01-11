@@ -1,0 +1,7 @@
+index,file,lines,version
+0,src/main/java/com/fasterxml/jackson/core/base/ParserMinimalBase.java,"{392, 393, 394, 403, 404, 405}",0
+1,src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java,"{269, 270, 271, 253, 254, 255}",0
+2,src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java,"{322, 323, 324, 305, 306, 307}",0
+3,src/main/java/com/fasterxml/jackson/core/base/ParserMinimalBase.java,"{392, 400}",1
+4,src/main/java/com/fasterxml/jackson/core/json/ReaderBasedJsonParser.java,"{266, 253}",1
+5,src/main/java/com/fasterxml/jackson/core/json/UTF8StreamJsonParser.java,"{305, 319}",1

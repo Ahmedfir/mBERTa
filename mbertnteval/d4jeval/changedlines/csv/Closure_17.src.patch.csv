@@ -1,0 +1,3 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/TypedScopeCreator.java,"{1291, 1292, 1294, 1295, 1296}",0
+1,src/com/google/javascript/jscomp/TypedScopeCreator.java,"{1291, 1293}",1

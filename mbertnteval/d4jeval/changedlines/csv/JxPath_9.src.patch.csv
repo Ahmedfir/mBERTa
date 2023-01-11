@@ -1,0 +1,7 @@
+index,file,lines,version
+0,src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationCompare.java,"{130, 139, 141, 142, 143, 144, 145, 146, 148, 149, 150, 152, 153, 155, 156, 157, 158, 160, 37, 40, 41, 43, 45, 46, 48, 49}",0
+1,src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationEqual.java,"{18, 30}",0
+2,src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationNotEqual.java,"{18, 28, 30}",0
+3,src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationCompare.java,"{134, 135, 136, 138, 140, 141, 142, 144, 145, 146, 148, 37, 39, 40, 121, 122, 123, 124, 125}",1
+4,src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationEqual.java,"{32, 33, 34, 19}",1
+5,src/java/org/apache/commons/jxpath/ri/compiler/CoreOperationNotEqual.java,"{32, 33, 34, 19, 29}",1

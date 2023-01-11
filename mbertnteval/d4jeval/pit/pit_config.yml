@@ -1,0 +1,18 @@
+---
+  java:
+      # path to your jdks 7 and 8
+    home7: ~/envlib/jdk1.7.0_80
+    home8: ~/envlib/jdk1.8.0_333
+  defects4j:
+    # path to where you installed d4j
+    containing_dir: ~/envlib/
+    # adapt this if needed to point to
+    fix_commit_changes_dir: ~/PycharmProjects/mBERTa/mbertnteval/d4jeval/changedlines/csv
+  tmp_large_memory:
+    d4jRepos:  ~/PycharmProjects/mBERTa/tmp/d4j_projects
+  pit_jar: ~/PycharmProjects/mBERTa/mbertnteval/pit/pitest-command-line-1.0.0-SNAPSHOT-jar-with-dependencies.jar
+  exec:
+    force_reload: False
+    threads: 8
+  output_dir: ~/PycharmProjects/mBERTa/d4j/output-pit
+...

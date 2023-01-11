@@ -1,0 +1,3 @@
+index,file,lines,version
+0,src/main/java/com/fasterxml/jackson/databind/node/TreeTraversingParser.java,"{308, 309, 310, 317, 318, 319}",0
+1,src/main/java/com/fasterxml/jackson/databind/node/TreeTraversingParser.java,"{314, 308}",1

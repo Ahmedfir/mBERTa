@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/java/org/apache/commons/codec/binary/Base64.java,{418},0
+1,src/java/org/apache/commons/codec/binary/Base64InputStream.java,{168},0
+2,src/java/org/apache/commons/codec/binary/Base64.java,"{419, 420, 421, 422, 423, 424, 425}",1
+3,src/java/org/apache/commons/codec/binary/Base64InputStream.java,"{169, 170, 171}",1

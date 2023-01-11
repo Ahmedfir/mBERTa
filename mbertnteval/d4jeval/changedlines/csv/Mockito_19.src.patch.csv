@@ -1,0 +1,11 @@
+index,file,lines,version
+0,src/org/mockito/internal/configuration/injection/PropertyAndSetterInjection.java,{114},0
+1,src/org/mockito/internal/configuration/injection/filter/FinalMockCandidateFilter.java,"{24, 13}",0
+2,src/org/mockito/internal/configuration/injection/filter/MockCandidateFilter.java,"{16, 9}",0
+3,src/org/mockito/internal/configuration/injection/filter/NameBasedCandidateFilter.java,"{42, 43, 44, 46, 47, 48, 49, 51, 52, 53, 54, 23, 55, 57, 56, 59, 31}",0
+4,src/org/mockito/internal/configuration/injection/filter/TypeBasedCandidateFilter.java,"{20, 28}",0
+5,src/org/mockito/internal/configuration/injection/PropertyAndSetterInjection.java,{114},1
+6,src/org/mockito/internal/configuration/injection/filter/FinalMockCandidateFilter.java,"{13, 23}",1
+7,src/org/mockito/internal/configuration/injection/filter/MockCandidateFilter.java,"{9, 15}",1
+8,src/org/mockito/internal/configuration/injection/filter/NameBasedCandidateFilter.java,"{42, 43, 23, 31}",1
+9,src/org/mockito/internal/configuration/injection/filter/TypeBasedCandidateFilter.java,"{20, 28}",1

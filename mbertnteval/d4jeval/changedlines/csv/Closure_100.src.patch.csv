@@ -1,0 +1,3 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/CheckGlobalThis.java,"{99, 100, 101, 102, 103, 104, 105, 153}",0
+1,src/com/google/javascript/jscomp/CheckGlobalThis.java,"{146, 99}",1

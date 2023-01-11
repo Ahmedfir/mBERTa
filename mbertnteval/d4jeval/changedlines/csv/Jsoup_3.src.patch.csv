@@ -1,0 +1,7 @@
+index,file,lines,version
+0,src/main/java/org/jsoup/nodes/Element.java,"{314, 270, 287}",0
+1,src/main/java/org/jsoup/parser/Parser.java,"{259, 260, 230, 74, 75, 76, 77, 78, 266, 26}",0
+2,src/main/java/org/jsoup/parser/Tag.java,"{388, 389, 390, 391, 392, 28, 158, 159, 160, 163, 164, 166, 297, 298, 304, 309, 310, 316, 317, 318, 319, 320, 321, 322, 323, 324, 100, 101, 233, 234}",0
+3,src/main/java/org/jsoup/nodes/Element.java,"{314, 270, 287}",1
+4,src/main/java/org/jsoup/parser/Parser.java,"{224, 258, 73, 26, 253}",1
+5,src/main/java/org/jsoup/parser/Tag.java,"{155, 28, 157, 158, 288, 289, 295, 300, 301, 307, 308, 309, 310, 311, 312, 313, 314, 315, 224, 225, 99, 379}",1

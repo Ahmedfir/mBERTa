@@ -1,0 +1,11 @@
+index,file,lines,version
+0,src/main/java/com/fasterxml/jackson/databind/JavaType.java,{302},0
+1,src/main/java/com/fasterxml/jackson/databind/ser/BeanSerializerFactory.java,{163},0
+2,src/main/java/com/fasterxml/jackson/databind/ser/std/BeanSerializerBase.java,"{370, 371}",0
+3,src/main/java/com/fasterxml/jackson/databind/ser/std/StdDelegatingSerializer.java,"{128, 129, 130, 131, 276, 277, 278, 280, 281, 165, 166, 167, 168, 169, 180, 181, 182, 183, 184, 192, 193, 194, 202, 203, 204, 242, 243, 244, 121, 123}",0
+4,src/main/java/com/fasterxml/jackson/databind/ser/std/StdSerializer.java,{262},0
+5,src/main/java/com/fasterxml/jackson/databind/JavaType.java,{302},1
+6,src/main/java/com/fasterxml/jackson/databind/ser/BeanSerializerFactory.java,{163},1
+7,src/main/java/com/fasterxml/jackson/databind/ser/std/BeanSerializerBase.java,{370},1
+8,src/main/java/com/fasterxml/jackson/databind/ser/std/StdDelegatingSerializer.java,"{224, 161, 256, 257, 172, 180, 121, 122, 187, 126, 127}",1
+9,src/main/java/com/fasterxml/jackson/databind/ser/std/StdSerializer.java,{262},1

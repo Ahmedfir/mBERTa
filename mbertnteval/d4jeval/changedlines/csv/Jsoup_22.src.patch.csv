@@ -1,0 +1,7 @@
+index,file,lines,version
+0,src/main/java/org/jsoup/nodes/Element.java,"{454, 434, 435, 437, 438, 439, 440, 441, 442, 470}",0
+1,src/main/java/org/jsoup/nodes/Node.java,"{448, 449, 450, 451, 452, 447, 444, 477, 478, 445}",0
+2,src/main/java/org/jsoup/select/Elements.java,"{24, 22, 23}",0
+3,src/main/java/org/jsoup/nodes/Element.java,"{434, 435, 462, 447}",1
+4,src/main/java/org/jsoup/nodes/Node.java,"{444, 445, 470}",1
+5,src/main/java/org/jsoup/select/Elements.java,{22},1

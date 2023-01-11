@@ -1,0 +1,7 @@
+index,file,lines,version
+0,src/main/java/com/fasterxml/jackson/core/base/GeneratorBase.java,"{441, 435, 53, 438, 439, 440, 437, 442, 443, 444}",0
+1,src/main/java/com/fasterxml/jackson/core/json/UTF8JsonGenerator.java,{910},0
+2,src/main/java/com/fasterxml/jackson/core/json/WriterBasedJsonGenerator.java,{687},0
+3,src/main/java/com/fasterxml/jackson/core/base/GeneratorBase.java,"{434, 435, 53}",1
+4,src/main/java/com/fasterxml/jackson/core/json/UTF8JsonGenerator.java,"{912, 913, 910, 911}",1
+5,src/main/java/com/fasterxml/jackson/core/json/WriterBasedJsonGenerator.java,"{688, 689, 690, 687}",1

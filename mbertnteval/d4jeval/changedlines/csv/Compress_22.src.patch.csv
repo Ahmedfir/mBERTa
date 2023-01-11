@@ -1,0 +1,3 @@
+index,file,lines,version
+0,src/main/java/org/apache/commons/compress/compressors/bzip2/BZip2CompressorInputStream.java,"{224, 930, 66, 196, 133, 902, 202, 844, 208, 211, 217, 220, 861}",0
+1,src/main/java/org/apache/commons/compress/compressors/bzip2/BZip2CompressorInputStream.java,"{226, 67, 227, 199, 135, 232, 871, 205, 942, 913, 211, 212, 853, 215, 216, 222, 223}",1

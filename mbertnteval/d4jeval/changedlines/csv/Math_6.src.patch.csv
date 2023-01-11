@@ -1,0 +1,15 @@
+index,file,lines,version
+0,src/main/java/org/apache/commons/math3/optim/BaseOptimizer.java,{51},0
+1,src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/gradient/NonLinearConjugateGradientOptimizer.java,"{216, 276, 213, 222}",0
+2,src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/CMAESOptimizer.java,{388},0
+3,src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/PowellOptimizer.java,"{192, 226, 190}",0
+4,src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizer.java,"{158, 175}",0
+5,src/main/java/org/apache/commons/math3/optim/nonlinear/vector/jacobian/GaussNewtonOptimizer.java,"{105, 107, 159}",0
+6,src/main/java/org/apache/commons/math3/optim/nonlinear/vector/jacobian/LevenbergMarquardtOptimizer.java,"{321, 324, 489}",0
+7,src/main/java/org/apache/commons/math3/optim/BaseOptimizer.java,{51},1
+8,src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/gradient/NonLinearConjugateGradientOptimizer.java,"{217, 277, 214, 223}",1
+9,src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/CMAESOptimizer.java,{388},1
+10,src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/PowellOptimizer.java,"{193, 227, 191}",1
+11,src/main/java/org/apache/commons/math3/optim/nonlinear/scalar/noderiv/SimplexOptimizer.java,"{158, 175}",1
+12,src/main/java/org/apache/commons/math3/optim/nonlinear/vector/jacobian/GaussNewtonOptimizer.java,"{160, 106, 108}",1
+13,src/main/java/org/apache/commons/math3/optim/nonlinear/vector/jacobian/LevenbergMarquardtOptimizer.java,"{489, 322, 325}",1

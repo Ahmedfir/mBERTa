@@ -1,0 +1,9 @@
+index,file,lines,version
+0,src/main/java/com/fasterxml/jackson/databind/JavaType.java,"{140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151}",0
+1,src/main/java/com/fasterxml/jackson/databind/type/CollectionLikeType.java,"{136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147}",0
+2,src/main/java/com/fasterxml/jackson/databind/type/MapLikeType.java,"{148, 149, 150, 151, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169}",0
+3,src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java,{428},0
+4,src/main/java/com/fasterxml/jackson/databind/JavaType.java,{140},1
+5,src/main/java/com/fasterxml/jackson/databind/type/CollectionLikeType.java,{136},1
+6,src/main/java/com/fasterxml/jackson/databind/type/MapLikeType.java,"{148, 149}",1
+7,src/main/java/com/fasterxml/jackson/databind/type/TypeFactory.java,{428},1

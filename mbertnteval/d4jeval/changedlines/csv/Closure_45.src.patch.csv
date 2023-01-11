@@ -1,0 +1,3 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/RemoveUnusedVars.java,"{740, 741, 742, 745, 908, 732}",0
+1,src/com/google/javascript/jscomp/RemoveUnusedVars.java,"{904, 739, 732, 741}",1

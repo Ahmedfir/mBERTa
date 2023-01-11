@@ -1,0 +1,3 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/Compiler.java,"{281, 276, 268, 277}",0
+1,src/com/google/javascript/jscomp/Compiler.java,"{268, 275, 276, 277, 281}",1

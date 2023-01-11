@@ -1,0 +1,3 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/ExploitAssigns.java,"{213, 215}",0
+1,src/com/google/javascript/jscomp/ExploitAssigns.java,"{213, 214}",1

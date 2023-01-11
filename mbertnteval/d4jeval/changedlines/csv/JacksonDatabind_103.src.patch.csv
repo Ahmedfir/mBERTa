@@ -1,0 +1,33 @@
+index,file,lines,version
+0,src/main/java/com/fasterxml/jackson/databind/DatabindContext.java,{195},0
+1,src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java,"{714, 1603}",0
+2,src/main/java/com/fasterxml/jackson/databind/JsonMappingException.java,"{10, 340, 381}",0
+3,src/main/java/com/fasterxml/jackson/databind/SerializerProvider.java,"{1361, 1341}",0
+4,src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java,{1589},0
+5,src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerFactory.java,"{281, 222}",0
+6,src/main/java/com/fasterxml/jackson/databind/deser/DeserializerCache.java,{268},0
+7,src/main/java/com/fasterxml/jackson/databind/deser/SettableAnyProperty.java,"{202, 214}",0
+8,src/main/java/com/fasterxml/jackson/databind/deser/SettableBeanProperty.java,"{611, 590}",0
+9,src/main/java/com/fasterxml/jackson/databind/deser/std/StdDeserializer.java,{526},0
+10,src/main/java/com/fasterxml/jackson/databind/deser/std/StdKeyDeserializer.java,"{262, 135}",0
+11,src/main/java/com/fasterxml/jackson/databind/deser/std/StdValueInstantiator.java,{456},0
+12,src/main/java/com/fasterxml/jackson/databind/introspect/BasicBeanDescription.java,{364},0
+13,src/main/java/com/fasterxml/jackson/databind/ser/DefaultSerializerProvider.java,"{505, 171}",0
+14,src/main/java/com/fasterxml/jackson/databind/ser/PropertyBuilder.java,"{105, 103}",0
+15,src/main/java/com/fasterxml/jackson/databind/util/ClassUtil.java,"{10, 753, 754, 755, 756, 757, 758}",0
+16,src/main/java/com/fasterxml/jackson/databind/DatabindContext.java,{195},1
+17,src/main/java/com/fasterxml/jackson/databind/DeserializationContext.java,"{714, 1603}",1
+18,src/main/java/com/fasterxml/jackson/databind/JsonMappingException.java,"{10, 339, 380}",1
+19,src/main/java/com/fasterxml/jackson/databind/SerializerProvider.java,"{1361, 1341}",1
+20,src/main/java/com/fasterxml/jackson/databind/deser/BasicDeserializerFactory.java,{1589},1
+21,src/main/java/com/fasterxml/jackson/databind/deser/BeanDeserializerFactory.java,"{281, 222}",1
+22,src/main/java/com/fasterxml/jackson/databind/deser/DeserializerCache.java,{268},1
+23,src/main/java/com/fasterxml/jackson/databind/deser/SettableAnyProperty.java,"{202, 214}",1
+24,src/main/java/com/fasterxml/jackson/databind/deser/SettableBeanProperty.java,"{611, 590}",1
+25,src/main/java/com/fasterxml/jackson/databind/deser/std/StdDeserializer.java,{526},1
+26,src/main/java/com/fasterxml/jackson/databind/deser/std/StdKeyDeserializer.java,"{262, 135}",1
+27,src/main/java/com/fasterxml/jackson/databind/deser/std/StdValueInstantiator.java,{456},1
+28,src/main/java/com/fasterxml/jackson/databind/introspect/BasicBeanDescription.java,{364},1
+29,src/main/java/com/fasterxml/jackson/databind/ser/DefaultSerializerProvider.java,"{505, 171}",1
+30,src/main/java/com/fasterxml/jackson/databind/ser/PropertyBuilder.java,"{105, 103}",1
+31,src/main/java/com/fasterxml/jackson/databind/util/ClassUtil.java,"{752, 10}",1

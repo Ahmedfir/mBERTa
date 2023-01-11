@@ -1,0 +1,7 @@
+index,file,lines,version
+0,src/main/java/org/apache/commons/cli/HelpFormatter.java,"{656, 653}",0
+1,src/main/java/org/apache/commons/cli/Option.java,{57},0
+2,src/main/java/org/apache/commons/cli/OptionBuilder.java,{80},0
+3,src/main/java/org/apache/commons/cli/HelpFormatter.java,"{656, 653}",1
+4,src/main/java/org/apache/commons/cli/Option.java,{57},1
+5,src/main/java/org/apache/commons/cli/OptionBuilder.java,{80},1

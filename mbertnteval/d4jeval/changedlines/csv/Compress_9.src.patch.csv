@@ -1,0 +1,3 @@
+index,file,lines,version
+0,src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java,"{108, 109, 110, 111, 112, 114, 115, 116, 117, 338}",0
+1,src/main/java/org/apache/commons/compress/archivers/tar/TarArchiveOutputStream.java,"{330, 108, 109}",1

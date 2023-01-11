@@ -1,0 +1,5 @@
+index,file,lines,version
+0,src/main/java/org/jsoup/parser/HtmlTreeBuilder.java,"{227, 228, 230, 231}",0
+1,src/main/java/org/jsoup/parser/Tokeniser.java,"{42, 35, 116, 70}",0
+2,src/main/java/org/jsoup/parser/HtmlTreeBuilder.java,"{232, 227, 229, 231}",1
+3,src/main/java/org/jsoup/parser/Tokeniser.java,"{36, 44, 45, 46, 47, 76, 77, 124, 125, 126}",1

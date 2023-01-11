@@ -1,0 +1,9 @@
+index,file,lines,version
+0,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,"{518, 689, 690, 691, 692, 693, 694, 695, 696, 697, 698, 159}",0
+1,src/com/google/javascript/jscomp/CommandLineRunner.java,{470},0
+2,src/com/google/javascript/jscomp/Compiler.java,"{1362, 1363}",0
+3,src/com/google/javascript/jscomp/CompilerOptions.java,"{960, 961, 962, 588}",0
+4,src/com/google/javascript/jscomp/AbstractCommandLineRunner.java,"{518, 519, 520, 521, 522, 693, 159}",1
+5,src/com/google/javascript/jscomp/CommandLineRunner.java,{471},1
+6,src/com/google/javascript/jscomp/Compiler.java,{1362},1
+7,src/com/google/javascript/jscomp/CompilerOptions.java,"{960, 588}",1
