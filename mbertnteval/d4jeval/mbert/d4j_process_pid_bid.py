@@ -6,6 +6,7 @@ import pandas as pd
 from codebertnt.locs_request import BusinessFileRequest
 from mbertnteval.d4jeval.d4j_project import D4jProject
 from mbertnteval.d4jeval.mbert.d4j_mbert_request import D4jRequest
+from mbertnteval.d4jeval.yaml_utils import load_config
 
 
 def get_args():
@@ -19,17 +20,6 @@ def get_args():
         parser.print_help()
         raise AttributeError
     return args
-
-
-def load_config(config_file: str):
-    # import pyyaml module
-    import yaml
-    from yaml.loader import SafeLoader
-
-    # Open the file and load the file
-    with open(config_file) as f:
-        data = yaml.load(f, Loader=SafeLoader)
-        return data
 
 
 def create_mbert_request(project: D4jProject, csv_path: str,
