@@ -13,6 +13,18 @@ log.setLevel(logging.INFO)
 log.addHandler(logging.StreamHandler(sys.stdout))
 
 
+def adapt_tests(x):
+    return x.replace('::', '.').replace(
+        "'", "").replace("[", '').replace(']', '')
+
+
+def string_to_array(x, test_splitter=','):
+    tests = [] if not x or x is None or x == 'nan' or x == ['nan'] or x == "['nan']" or len(x) == 0 else adapt_tests(
+        x).split(
+        test_splitter)
+    return [t.strip() for t in tests if t is not None and len(t.strip()) > 0]
+
+
 class D4jProject(MbertProject):
     def __init__(self, d4j_path, repos_path, pid, bid, jdk8, jdk7=None, version='f'):
         super(D4jProject, self).__init__(None, None, None, None, repos_path)

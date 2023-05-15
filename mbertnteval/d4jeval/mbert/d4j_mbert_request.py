@@ -9,8 +9,8 @@ from typing import List
 from tqdm import tqdm
 
 from cb.replacement_mutants import ReplacementMutant, TESTS_TIME_OUT_RESULT
-from mbertnteval.d4jeval.d4j_project import D4jProject
 from mbertntcall.mbert_ext_request_impl import MbertRequestImpl
+from mbertnteval.d4jeval.d4j_project import D4jProject
 from mbertnteval.sim_utils import calc_ochiai
 from utils.file_read_write import write_csv_row
 
@@ -46,7 +46,8 @@ def process_mutant(mutant: ReplacementMutant, repo_path, projects: List[D4jProje
     # lock the csv file to print to it
     with output_csv_lock:
         # print line to csv
-        write_csv_row(mutants_csv_file, [mutant.id, mutant.compilable, mutant.broken_tests, ochiai, is_coupled])
+        # write_csv_row(mutants_csv_file, [mutant.id, mutant.compilable, mutant.broken_tests, ochiai, is_coupled])
+        write_csv_row(mutants_csv_file, mutant.to_csv_line(ochiai, is_coupled))
         # unlock the csv file
 
 
@@ -72,7 +73,8 @@ class D4jRequest(MbertRequestImpl):
                 log.error('could not checkout project {0}'.format(p), e)
                 break
 
-    def process_mutants(self, mutants: List[ReplacementMutant], mutant_classes_output_dir=None, patch_diff=False, java_file=False):
+    def process_mutants(self, mutants: List[ReplacementMutant], mutant_classes_output_dir=None, patch_diff=False,
+                        java_file=False):
         self.projects = [self.project]
         if len(mutants) > self.max_processes_number:
             # create copies of the repo to parallellise the mutants processing.
@@ -96,7 +98,8 @@ class D4jRequest(MbertRequestImpl):
                 futures = {
                     executor.submit(process_mutant, mutant, self.repo_path, self.projects, self.mutants_csv_file,
                                     output_csv_lock,
-                                    broken_tests_orig_bug, mutant_classes_output_dir, patch_diff, java_file): mutant.id for mutant in mutants}
+                                    broken_tests_orig_bug, mutant_classes_output_dir, patch_diff, java_file): mutant.id
+                    for mutant in mutants}
                 for future in concurrent.futures.as_completed(futures):
                     kwargs = {
                         'total': len(futures),
