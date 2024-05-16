@@ -184,7 +184,8 @@ class ApMcListFileLocations(BaseModel):
                 return sorted(list(intersection))[0]
         return sorted(mutant_ids)[0]
 
-    def to_mutants(self, proj_bug_id, version, no_duplicates=True, executed_mutants_ids: List[int] = None) -> DataFrame:
+    def to_mutants(self, proj_bug_id, version, no_duplicates=True,
+                   executed_mutants_ids: List[int] = None) -> DataFrame:
         return pd.DataFrame(
             [vars(Mutant(proj_bug_id, mutant.id, mutant.cosine, mutant.rank, version, mutant.match_org, mutant.score,
                          fileP.javaFile.path, '', '', maskedPredicates.lineNumber,
@@ -197,9 +198,17 @@ class ApMcListFileLocations(BaseModel):
              for maskedPredicates in fileP.allMaskedPredicates
              for m in maskedPredicates.get_unique_preds().keys()
              for predictions_list in maskedPredicates.predictions.values()
-             for mutant in predictions_list.__root__ if not no_duplicates or
-             (mutant.id == self.get_executed_or_first(maskedPredicates.get_unique_preds()[m], executed_mutants_ids))
+             for mutant in self.get_exec_or_1st_no_dupl(predictions_list, maskedPredicates.get_unique_preds()[m],
+                                                        executed_mutants_ids, no_duplicates=no_duplicates)
              ])
+
+    def get_exec_or_1st_no_dupl(self, predictions_list, unique_preds, executed_ids, no_duplicates=True):
+        res = []
+        for mutant in predictions_list.__root__:
+            is_duplicate = (mutant.id != self.get_executed_or_first(unique_preds, executed_ids))
+            if not no_duplicates or not is_duplicate:
+                res.append(mutant)
+        return res
 
     def get_mutant_by_id(self, include):
         if include is None:
@@ -240,6 +249,16 @@ class ApMcListFileLocations(BaseModel):
                 result.append(FileReplacementMutants(fileP.javaFile.path, mutants))
 
         return result
+
+    def count_predictions(self) -> DataFrame:
+
+        tuples = [(fileP.javaFile.path, len(fileP.allMaskedPredicates), len(maskedPredicates.unique_predictions),
+                   sum(len(v) for v in maskedPredicates.unique_predictions.values()))
+
+                  for fileP in self.fileRequests
+                  for maskedPredicates in fileP.allMaskedPredicates]
+        df = pd.DataFrame(tuples, columns=['file','masked_preds','uniq_preds','all_preds'])
+        return df
 
 
 def predict_ap_mc_locs(sc_json_file: str, cbm: CodeBertMlmFillMask = None, start_mutant_id=0, max_size=MAX_TOKENS):
