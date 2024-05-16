@@ -3,6 +3,12 @@ command-line jar build with dependencies form:
 * https://github.com/hcoles/pitest.git
 * master branch
 * revision: 17e1eecf
+ 
+# Pit-hom : Pit 1.9.8 
+command-line jar build with dependencies form:
+* https://github.com/ucd-csl/pitest.git
+* master branch
+* revision: 777886ea
 
 # Pit-rv : Pit 1.7.4
 command-line jar build with dependencies form:

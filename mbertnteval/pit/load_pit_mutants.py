@@ -56,8 +56,10 @@ class DetectionStatus(Enum):
 
 class PitMutant:
 
-    def __init__(self, detected: bool, status: DetectionStatus, sourceFile: str, mutatedClass: str, mutatedMethod: str,
-                 lineNumber: int, mutator: str, killingTests: List[str]):
+    def __init__(self, id: int, detected: bool, status: DetectionStatus, sourceFile: str, mutatedClass: str,
+                 mutatedMethod: str, lineNumber: int, mutator: str, killingTests: List[str], description: str,
+                 block: List[int], indexes: List[int]):
+        self.id: int = id  # this corresponds to the mutant output order in the xml file.
         self.detected = detected
         self.status = status
         self.sourceFile = sourceFile
@@ -66,6 +68,9 @@ class PitMutant:
         self.lineNumber = lineNumber
         self.mutator = mutator
         self.killingTests = killingTests
+        self.description = description
+        self.block: List[int] = block
+        self.indexes: List[int] = indexes
 
 
 def parse_xml_file(containing_dir, xml_file_name=PIT_XML_FILE_NAME, output_file='mutants.pickle', force_reload=False) -> \
@@ -88,15 +93,18 @@ def parse_xml_file(containing_dir, xml_file_name=PIT_XML_FILE_NAME, output_file=
         assert isfile(xml_file) and getsize(xml_file) > 0
         tree = ET.parse(xml_file)
 
-        res = [PitMutant(mutant_xml.attrib['detected'] == 'true',
+        res = [PitMutant(i, mutant_xml.attrib['detected'] == 'true',
                          DetectionStatus(mutant_xml.attrib['status']),
                          mutant_xml.find('sourceFile').text,
                          mutant_xml.find('mutatedClass').text,
                          mutant_xml.find('mutatedMethod').text,
                          int(mutant_xml.find('lineNumber').text),
                          mutant_xml.find('mutator').text,
-                         split_tests(mutant_xml.find('killingTests').text))
-               for mutant_xml in tree.getroot().findall('mutation')]
+                         split_tests(mutant_xml.find('killingTests').text),
+                         mutant_xml.find('description').text,
+                         [int(b.text) for blocks_xml in mutant_xml.findall('blocks') for b in blocks_xml.findall('block')],
+                         [int(b.text) for blocks_xml in mutant_xml.findall('indexes') for b in blocks_xml.findall('index')])
+               for i, mutant_xml in enumerate(tree.getroot().findall('mutation'))]
 
         pickle_utils.save_zipped_pickle(res, output_file)
     else:
@@ -127,7 +135,16 @@ def parse_default_mutants_from_all_mutants_xml_file(containing_dir, pit_default_
         default_mutants = [m for m in all_mutants if m.mutator.split('.')[-1] in pit_default_mutators]
         pickle_utils.save_zipped_pickle(default_mutants, output_file)
     else:
-        default_mutants = pickle_utils.load_zipped_pickle(output_file)
+        try:
+            default_mutants = pickle_utils.load_zipped_pickle(output_file)
+        except BaseException:
+            print('issue in loading pickle {0}'.format(output_file))
+            os.remove(output_file)
+            default_mutants = parse_default_mutants_from_all_mutants_xml_file(containing_dir, pit_default_mutators,
+                                                                              xml_file_name=xml_file_name,
+                                                                              all_output_file=all_output_file,
+                                                                              output_file=output_file,
+                                                                              force_reload=force_reload)
     return default_mutants
 
 
@@ -153,27 +170,40 @@ class PitResults:
         else:
             return None
 
-    def get_mutants(self):
+    def get_mutants(self, force_reload=False):
         xml_dir = self.get_results_dir()
         if xml_dir is not None:
             if self.mutators == PitMutators.ALL:
-                return parse_xml_file(xml_dir, output_file=join(self.pickle_dir, self.project_name + '_pit.pickle'))
+                return parse_xml_file(xml_dir, output_file=join(self.pickle_dir, self.project_name + '_pit.pickle'),
+                                      force_reload=force_reload)
             elif self.mutators == PitMutators.DEF:
                 all_output_file = join(self.pickle_dir, self.project_name + '_pit.pickle')
                 default_output_file = join(self.pickle_dir, self.project_name + '_pit_def.pickle')
 
                 return parse_default_mutants_from_all_mutants_xml_file(xml_dir, PIT_DEFAULT_MUTATORS[self.version],
                                                                        all_output_file=all_output_file,
-                                                                       output_file=default_output_file)
+                                                                       output_file=default_output_file,
+                                                                       force_reload=force_reload)
         else:
             return None
 
-    def get_mutants_df(self):
-        mutants = self.get_mutants()
+    def get_mutants_df(self, filter_ids=[], force_reload=False):
+        mutants = self.get_mutants(force_reload=force_reload)
         if mutants is not None and len(mutants) > 0:
             import pandas as pd
-            mutants_df = pd.DataFrame([vars(m) for m in mutants])
+            if filter_ids:
+                mutants_df = pd.DataFrame([vars(m) for m in mutants if m.id in filter_ids])
+            else:
+                mutants_df = pd.DataFrame([vars(m) for m in mutants])
+
             mutants_df['proj_bug_id'] = self.project_name
             return mutants_df
         else:
             return None
+
+
+class HomPitResults(PitResults):
+
+    def __init__(self, first_order_res: PitResults, *args, **kargs):
+        super(HomPitResults, self).__init__(*args, **kargs)
+        self.first_order_res = first_order_res

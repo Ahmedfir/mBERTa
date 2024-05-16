@@ -14,7 +14,8 @@ PIT_RV_JAR = join(Path(__file__).parent, 'pitest-command-line-1.7.4-SNAPSHOT-jar
 
 
 def pit_generate_mutants(jdk_path, class_patch, source_dir, tests_dir, target_classes, target_tests,
-                         output_dir, pit_jar_path=PIT_JAR, threads=0, mutators='ALL', max_mut_per_class=5):
+                         output_dir, pit_jar_path=PIT_JAR, threads=0, mutators='ALL', max_mut_per_class=5,
+                         print_mutants=False, hom=0, output_format='XML'):
     '''
     example from the docs:
     java -cp <your classpath including pit jar and dependencies> \
@@ -40,10 +41,26 @@ def pit_generate_mutants(jdk_path, class_patch, source_dir, tests_dir, target_cl
           + " --sourceDirs '" + source_dir + ',' + tests_dir + "'" \
           + (" --threads " + str(threads) if threads > 0 else "") \
           + " --mutators " + mutators \
-          + " --maxMutationsPerClass " + str(max_mut_per_class) \
-          + " --outputFormats XML" \
-          + " --timestampedReports=false" \
-          + " --fullMutationMatrix=true"
+          + " --timestampedReports=false"
+    if 'HTML' != output_format:
+        cmd = cmd + " --outputFormats " + output_format \
+
+    if 'XML' == output_format:
+        cmd = cmd + " --fullMutationMatrix=true"
+
+    if hom > 0:
+        cmd = cmd + " --hom " + str(hom)
+
+    features = ""
+    if print_mutants:
+        features = " '--features=+EXPORT"
+    if max_mut_per_class > 0:
+        features = " '--features=" if len(features) == 0 else features + ","
+        features = features + "+CLASSLIMIT(limit[" + str(max_mut_per_class) + "])"
+
+    if features:
+        features = features + "'"
+        cmd = cmd + features
 
     log.debug('exec cmd >> ' + cmd)
 
