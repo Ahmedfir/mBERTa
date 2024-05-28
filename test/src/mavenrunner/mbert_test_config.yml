@@ -1,0 +1,32 @@
+---
+  maven: /usr/local/Cellar/maven/3.8.4
+  java:
+    # path to your jdks 7 and 8
+    home8: /Library/Java/JavaVirtualMachines/jdk1.8.0_341.jdk/Contents/Home/
+  defects4j:
+    # path to where you installed d4j
+    containing_dir: ~/envlib/
+    # adapt this if needed to point to
+    fix_commit_changes_dir: ~/PycharmProjects/mBERTa/mbertnteval/d4jeval/changedlines/csv
+  tmp_large_memory:
+    # where the d4j repositories will be cloned.
+    d4jRepos:  ~/PycharmProjects/mBERTa/tmp/d4j_projects
+  exec:
+    # set this to true if you want to execute a fresh rerun
+    force_reload: False
+    # number of mutants to be executed in parallel.
+    max_processes: 4
+    # number of processus to pass to pytorch to enhance prediction speed.
+    # Make sure to not exceed your maximum number of CPUs.
+    torch_processes: 8
+    # Keep this to true if you want to include all the business-logic lines of code.
+    all_lines: True
+    # Turn this to True if you want to remove the comments and javadoc before the mutation.
+    no_comments: False
+    # Turn this to True if you want to mask the full if conditions.
+    mask_full_if_conditions: False
+    # Turn this to True if you want to generate only simple mutants without the condition seeding ones.
+    simple_only: False
+  # this is where the results will be output.
+  output_dir:  ~/PycharmProjects/mBERTa/d4j/output-mbert
+...
