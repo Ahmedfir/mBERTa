@@ -54,3 +54,9 @@ class TestMvnProject(TestCase):
         project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk, mvn_home=self.dummy_dir_as_mvn)
         result = project.compile()
         self.assertTrue(result)
+
+    def test_test(self):
+        project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk,
+                             mvn_home=self.dummy_dir_as_mvn)
+        result = project.test()
+        self.assertEqual(set(), result)

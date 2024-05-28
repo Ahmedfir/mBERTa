@@ -4,11 +4,12 @@ from os import listdir, makedirs
 from os.path import join, isdir, isfile
 from pathlib import Path
 from subprocess import SubprocessError, TimeoutExpired, CompletedProcess
-from typing import List
+from typing import List, Tuple, Set
 from git import GitCommandError
 
 import pandas as pd
 
+from mavenrunner.tests_exec_parser import exec_res_to_broken_tests_arr, MvnFailingTest
 from mbertntcall.mbert_project import MbertProject
 from utils import file_read_write
 from utils.cmd_utils import safe_chdir, shell_call, DEFAULT_TIMEOUT_S
@@ -49,10 +50,12 @@ class MvnProject(MbertProject):
         self.rev_id = rev_id
         self.failing_tests = None
         self.lock = None
-        self.relevant_tests_exec_only_possible = True
+        self.relevant_tests_exec_only_possible = False
         self.source_dir = None
         self.bin_dir = None
         self.target_classes = None
+
+# todo add a maven preprocess mvn -v
 
     def cp(self, n):
         copy = super(MvnProject, self).cp(n)
@@ -142,16 +145,29 @@ class MvnProject(MbertProject):
         raise Exception('Not implemented yet!')
 
     def test_command(self, relevant_tests=True) -> str:
-        cmd = self.cmd_base() + " test"
+        # parallel=classes
+        # -Dtest=pkg.SomeTest#testMethod
+        # printSummary=false
+        # -Dtest=TestSquare,TestCi*le test
+
+        cmd = self.cmd_base() + " test -Dparallel=classes -DprintSummary=false"
         # todo implement this
         if self.relevant_tests_exec_only_possible and relevant_tests:
             cmd = cmd + " -r"
         return cmd
 
-    def test(self, timeout=DEFAULT_TIMEOUT_S, relevant_tests=True) -> List[str]:
+    def on_tests_run(self, test_exec_output) -> Set[MvnFailingTest]:
+        text = test_exec_output.stdout
+        if len(text) == 0:
+            text = test_exec_output.output
+        if len(text) == 0:
+            text = test_exec_output.stderr
+        return exec_res_to_broken_tests_arr(text)
+
+    def test(self, timeout=DEFAULT_TIMEOUT_S, relevant_tests=True) -> Tuple[List[str],str]:
         """test project"""
         with safe_chdir(self.repo_path):
-            log.debug('testing {0} in {1}'.format(self.pid_bid, self.repo_path))
+            log.debug('testing {0} in {1}'.format( self.repo_path, self.rev_id))
             cmd = self.test_command(relevant_tests)
             log.info('-- executing shell cmd = {0}'.format(cmd))
             try:
@@ -161,14 +177,8 @@ class MvnProject(MbertProject):
                 log.debug('timeout')
                 raise te
             except SubprocessError as e:
-                log.critical("compilation failed for {0}".format(self.pid_bid), e, exc_info=True)
-                raise e
-
-    def get_src_dir(self):
-        # todo
-        if self.source_dir is None:
-            self.source_dir = self.export_prop('dir.src.classes')
-        return self.source_dir
+                log.debug("tests exec failed for {0}".format(self.repo_path), e, exc_info=True)
+                return self.on_tests_run(e)
 
     def adapt_file_abs_path(self, file_path):
         if isinstance(file_path, str):
