@@ -80,9 +80,17 @@ So you will have to include them in your `$PYTHONPATH` i.e.:
   - if you just want to run the tool via shell (see the `gen_mutants.sh` script): 
   you need to add the dependencies to your `$PYTHONPATH`: `export path/to/cloned/commons:path/to/cloned/cbnt:path/to/cloned/CodeBERT-nt:$PYTHONPATH`
 
+### Maven projects
+
+- You can run μBERT on maven projects via `mavenrunner/mvn_mbert_runner.py` script. 
+The minimum required arguments are the `-repo_path` or the `-git_url` of your target project and the path to the config file via `-config`.
+- We give an example of config file in `mavenrunner/mbert_config.yml`, you will need to adapt it (or create your own) depending on your environment and requirements.
+- In addition to the features in the config, few more are in the `get_args()` method  in `mavenrunner/mvn_mbert_runner.py`.
+- Please don't hesitate to contact us or create a ticket, if you encounter any issue or need any extra support.
+
 ### mutants generation
 
-- You can run μBERT via `mbertntcall/mbert_generate_mutants_runner.py` script. 
+- If you want only to generate mutants, you can run the mutant generation phase of μBERT without compilation and test execution, via `mbertntcall/mbert_generate_mutants_runner.py` script. 
 The minimum required arguments are the project path and the target classes to mutate.
 i.e. `python3 mbert_generate_mutants_runner.py -repo_path path/to/your/project -target_classes path/to/class1,path/to/class2`.
 Please check the `get_args()` method for more information on other optional parameters, i.e. 

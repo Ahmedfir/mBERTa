@@ -8,6 +8,7 @@ from pathlib import Path
 from subprocess import SubprocessError, TimeoutExpired
 from typing import List
 
+from commentsremover.comments_remover import remove_comments_from_repo
 from utils.cmd_utils import safe_chdir, shell_call, DEFAULT_TIMEOUT_S
 
 log = logging.getLogger(__name__)
@@ -16,13 +17,26 @@ log.addHandler(logging.StreamHandler(sys.stdout))
 
 class MbertProject:
 
-    def __init__(self, repo_path, jdk_path, class_path, test_class_path, repos_path='/tmp_large_mem'):
+    def __init__(self, repo_path, jdk_path, class_path, test_class_path, repos_path='/tmp_large_mem',
+                 no_comments=False):
         self.repos_path = repos_path
         self.repo_path = repo_path
         self.jdk = jdk_path
         self.lock = None
         self.class_path = class_path
         self.test_class_path = test_class_path
+        self.no_comments = no_comments
+
+    def remove_comments_from_repo(self, check_compile=True,
+                                  vm_options="-Xms1024m -Xmx1024m -Xss512m"):
+
+        output = remove_comments_from_repo(self.repo_path, jdk=self.jdk, vm_options=vm_options)
+        log.info(output)
+        if check_compile:
+            return self.compile()
+        else:
+            log.warning("skipping compilation check after removing")
+            return True
 
     def __deepcopy__(self, memo):
         cls = self.__class__

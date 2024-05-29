@@ -1,0 +1,32 @@
+---
+  # path to maven: optional if you have it added to your env path.
+  maven: /usr/local/Cellar/maven/3.8.4
+  java:
+    # path to your JAVA_HOME. optional if you have JAVA_HOME in your path
+    home8: /Library/Java/JavaVirtualMachines/jdk1.8.0_341.jdk/Contents/Home/
+  tmp_large_memory:
+    # where the repository will be cloned.
+    repos_path:  ~/PycharmProjects/mBERTa/tmp/mvn_projects
+  exec:
+    # set this to true if you want to execute a fresh rerun
+    force_reload: False
+    # number of mutants to be executed in parallel.
+    max_processes: 4
+    # number of processus to pass to pytorch to enhance prediction speed.
+    # Make sure to not exceed your maximum number of CPUs.
+    torch_processes: 8
+    # Keep this to true if you want to include all the business-logic lines of code.
+    all_lines: True
+    # Turn this to True if you want to remove the comments and javadoc before the mutation.
+    no_comments: False
+    # Turn this to True if you want to mask the full if conditions.
+    mask_full_if_conditions: False
+    # Turn this to True if you want to generate only simple mutants without the condition seeding ones.
+    simple_only: False
+    # Turn this to true to remove the cloned repo on exit. This is useful when you are conducting a study on remote repositories.
+    # Make sure this is False if you are targeting a local repository.
+    # by default, if a -git_url is given, the clone will be removed in the end, otherwise not.
+    remove_project_on_exit:
+  # this is where the results will be output.
+  output_dir:  ~/PycharmProjects/mBERTa/tmp/output-mbert
+...

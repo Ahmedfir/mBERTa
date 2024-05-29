@@ -81,7 +81,8 @@ class MbertRequestImpl(MbertAdditivePatternsLocationsRequest):
                     p.set_lock(lock)
 
                 futures = {
-                    executor.submit(MbertRequestImpl.process_mutant, mutant, self.repo_path, self.projects, self.mutants_csv_file,
+                    executor.submit(MbertRequestImpl.process_mutant, mutant, self.repo_path, self.projects,
+                                    self.mutants_csv_file,
                                     output_csv_lock, mutant_classes_output_dir, patch_diff, java_file): mutant.id for
                     mutant in mutants}
                 for future in concurrent.futures.as_completed(futures):
@@ -109,6 +110,10 @@ class MbertRequestImpl(MbertAdditivePatternsLocationsRequest):
         super(MbertRequestImpl, self).on_exit(reason)
         if self.remove_project_on_exit:
             self.project.remove()
+        elif self.project.no_comments:
+            # Checkout the project newly without removing the commits.
+            self.project.no_comments = False
+            self.project.checkout()
         if self.projects is not None and len(self.projects) > 0:
             if not self.remove_project_on_exit and self.project in self.projects:
                 self.projects.remove(self.project)
