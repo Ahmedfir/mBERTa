@@ -3,7 +3,7 @@ from pathlib import Path
 from unittest import TestCase
 from utils.file_read_write import load_file
 
-from mavenrunner.tests_exec_parser import exec_res_to_broken_tests_arr, MvnFailingTest
+from mavenrunner.tests_exec_parser import exec_res_to_broken_tests_arr, MvnFailingTest, FailCategory
 
 
 class TestMvnProject(TestCase):
@@ -179,17 +179,17 @@ class TestMvnProject(TestCase):
 
     def test_exec_res_to_broken_tests_arr_fail(self):
         self.assertEqual({MvnFailingTest(method_name='parseStringToInt_int', class_name='example.DummyClassTest',
-                                         reason='expected:<4> but was:<1>'),
+                                         reason='expected:<4> but was:<1>', failing_category=FailCategory.Fail),
                           MvnFailingTest(method_name='addCalc', class_name='example.DummyClassTest',
-                                         reason='expected:<6> but was:<5>')},
+                                         reason='expected:<6> but was:<5>', failing_category=FailCategory.Fail)},
                          exec_res_to_broken_tests_arr(self.failing_tests_example))
 
     def test_exec_res_to_broken_tests_arr_fail_and_error(self):
         self.assertEqual({MvnFailingTest(method_name='parseStringToInt_int', class_name='example.DummyClassTest',
-                                         reason='expected:<4> but was:<1>'),
+                                         reason='expected:<4> but was:<1>', failing_category=FailCategory.Fail),
                           MvnFailingTest(method_name='addCalc', class_name='example.DummyClassTest',
-                                         reason='expected:<6> but was:<5>'),
+                                         reason='expected:<6> but was:<5>', failing_category=FailCategory.Fail),
                           MvnFailingTest(method_name='parseStringToInt_str', class_name='example.DummyClassTest',
-                                         reason=None)
+                                         reason=None, failing_category=FailCategory.Err)
                           },
                          exec_res_to_broken_tests_arr(self.failing_and_error_tests_example))

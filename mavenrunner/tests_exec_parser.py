@@ -1,6 +1,7 @@
 import logging
 import sys
-from typing import List, Any, Set
+from typing import List, Any, Set, Dict
+from enum import Enum
 
 from pydantic import BaseModel
 from ttp import ttp
@@ -10,19 +11,20 @@ log.setLevel(logging.INFO)
 log.addHandler(logging.StreamHandler(sys.stdout))
 
 
+class FailCategory(Enum):
+    Err = 0
+    Fail = 1
+    Ukn = 2
+
+
 class MvnFailingTest(BaseModel):
     method_name: str = None
     class_name: str = None
     reason: str = None
+    failing_category: FailCategory = None
 
     def is_invalid(self):
         return self.class_name is None or self.method_name is None
-
-    def is_error(self):
-        return self.reason is None
-
-    def is_failure(self):
-        return self.reason is not None
 
     def __eq__(self, other: Any) -> bool:
         if not isinstance(other, MvnFailingTest):
@@ -35,11 +37,12 @@ class MvnFailingTest(BaseModel):
         return hash((self.method_name, self.class_name, self.reason))
 
     @staticmethod
-    def get_template() -> List:
-        return ["""-Failed tests: {{ method_name }}({{ class_name }}): {{ reason | ORPHRASE }}""",
-                """-Tests in error: \n-  {{ method_name }}({{ class_name }})""",
-                """- {{ method_name }}({{ class_name }}): {{ reason | ORPHRASE }}""",
-                ]
+    def get_template() -> Dict[FailCategory, str]:
+        return {
+            FailCategory.Fail: """-Failed tests: {{ method_name }}({{ class_name }}): {{ reason | ORPHRASE }}""",
+            FailCategory.Err: """-Tests in error: \n-  {{ method_name }}({{ class_name }})""",
+            FailCategory.Ukn: """- {{ method_name }}({{ class_name }}): {{ reason | ORPHRASE }}"""
+            }
 
 
 class MvnFailingTestsArray(BaseModel):
@@ -94,10 +97,13 @@ def parse_to_json(data_to_parse, template) -> str:
 
 def parse_broken_tests(data_to_parse) -> Set[MvnFailingTest]:
     unique_broken_tests = set()
-    for template in MvnFailingTest.get_template():
-        results_str = parse_to_json(data_to_parse.replace('\n', '\n' + '-'), template)
+    tmplate_dict = MvnFailingTest.get_template()
+    for template_failing_category in tmplate_dict:
+        results_str = parse_to_json(data_to_parse.replace('\n', '\n' + '-'), tmplate_dict[template_failing_category])
         parsed = MvnFailingTestsArray.parse_raw(results_str)
         parsed.remove_invalid()
+        for p in parsed.__root__:
+            p.failing_category = template_failing_category
         unique_broken_tests.update(parsed.__root__)
     return unique_broken_tests
 
@@ -109,9 +115,7 @@ def exec_res_to_broken_tests_arr(data_to_parse) -> Set[MvnFailingTest]:
         raise Exception("0 tests run!")
     if exec_summary.fa > 0 or exec_summary.err > 0:
         unique_broken_tests = parse_broken_tests(data_to_parse)
-
-        if len({t for t in unique_broken_tests if t.is_error()}) != exec_summary.err\
-                or len({t for t in unique_broken_tests if t.is_failure()}) != exec_summary.fa:
+        if len(unique_broken_tests) != exec_summary.err + exec_summary.fa:
             log.critical(
                 "Wrong tests parsing! "
                 "Received different number of tests when parsing the results than parsing the failing tests!"
@@ -120,5 +124,19 @@ def exec_res_to_broken_tests_arr(data_to_parse) -> Set[MvnFailingTest]:
                 log.critical(t.json())
             log.critical(' --- instead of:\n{0}'.format(exec_summary.json()))
             raise Exception("Wrong tests parsing! Received different number of Errors and Failures!")
+
+        # just trying to add types for the unkown ones by checking whether we have all error and failing ones.
+        tests_with_unkown_failing = {t for t in unique_broken_tests if t.failing_category == FailCategory.Ukn}
+        if len(tests_with_unkown_failing) > 0:
+            # if all expected Fail tests have been categorised Fail, the rest is Err.
+            if exec_summary.fa == 0 or exec_summary.fa == len({t for t in unique_broken_tests if t.failing_category == FailCategory.Fail}):
+                for t in tests_with_unkown_failing:
+                    t.failing_category = FailCategory.Err
+            # if all expected Err tests have been categorised Err, the rest is Fail.
+            elif exec_summary.err == 0 or exec_summary.err == len(
+                    {t for t in unique_broken_tests if t.failing_category == FailCategory.Err}):
+                for t in tests_with_unkown_failing:
+                    t.failing_category = FailCategory.Fail
+
         return unique_broken_tests
     return set()
