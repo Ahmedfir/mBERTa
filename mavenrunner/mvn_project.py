@@ -3,15 +3,13 @@ import sys
 from os import listdir, makedirs
 from os.path import join, isdir, isfile
 from pathlib import Path
-from subprocess import SubprocessError, TimeoutExpired, CompletedProcess
+from subprocess import SubprocessError, TimeoutExpired
 from typing import List, Tuple, Set
 from git import GitCommandError
 
-import pandas as pd
 
 from mavenrunner.tests_exec_parser import exec_res_to_broken_tests_arr, MvnFailingTest
 from mbertntcall.mbert_project import MbertProject
-from utils import file_read_write
 from utils.cmd_utils import safe_chdir, shell_call, DEFAULT_TIMEOUT_S
 from utils.git_utils import clone_checkout
 
@@ -38,7 +36,7 @@ class MvnProject(MbertProject):
     @staticmethod
     def get_project_name_from_git_url(vcs_url):
         return vcs_url.replace('.git','').split('/')[-1]
-    def __init__(self,repo_path, repos_path, jdk_path=None, mvn_home= None, vcs_url=None, rev_id=None):
+    def __init__(self, repo_path, repos_path, jdk_path=None, mvn_home= None, vcs_url=None, rev_id=None):
         super(MvnProject, self).__init__(repo_path, jdk_path, None, None, repos_path)
         if self.repo_path is None or not isdir(self.repo_path):
             if vcs_url is None:
@@ -60,7 +58,7 @@ class MvnProject(MbertProject):
     def cp(self, n):
         copy = super(MvnProject, self).cp(n)
         # fixme
-        copy.repo_path = join(copy.repos_path, self.repo_path.name)
+        copy.repo_path = join(copy.repos_path, Path(self.repo_path).name)
         return copy
 
     def cmd_base(self):
@@ -73,23 +71,11 @@ class MvnProject(MbertProject):
         return " ".join(cmd_arr)
 
     def checkout_validate_fixed_version(self) -> bool:
-        # fixme
-        return self.validate_fixed_version_project(force_reload=True)
+        self.checkout(force_reload=True)
+        return self.validate_fixed_version_project()
 
-    def checkout_compile_buggy_version(self, force_reload=False):
-        self.checkout(force_reload=force_reload)
-        try:
-            success = self.compile()
-        except SubprocessError:
-            success = False
-        return success
-
-    def validate_fixed_version_project(self, jdk=None, force_reload=False) -> bool:
+    def validate_fixed_version_project(self) -> bool:
         # compiles and tests pass for the fixed version.
-        # set the jdk that works fine for this project.
-        # this implementation tries only 1 jdk7 and 1 jdk8.
-        self.checkout(force_reload=force_reload)
-
         try:
             failed = not self.compile()
             if not failed:

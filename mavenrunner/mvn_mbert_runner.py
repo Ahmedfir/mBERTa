@@ -1,81 +1,81 @@
+import logging
 import os
 from os.path import isfile, join, isdir
+from pathlib import Path
 
 import pandas as pd
 import torch
 
 from codebertnt.locs_request import BusinessFileRequest
-from mbertnteval.d4jeval.d4j_project import D4jProject
-from mbertnteval.d4jeval.mbert.d4j_mbert_request import D4jRequest
+from mavenrunner.mvn_mbert_request import MvnRequest
+from mavenrunner.mvn_project import MvnProject
 from mbertnteval.d4jeval.yaml_utils import load_config
+
+
+def _get_test_dummy_project_path():
+    logging.critical("!!! DUMMY PROJECT SELECTED !!! You have to pass YOUR repo path or a git_url.")
+    return join(Path(__file__).parent.parent, 'test', 'res', 'exampleclass', 'DummyProject')
 
 
 def get_args():
     import argparse
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument('-fix_commit_changes_csv',
-                        dest='fix_commit_changes_csv')  # i.e. , default='Csv_9.src.patch.csv')
+    parser.add_argument('-target_files', dest='target_files',
+                        help="optional: csv file containing a list of java files and lines to mutate: one file per row. Columns are 'filename','lines'. Note that when 'all_lines' is set True in the config file, the 'lines' column will be ignored.")
+    parser.add_argument('-git_url', dest='git_url', help='optional if a repo_path is given: git url to your repo.')
+    parser.add_argument('-rev_id', dest='rev_id', help='optional: rev_id (commit-hash) to checkout.')
+    parser.add_argument('-repo_path', dest='repo_path', default=_get_test_dummy_project_path(),
+                        help='optional if a git_url is given: the path to your maven project.')
     parser.add_argument('-config', dest='config',
-                        help='config yaml file.')  # i.e. , default=os.path.expanduser('~/PycharmProjects/CBMuPy/d4j/mbert/local_config.yml'))
+                        help='required: config yaml file.', default=join(Path(__file__).parent,
+                                                               'mbert_config.yml'))  # i.e. , default=os.path.expanduser('~/PycharmProjects/CBMuPy/d4j/mbert/local_config.yml'))
     args = parser.parse_args()
 
-    if args.fix_commit_changes_csv is None or (not isfile(args.config) and not isfile(os.path.expanduser(args.config))):
+    if (not isfile(args.config) and not isfile(os.path.expanduser(args.config))) or (args.repo_path is None and args.git_url is None):
         parser.print_help()
         raise AttributeError
     return args
 
 
-def create_mbert_request(project: D4jProject, csv_path: str,
+def create_mbert_request(project: MvnProject, csv_path:str,
                          output_dir: str, max_processes_number: int = 4, all_lines=True,
                          simple_only=False, no_comments=False, force_reload=False,
-                         mask_full_if_conditions=False) -> D4jRequest:
-    df = pd.read_csv(csv_path)
-    if project.version == 'b':
-        v = 0
+                         mask_full_if_conditions=False) -> MvnRequest:
+    if csv_path is None or not isfile(csv_path):
+        logging.warning('No csv_path passed! You will run on all files!')
+        reqs = None
     else:
-        v = 1
-    dfv = df[df['version'] == v]
+        df = pd.read_csv(csv_path)
+        reqs = {BusinessFileRequest(row['filename'], None if all_lines else str(row['lines']))
+                for index, row in df.iterrows() if row['file'].endswith('.java')}
 
-    reqs = {BusinessFileRequest(row['file'], None if all_lines else str(row['lines']))
-            for index, row in dfv.iterrows() if row['file'].endswith('.java')}
-    if no_comments:
-        from mbertnteval.d4jeval.mbert.no_comments.d4j_no_comments_mbert_request import NoCommentD4jRequest
-        return NoCommentD4jRequest(project=project, file_requests=reqs, repo_path=project.repo_path,
+    return MvnRequest(project=project, file_requests=reqs, repo_path=project.repo_path,
                                    output_dir=output_dir,
-                                   max_processes_number=max_processes_number, simple_only=simple_only,
+                                   max_processes_number=max_processes_number, no_comments=no_comments, simple_only=simple_only,
                                    force_reload=force_reload, mask_full_if_conditions=mask_full_if_conditions)
-    else:
-        return D4jRequest(project=project, file_requests=reqs, repo_path=project.repo_path, output_dir=output_dir,
-                          max_processes_number=max_processes_number, simple_only=simple_only, force_reload=force_reload,
-                          mask_full_if_conditions=mask_full_if_conditions)
 
 
-def create_request(config, job_name, simple_only=False, no_comments=False, force_reload=False,
-                   mask_full_if_conditions=False) -> D4jRequest:
-    #  job_name = Math_2.src.patch.csv -> pid_bid = Math_2
-    pid_bid = job_name.split(".")[0]
-    pid_bid_splits = pid_bid.split('_')
-    d4j_project = D4jProject(os.path.expanduser(config['defects4j']['containing_dir']),
-                             os.path.expanduser(config['tmp_large_memory']['d4jRepos']), pid=pid_bid_splits[0],
-                             bid=pid_bid_splits[1],
-                             jdk8=os.path.expanduser(config['java']['home8']),
-                             jdk7=os.path.expanduser(config['java']['home7']))
+def create_request(config, cli_args, simple_only=False, no_comments=False, force_reload=False,
+                   mask_full_if_conditions=False) -> MvnRequest:
+    mvn_project = MvnProject(repo_path=cli_args.repo_path, repos_path=os.path.expanduser(config['tmp_large_memory']['repos_path']),
+                             jdk_path=os.path.expanduser(config['java']['home8']),
+                             mvn_home=os.path.expanduser(config['maven']), vcs_url=cli_args.git_url, rev_id=cli_args.rev_id)
 
-    fix_commit_changes_csv = join(os.path.expanduser(config['defects4j']['fix_commit_changes_dir']), job_name)
-    output_dir = join(os.path.expanduser(config['output_dir']), pid_bid)
+    csv_path = cli_args.target_files
+    output_dir = join(os.path.expanduser(config['output_dir']), Path(mvn_project.repo_path).name)
     if not isdir(output_dir):
         try:
             os.makedirs(output_dir)
         except FileExistsError:
             print("two threads created the directory concurrently.")
 
-    return create_mbert_request(d4j_project, fix_commit_changes_csv, output_dir,
+    return create_mbert_request(mvn_project, csv_path, output_dir,
                                 config['exec']['max_processes'], config['exec']['all_lines'],
                                 simple_only=simple_only, no_comments=no_comments, force_reload=force_reload,
                                 mask_full_if_conditions=mask_full_if_conditions)
 
 
-def main_function(conf, changes_csv):
+def main_function(conf, cli_args):
     config = load_config(conf)
     # this option sets the max number of process in pytorch, for a multi-cpu processing.
     if 'torch_processes' in config['exec'] and config['exec']['torch_processes']:
@@ -86,12 +86,11 @@ def main_function(conf, changes_csv):
     mask_full_if_conditions = 'mask_full_if_conditions' in config['exec'] and config['exec']['mask_full_if_conditions']
     # this option limits the generation to generating only simple mutants without the condition seeding ones.
     simple_only = 'mask_full_if_conditions' in config['exec'] and config['exec']['mask_full_if_conditions']
-    request: D4jRequest = create_request(config, changes_csv, simple_only=simple_only, no_comments=no_comments,
+    request: MvnRequest = create_request(config, cli_args, simple_only=simple_only, no_comments=no_comments,
                                          mask_full_if_conditions=mask_full_if_conditions)
     request.call(os.path.expanduser(config['java']['home8']))
 
 
 if __name__ == '__main__':
     args = get_args()
-    job_name = args.fix_commit_changes_csv
-    main_function(os.path.expanduser(args.config), job_name)
+    main_function(os.path.expanduser(args.config), args)

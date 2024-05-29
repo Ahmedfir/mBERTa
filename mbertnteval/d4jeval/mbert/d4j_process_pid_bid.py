@@ -38,16 +38,10 @@ def create_mbert_request(project: D4jProject, csv_path: str,
 
     reqs = {BusinessFileRequest(row['file'], None if all_lines else str(row['lines']))
             for index, row in dfv.iterrows() if row['file'].endswith('.java')}
-    if no_comments:
-        from mbertnteval.d4jeval.mbert.no_comments.d4j_no_comments_mbert_request import NoCommentD4jRequest
-        return NoCommentD4jRequest(project=project, file_requests=reqs, repo_path=project.repo_path,
-                                   output_dir=output_dir,
-                                   max_processes_number=max_processes_number, simple_only=simple_only,
-                                   force_reload=force_reload, mask_full_if_conditions=mask_full_if_conditions)
-    else:
-        return D4jRequest(project=project, file_requests=reqs, repo_path=project.repo_path, output_dir=output_dir,
-                          max_processes_number=max_processes_number, simple_only=simple_only, force_reload=force_reload,
-                          mask_full_if_conditions=mask_full_if_conditions)
+
+    return D4jRequest(project=project, file_requests=reqs, repo_path=project.repo_path, output_dir=output_dir,
+                      max_processes_number=max_processes_number, no_comments=no_comments, simple_only=simple_only,
+                      force_reload=force_reload, mask_full_if_conditions=mask_full_if_conditions)
 
 
 def create_request(config, job_name, simple_only=False, no_comments=False, force_reload=False,

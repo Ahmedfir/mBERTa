@@ -1,25 +1,31 @@
 import concurrent
 import concurrent.futures
+import glob
+import json
 import logging
 import multiprocessing
+import os
 import sys
 from concurrent.futures import ProcessPoolExecutor
+from os import listdir
+from os.path import isdir
+from pathlib import Path
 from typing import List
 
 from tqdm import tqdm
 
 from cb.replacement_mutants import ReplacementMutant, TESTS_TIME_OUT_RESULT
+from codebertnt.locs_request import BusinessFileRequest
+from mavenrunner.mvn_project import MvnProject
 from mbertntcall.mbert_ext_request_impl import MbertRequestImpl
-from mbertnteval.d4jeval.d4j_project import D4jProject
-from mbertnteval.sim_utils import calc_ochiai
 from utils.file_read_write import write_csv_row
 
 log = logging.getLogger(__name__)
 log.addHandler(logging.StreamHandler(sys.stdout))
 
 
-def process_mutant(mutant: ReplacementMutant, repo_path, projects: List[D4jProject], mutants_csv_file,
-                   output_csv_lock, broken_tests_orig_bug, mutant_classes_output_dir, patch_diff, java_file):
+def process_mutant(mutant: ReplacementMutant, repo_path, projects: List[MvnProject], mutants_csv_file,
+                   output_csv_lock, mutant_classes_output_dir, patch_diff, java_file):
     # select project that is not locked and lock it
     p = next(x for x in projects if x.acquire())
     log.debug('{0} - in {1}'.format(str(mutant.id), p.repo_path))
@@ -32,41 +38,48 @@ def process_mutant(mutant: ReplacementMutant, repo_path, projects: List[D4jProje
         #  unlock project
         p.lock.release()
 
-    # calculate ochiai and coupling
-    if not mutant.compilable or mutant.broken_tests is None or TESTS_TIME_OUT_RESULT == mutant.broken_tests or len(
-            mutant.broken_tests) == 0:
-        ochiai = 0.0
-        is_coupled = False
-    else:
-        ochiai = calc_ochiai(mutant.broken_tests, broken_tests_orig_bug)
-        is_coupled = len(mutant.broken_tests) > 0 and set(mutant.broken_tests).issubset(set(broken_tests_orig_bug))
-
     log.info('csv - {0} - in {1}'.format(str(mutant.id), p.repo_path))
-
+    res = [mutant.id, mutant.compilable, [t.class_name + '.' + t.method_name for t in mutant.broken_tests],
+           json.dumps(mutant.broken_tests)]
     # lock the csv file to print to it
     with output_csv_lock:
         # print line to csv
-        # write_csv_row(mutants_csv_file, [mutant.id, mutant.compilable, mutant.broken_tests, ochiai, is_coupled])
-        write_csv_row(mutants_csv_file, mutant.to_csv_line(ochiai, is_coupled))
-        # unlock the csv file
+        write_csv_row(mutants_csv_file, res)
+        # unlock the csv file, after <with>.
 
 
-class D4jRequest(MbertRequestImpl):
+class MvnRequest(MbertRequestImpl):
 
-    def __init__(self, project: D4jProject, *args, **kargs):
-        super(D4jRequest, self).__init__(project, *args, **kargs)
+    def __init__(self, project: MvnProject, *args, **kargs):
+        super(MvnRequest, self).__init__(project, *args, **kargs)
 
     def preprocess(self) -> bool:
-        # checkout fixed version of the project and check that it's valid.
-        return self.project.checkout_validate_fixed_version()
+        if not isdir(self.project.repo_path) or len(listdir(self.project.repo_path)) == 0 or (
+                self.project.rev_id is not None and len(
+            self.project.rev_id) > 0):  # whenever a revision id we recheckout
+            # checkout revision version of the project and check that it's valid.
+            res = self.project.checkout_validate_fixed_version()
+        else:  # we simply use the local version without checkout
+            res = self.project.validate_fixed_version_project()
+
+        if res and (not self.no_comments or self.remove_comments_from_repo()):  # remove comments
+            if self.file_requests is None or len(self.file_requests) == 0:
+                self.file_requests = {BusinessFileRequest(str(file))
+                                      for file in Path(self.project.repo_path).rglob('*.java') if
+                                      'test/java' not in str(file)}
+            if self.file_requests is None or len(self.file_requests) == 0:
+                raise Exception("Exiting! No java source file found.")
+            return True
+        else:
+            return False
 
     def csv_header(self):
-        return ['id', 'compilable', 'broken_tests', 'ochiai', 'is_coupled']
+        return ['id', 'compilable', 'broken_tests', 'broken_tests_reason']
 
     def create_project_copies(self):
         copies_project = self.project.copy(self.max_processes_number - 1)
         for p in copies_project:
-            try:
+            try: # fixme
                 p.checkout()
                 self.projects.append(p)
             except BaseException as e:
@@ -81,9 +94,6 @@ class D4jRequest(MbertRequestImpl):
             self.create_project_copies()
         self.max_processes_number = len(self.projects)
 
-        # load this only once.
-        broken_tests_orig_bug = self.project.get_failing_tests()
-
         with ProcessPoolExecutor(
                 max_workers=self.max_processes_number) as executor:
             try:
@@ -97,8 +107,8 @@ class D4jRequest(MbertRequestImpl):
 
                 futures = {
                     executor.submit(process_mutant, mutant, self.repo_path, self.projects, self.mutants_csv_file,
-                                    output_csv_lock,
-                                    broken_tests_orig_bug, mutant_classes_output_dir, patch_diff, java_file): mutant.id
+                                    output_csv_lock
+                                    , mutant_classes_output_dir, patch_diff, java_file): mutant.id
                     for mutant in mutants}
                 for future in concurrent.futures.as_completed(futures):
                     kwargs = {

@@ -1,6 +1,6 @@
 import logging
 import sys
-from typing import List, Any, Tuple, Set
+from typing import List, Any, Set
 
 from pydantic import BaseModel
 from ttp import ttp

@@ -9,6 +9,7 @@ from typing import List
 from tqdm import tqdm
 
 from cb.replacement_mutants import ReplacementMutant
+from commentsremover.comments_remover import remove_comments_from_repo
 from mbertntcall.mbert_ext_request import MbertAdditivePatternsLocationsRequest
 from mbertntcall.mbert_project import MbertProject
 from utils.file_read_write import write_csv_row
@@ -18,12 +19,25 @@ log.addHandler(logging.StreamHandler(sys.stdout))
 
 
 class MbertRequestImpl(MbertAdditivePatternsLocationsRequest):
-    def __init__(self, project: MbertProject, max_processes_number=4, remove_project_on_exit=True, *args, **kargs):
+    def __init__(self, project: MbertProject, max_processes_number=4, remove_project_on_exit=True, no_comments=False, *args, **kargs):
         super(MbertRequestImpl, self).__init__(*args, **kargs)
         self.project: MbertProject = project
         self.max_processes_number = max_processes_number
         self.projects = None
         self.remove_project_on_exit = remove_project_on_exit
+        self.no_comments = no_comments
+
+    def _remove_comments_from_repo(self, check_compile=True,
+                                  vm_options="-Xms1024m -Xmx1024m -Xss512m"):
+
+        output = remove_comments_from_repo(self.repo_path, jdk=self.project.jdk,
+                                           vm_options=vm_options)
+        log.info(output)
+        if check_compile:
+            return self.project.compile()
+        else:
+            log.warning("skipping compilation check after removing")
+            return True
 
     def preprocess(self) -> bool:
         # checkout fixed version of the project and check that it's valid, i.e. compiles and all tests are passing.
