@@ -54,6 +54,12 @@ class TestMvnProject(TestCase):
         project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk, mvn_home=self.dummy_dir_as_mvn)
         result = project.compile()
         self.assertTrue(result)
+    def test_compile_no_comments(self):
+        project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk, mvn_home=self.dummy_dir_as_mvn)
+        project.no_comments = True
+        project.remove_comments_from_repo()
+        result = project.compile()
+        self.assertTrue(result)
 
     def test_test(self):
         project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk,

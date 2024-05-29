@@ -58,8 +58,7 @@ class D4jRequest(MbertRequestImpl):
 
     def preprocess(self) -> bool:
         # checkout fixed version of the project and check that it's valid.
-        return self.project.checkout_validate_fixed_version() and (
-                not self.no_comments or self._remove_comments_from_repo())  # remove comments
+        return self.project.checkout_validate_fixed_version()
 
     def csv_header(self):
         return ['id', 'compilable', 'broken_tests', 'ochiai', 'is_coupled']

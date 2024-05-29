@@ -15,6 +15,8 @@
     # set this to true if you want to execute a fresh rerun
     force_reload: False
     # number of mutants to be executed in parallel.
+    # This is currently only implemented for projects loaded via -git_url.
+    # If you target a local project, the mutants will be tested sequentially.
     max_processes: 4
     # number of processus to pass to pytorch to enhance prediction speed.
     # Make sure to not exceed your maximum number of CPUs.
@@ -27,6 +29,9 @@
     mask_full_if_conditions: False
     # Turn this to True if you want to generate only simple mutants without the condition seeding ones.
     simple_only: False
+    # Turn this to true to remove the cloned repo on exit. This is useful when you are conducting a study on remote repositories.
+    # Make sure this is False if you are targeting a local repository.
+    remove_project_on_exit: False
   # this is where the results will be output.
   output_dir:  ~/PycharmProjects/mBERTa/d4j/output-mbert
 ...

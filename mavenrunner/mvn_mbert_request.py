@@ -1,10 +1,8 @@
 import concurrent
 import concurrent.futures
-import glob
 import json
 import logging
 import multiprocessing
-import os
 import sys
 from concurrent.futures import ProcessPoolExecutor
 from os import listdir
@@ -61,8 +59,10 @@ class MvnRequest(MbertRequestImpl):
             res = self.project.checkout_validate_fixed_version()
         else:  # we simply use the local version without checkout
             res = self.project.validate_fixed_version_project()
+            # remove comments.
+            res = res and (not self.project.no_comments or self.project.remove_comments_from_repo())
 
-        if res and (not self.no_comments or self.remove_comments_from_repo()):  # remove comments
+        if res:
             if self.file_requests is None or len(self.file_requests) == 0:
                 self.file_requests = {BusinessFileRequest(str(file))
                                       for file in Path(self.project.repo_path).rglob('*.java') if

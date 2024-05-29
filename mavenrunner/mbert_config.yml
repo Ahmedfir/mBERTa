@@ -23,6 +23,10 @@
     mask_full_if_conditions: False
     # Turn this to True if you want to generate only simple mutants without the condition seeding ones.
     simple_only: False
+    # Turn this to true to remove the cloned repo on exit. This is useful when you are conducting a study on remote repositories.
+    # Make sure this is False if you are targeting a local repository.
+    # by default, if a -git_url is given, the clone will be removed in the end, otherwise not.
+    remove_project_on_exit:
   # this is where the results will be output.
   output_dir:  ~/PycharmProjects/mBERTa/tmp/output-mbert
 ...

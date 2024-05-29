@@ -7,7 +7,6 @@ from subprocess import SubprocessError, TimeoutExpired
 from typing import List, Tuple, Set
 from git import GitCommandError
 
-
 from mavenrunner.tests_exec_parser import exec_res_to_broken_tests_arr, MvnFailingTest
 from mbertntcall.mbert_project import MbertProject
 from utils.cmd_utils import safe_chdir, shell_call, DEFAULT_TIMEOUT_S
@@ -32,12 +31,12 @@ def string_to_array(x, test_splitter=','):
 
 class MvnProject(MbertProject):
 
-
     @staticmethod
     def get_project_name_from_git_url(vcs_url):
-        return vcs_url.replace('.git','').split('/')[-1]
-    def __init__(self, repo_path, repos_path, jdk_path=None, mvn_home= None, vcs_url=None, rev_id=None):
-        super(MvnProject, self).__init__(repo_path, jdk_path, None, None, repos_path)
+        return vcs_url.replace('.git', '').split('/')[-1]
+
+    def __init__(self, repo_path, repos_path, jdk_path=None, mvn_home=None, vcs_url=None, rev_id=None, no_comments=False):
+        super(MvnProject, self).__init__(repo_path, jdk_path, None, None, repos_path, no_comments)
         if self.repo_path is None or not isdir(self.repo_path):
             if vcs_url is None:
                 raise Exception("Pleas pass a valid git url or repo path.")
@@ -53,11 +52,10 @@ class MvnProject(MbertProject):
         self.bin_dir = None
         self.target_classes = None
 
-# todo add a maven preprocess mvn -v
+    # todo add a maven preprocess mvn -v
 
     def cp(self, n):
         copy = super(MvnProject, self).cp(n)
-        # fixme
         copy.repo_path = join(copy.repos_path, Path(self.repo_path).name)
         return copy
 
@@ -107,7 +105,8 @@ class MvnProject(MbertProject):
             if self.repo_path is None:
                 self.repo_path = self.repos_path
             clone_checkout(self.vcs_url, self.repo_path, self.rev_id)
-            return isdir(self.repo_path) and len(listdir(self.repo_path)) > 0
+            return isdir(self.repo_path) and len(listdir(self.repo_path)) > 0 and (
+                    not self.no_comments or self.remove_comments_from_repo())  # remove comments
         except GitCommandError as e:
             log.error('failed to clone and checkout repo {0} {1}'.format(self.vcs_url, self.rev_id))
             log.critical("checkout failed for {0}".format(self.repo_path), e, exc_info=True)
@@ -150,10 +149,10 @@ class MvnProject(MbertProject):
             text = test_exec_output.stderr
         return exec_res_to_broken_tests_arr(text)
 
-    def test(self, timeout=DEFAULT_TIMEOUT_S, relevant_tests=True) -> Tuple[List[str],str]:
+    def test(self, timeout=DEFAULT_TIMEOUT_S, relevant_tests=True) -> Set[MvnFailingTest]:
         """test project"""
         with safe_chdir(self.repo_path):
-            log.debug('testing {0} in {1}'.format( self.repo_path, self.rev_id))
+            log.debug('testing {0} in {1}'.format(self.repo_path, self.rev_id))
             cmd = self.test_command(relevant_tests)
             log.info('-- executing shell cmd = {0}'.format(cmd))
             try:

@@ -28,19 +28,20 @@ def get_args():
                         help='optional if a git_url is given: the path to your maven project.')
     parser.add_argument('-config', dest='config',
                         help='required: config yaml file.', default=join(Path(__file__).parent,
-                                                               'mbert_config.yml'))  # i.e. , default=os.path.expanduser('~/PycharmProjects/CBMuPy/d4j/mbert/local_config.yml'))
+                                                                         'mbert_config.yml'))  # i.e. , default=os.path.expanduser('~/PycharmProjects/CBMuPy/d4j/mbert/local_config.yml'))
     args = parser.parse_args()
 
-    if (not isfile(args.config) and not isfile(os.path.expanduser(args.config))) or (args.repo_path is None and args.git_url is None):
+    if (not isfile(args.config) and not isfile(os.path.expanduser(args.config))) or (
+            args.repo_path is None and args.git_url is None):
         parser.print_help()
         raise AttributeError
     return args
 
 
-def create_mbert_request(project: MvnProject, csv_path:str,
+def create_mbert_request(project: MvnProject, csv_path: str,
                          output_dir: str, max_processes_number: int = 4, all_lines=True,
-                         simple_only=False, no_comments=False, force_reload=False,
-                         mask_full_if_conditions=False) -> MvnRequest:
+                         simple_only=False, force_reload=False,
+                         mask_full_if_conditions=False, remove_project_on_exit=True) -> MvnRequest:
     if csv_path is None or not isfile(csv_path):
         logging.warning('No csv_path passed! You will run on all files!')
         reqs = None
@@ -50,16 +51,19 @@ def create_mbert_request(project: MvnProject, csv_path:str,
                 for index, row in df.iterrows() if row['file'].endswith('.java')}
 
     return MvnRequest(project=project, file_requests=reqs, repo_path=project.repo_path,
-                                   output_dir=output_dir,
-                                   max_processes_number=max_processes_number, no_comments=no_comments, simple_only=simple_only,
-                                   force_reload=force_reload, mask_full_if_conditions=mask_full_if_conditions)
+                      output_dir=output_dir,
+                      max_processes_number=max_processes_number, simple_only=simple_only,
+                      force_reload=force_reload, mask_full_if_conditions=mask_full_if_conditions,
+                      remove_project_on_exit=remove_project_on_exit)
 
 
 def create_request(config, cli_args, simple_only=False, no_comments=False, force_reload=False,
-                   mask_full_if_conditions=False) -> MvnRequest:
-    mvn_project = MvnProject(repo_path=cli_args.repo_path, repos_path=os.path.expanduser(config['tmp_large_memory']['repos_path']),
+                   mask_full_if_conditions=False, remove_project_on_exit=True) -> MvnRequest:
+    mvn_project = MvnProject(repo_path=cli_args.repo_path,
+                             repos_path=os.path.expanduser(config['tmp_large_memory']['repos_path']),
                              jdk_path=os.path.expanduser(config['java']['home8']),
-                             mvn_home=os.path.expanduser(config['maven']), vcs_url=cli_args.git_url, rev_id=cli_args.rev_id)
+                             mvn_home=os.path.expanduser(config['maven']), vcs_url=cli_args.git_url,
+                             rev_id=cli_args.rev_id, no_comments=no_comments)
 
     csv_path = cli_args.target_files
     output_dir = join(os.path.expanduser(config['output_dir']), Path(mvn_project.repo_path).name)
@@ -71,8 +75,9 @@ def create_request(config, cli_args, simple_only=False, no_comments=False, force
 
     return create_mbert_request(mvn_project, csv_path, output_dir,
                                 config['exec']['max_processes'], config['exec']['all_lines'],
-                                simple_only=simple_only, no_comments=no_comments, force_reload=force_reload,
-                                mask_full_if_conditions=mask_full_if_conditions)
+                                simple_only=simple_only, force_reload=force_reload,
+                                mask_full_if_conditions=mask_full_if_conditions,
+                                remove_project_on_exit=remove_project_on_exit)
 
 
 def main_function(conf, cli_args):
@@ -82,12 +87,21 @@ def main_function(conf, cli_args):
         torch.set_num_threads(config['exec']['torch_processes'])
     # this option removes all comments from the repo before the mutation.
     no_comments = 'no_comments' in config['exec'] and config['exec']['no_comments']
+    if no_comments and cli_args.git_url is None:
+        logging.warning("You are about to remove all the comments from your repo!")
     # this option adds extra mutants where the full if condition is masked.
     mask_full_if_conditions = 'mask_full_if_conditions' in config['exec'] and config['exec']['mask_full_if_conditions']
     # this option limits the generation to generating only simple mutants without the condition seeding ones.
     simple_only = 'mask_full_if_conditions' in config['exec'] and config['exec']['mask_full_if_conditions']
+    # this option removes the project at the end when set to true.
+    # by default, if a -git_url is given, the clone will be removed in the end, otherwise not.
+    remove_project_on_exit = cli_args.git_url is not None
+    if 'remove_project_on_exit' in config['exec'] and config['exec']['remove_project_on_exit'] is not None:
+        remove_project_on_exit = config['exec']['remove_project_on_exit']
+
     request: MvnRequest = create_request(config, cli_args, simple_only=simple_only, no_comments=no_comments,
-                                         mask_full_if_conditions=mask_full_if_conditions)
+                                         mask_full_if_conditions=mask_full_if_conditions,
+                                         remove_project_on_exit=remove_project_on_exit)
     request.call(os.path.expanduser(config['java']['home8']))
 
 

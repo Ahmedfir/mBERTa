@@ -27,7 +27,7 @@ def get_args():
 
 def create_mbert_request(project: D4jProject, csv_path: str,
                          output_dir: str, max_processes_number: int = 4, all_lines=True,
-                         simple_only=False, no_comments=False, force_reload=False,
+                         simple_only=False, force_reload=False,
                          mask_full_if_conditions=False) -> D4jRequest:
     df = pd.read_csv(csv_path)
     if project.version == 'b':
@@ -40,7 +40,7 @@ def create_mbert_request(project: D4jProject, csv_path: str,
             for index, row in dfv.iterrows() if row['file'].endswith('.java')}
 
     return D4jRequest(project=project, file_requests=reqs, repo_path=project.repo_path, output_dir=output_dir,
-                      max_processes_number=max_processes_number, no_comments=no_comments, simple_only=simple_only,
+                      max_processes_number=max_processes_number, simple_only=simple_only,
                       force_reload=force_reload, mask_full_if_conditions=mask_full_if_conditions)
 
 
@@ -53,7 +53,7 @@ def create_request(config, job_name, simple_only=False, no_comments=False, force
                              os.path.expanduser(config['tmp_large_memory']['d4jRepos']), pid=pid_bid_splits[0],
                              bid=pid_bid_splits[1],
                              jdk8=os.path.expanduser(config['java']['home8']),
-                             jdk7=os.path.expanduser(config['java']['home7']))
+                             jdk7=os.path.expanduser(config['java']['home7']), no_comments=no_comments)
 
     fix_commit_changes_csv = join(os.path.expanduser(config['defects4j']['fix_commit_changes_dir']), job_name)
     output_dir = join(os.path.expanduser(config['output_dir']), pid_bid)
@@ -63,9 +63,9 @@ def create_request(config, job_name, simple_only=False, no_comments=False, force
         except FileExistsError:
             print("two threads created the directory concurrently.")
 
-    return create_mbert_request(d4j_project, fix_commit_changes_csv, output_dir,
+    return create_mbert_request(d4j_project, fix_commit_changes_csv, str(output_dir),
                                 config['exec']['max_processes'], config['exec']['all_lines'],
-                                simple_only=simple_only, no_comments=no_comments, force_reload=force_reload,
+                                simple_only=simple_only, force_reload=force_reload,
                                 mask_full_if_conditions=mask_full_if_conditions)
 
 

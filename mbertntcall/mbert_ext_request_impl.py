@@ -9,7 +9,6 @@ from typing import List
 from tqdm import tqdm
 
 from cb.replacement_mutants import ReplacementMutant
-from commentsremover.comments_remover import remove_comments_from_repo
 from mbertntcall.mbert_ext_request import MbertAdditivePatternsLocationsRequest
 from mbertntcall.mbert_project import MbertProject
 from utils.file_read_write import write_csv_row
@@ -19,25 +18,12 @@ log.addHandler(logging.StreamHandler(sys.stdout))
 
 
 class MbertRequestImpl(MbertAdditivePatternsLocationsRequest):
-    def __init__(self, project: MbertProject, max_processes_number=4, remove_project_on_exit=True, no_comments=False, *args, **kargs):
+    def __init__(self, project: MbertProject, max_processes_number=4, remove_project_on_exit=True, *args, **kargs):
         super(MbertRequestImpl, self).__init__(*args, **kargs)
         self.project: MbertProject = project
         self.max_processes_number = max_processes_number
         self.projects = None
         self.remove_project_on_exit = remove_project_on_exit
-        self.no_comments = no_comments
-
-    def _remove_comments_from_repo(self, check_compile=True,
-                                  vm_options="-Xms1024m -Xmx1024m -Xss512m"):
-
-        output = remove_comments_from_repo(self.repo_path, jdk=self.project.jdk,
-                                           vm_options=vm_options)
-        log.info(output)
-        if check_compile:
-            return self.project.compile()
-        else:
-            log.warning("skipping compilation check after removing")
-            return True
 
     def preprocess(self) -> bool:
         # checkout fixed version of the project and check that it's valid, i.e. compiles and all tests are passing.
@@ -95,7 +81,8 @@ class MbertRequestImpl(MbertAdditivePatternsLocationsRequest):
                     p.set_lock(lock)
 
                 futures = {
-                    executor.submit(MbertRequestImpl.process_mutant, mutant, self.repo_path, self.projects, self.mutants_csv_file,
+                    executor.submit(MbertRequestImpl.process_mutant, mutant, self.repo_path, self.projects,
+                                    self.mutants_csv_file,
                                     output_csv_lock, mutant_classes_output_dir, patch_diff, java_file): mutant.id for
                     mutant in mutants}
                 for future in concurrent.futures.as_completed(futures):
@@ -123,6 +110,10 @@ class MbertRequestImpl(MbertAdditivePatternsLocationsRequest):
         super(MbertRequestImpl, self).on_exit(reason)
         if self.remove_project_on_exit:
             self.project.remove()
+        elif self.project.no_comments:
+            # Checkout the project newly without removing the commits.
+            self.project.no_comments = False
+            self.project.checkout()
         if self.projects is not None and len(self.projects) > 0:
             if not self.remove_project_on_exit and self.project in self.projects:
                 self.projects.remove(self.project)

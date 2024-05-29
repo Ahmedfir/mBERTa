@@ -72,8 +72,8 @@ def coverage_to_csv(output: CompletedProcess, csv_file):
 
 
 class D4jProject(MbertProject):
-    def __init__(self, d4j_path, repos_path, pid, bid, jdk8, jdk7=None, version='f'):
-        super(D4jProject, self).__init__(None, None, None, None, repos_path)
+    def __init__(self, d4j_path, repos_path, pid, bid, jdk8, jdk7=None, version='f', no_comments=False):
+        super(D4jProject, self).__init__(None, None, None, None, repos_path, no_comments)
         self.d4j_path = d4j_path
         self.pid = pid
         self.bid = bid
@@ -186,8 +186,9 @@ class D4jProject(MbertProject):
             text = output.stdout
             if len(text) == 0:
                 text = output.stderr
-            # log.info(text)
-            return text
+            log.debug(text)
+            return isdir(self.repo_path) and len(listdir(self.repo_path)) > 0 and (
+                    not self.no_comments or self.remove_comments_from_repo())  # remove comments
         except SubprocessError as e:
             log.critical("checkout failed for {0}".format(self.pid_bid), e, exc_info=True)
             raise e
