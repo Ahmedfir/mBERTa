@@ -37,13 +37,25 @@ def process_mutant(mutant: ReplacementMutant, repo_path, projects: List[MvnProje
         p.lock.release()
 
     log.info('csv - {0} - in {1}'.format(str(mutant.id), p.repo_path))
-    res = [mutant.id, mutant.compilable, [t.class_name + '.' + t.method_name for t in mutant.broken_tests],
-           json.dumps(mutant.broken_tests)]
-    # lock the csv file to print to it
-    with output_csv_lock:
-        # print line to csv
-        write_csv_row(mutants_csv_file, res)
-        # unlock the csv file, after <with>.
+
+    res = [mutant.id, mutant.compilable]
+    try:
+        if mutant.broken_tests is None:
+            res = res + [None, None]
+        else:
+            res.append([t.class_name + '.' + t.method_name for t in mutant.broken_tests])
+            res.append(json.dumps([t.json() for t in mutant.broken_tests]))
+        # lock the csv file to print to it
+        with output_csv_lock:
+            # print line to csv
+            write_csv_row(mutants_csv_file, res)
+            # unlock the csv file, after <with>.
+    except BaseException as e:
+        log.error(e)
+        log.critical("Failed to write mutant to the output csv. Please contact support with full trace", e)
+        log.critical("Collected res: {0}".format(str(res)))
+        log.critical("Mutant: {0}".format(str(mutant.__dict__)))
+        raise e
 
 
 class MvnRequest(MbertRequestImpl):
