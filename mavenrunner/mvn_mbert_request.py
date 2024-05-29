@@ -77,14 +77,17 @@ class MvnRequest(MbertRequestImpl):
         return ['id', 'compilable', 'broken_tests', 'broken_tests_reason']
 
     def create_project_copies(self):
-        copies_project = self.project.copy(self.max_processes_number - 1)
-        for p in copies_project:
-            try: # fixme
-                p.checkout()
-                self.projects.append(p)
-            except BaseException as e:
-                log.error('could not checkout project {0}'.format(p), e)
-                break
+        if self.project.vcs_url is not None and len(self.project.vcs_url) > 0:
+            copies_project = self.project.copy(self.max_processes_number - 1)
+            for p in copies_project:
+                try:
+                    p.checkout()
+                    self.projects.append(p)
+                except BaseException as e:
+                    log.error('could not checkout project {0}'.format(p), e)
+                    break
+        else:
+            log.warning("Currently parallel mutants testing is only enabled when a -git_url is given.")
 
     def process_mutants(self, mutants: List[ReplacementMutant], mutant_classes_output_dir=None, patch_diff=False,
                         java_file=False):

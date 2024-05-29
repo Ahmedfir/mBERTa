@@ -4,7 +4,7 @@ from os import listdir, makedirs
 from os.path import join, isdir, isfile
 from pathlib import Path
 from subprocess import SubprocessError, TimeoutExpired
-from typing import List, Tuple, Set
+from typing import Set
 from git import GitCommandError
 
 from mavenrunner.tests_exec_parser import exec_res_to_broken_tests_arr, MvnFailingTest
