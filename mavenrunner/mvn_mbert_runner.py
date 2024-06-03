@@ -48,7 +48,7 @@ def create_mbert_request(project: MvnProject, csv_path: str,
     else:
         df = pd.read_csv(csv_path)
         reqs = {BusinessFileRequest(row['filename'], None if all_lines else str(row['lines']))
-                for index, row in df.iterrows() if row['file'].endswith('.java')}
+                for index, row in df.iterrows() if row['filename'].endswith('.java')}
 
     return MvnRequest(project=project, file_requests=reqs, repo_path=project.repo_path,
                       output_dir=output_dir,
@@ -92,7 +92,7 @@ def main_function(conf, cli_args):
     # this option adds extra mutants where the full if condition is masked.
     mask_full_if_conditions = 'mask_full_if_conditions' in config['exec'] and config['exec']['mask_full_if_conditions']
     # this option limits the generation to generating only simple mutants without the condition seeding ones.
-    simple_only = 'mask_full_if_conditions' in config['exec'] and config['exec']['mask_full_if_conditions']
+    simple_only = 'simple_only' in config['exec'] and config['exec']['simple_only']
     # this option removes the project at the end when set to true.
     # by default, if a -git_url is given, the clone will be removed in the end, otherwise not.
     remove_project_on_exit = cli_args.git_url is not None

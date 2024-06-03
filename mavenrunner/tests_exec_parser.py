@@ -39,10 +39,13 @@ class MvnFailingTest(BaseModel):
     @staticmethod
     def get_template() -> Dict[FailCategory, str]:
         return {
-            FailCategory.Fail: """-Failed tests: {{ method_name }}({{ class_name }}): {{ reason | ORPHRASE }}""",
-            FailCategory.Err: """-Tests in error: \n-  {{ method_name }}({{ class_name }})""",
-            FailCategory.Ukn: """- {{ method_name }}({{ class_name }}): {{ reason | ORPHRASE }}"""
-            }
+            FailCategory.Fail: ["""-Failed tests: {{ method_name }}({{ class_name }}): {{ reason | ORPHRASE }}""",
+                                """-Failed tests: {{ method_name }}({{ class_name }})"""],
+            FailCategory.Err: ["""-Tests in error: \n-  {{ method_name }}({{ class_name }}): {{ reason | ORPHRASE }}""",
+                               """-Tests in error: \n-  {{ method_name }}({{ class_name }})"""],
+            FailCategory.Ukn: ["""- {{ method_name }}({{ class_name }}): {{ reason | ORPHRASE }}""",
+                               """- {{ method_name }}({{ class_name }})"""]
+        }
 
 
 class MvnFailingTestsArray(BaseModel):
@@ -99,12 +102,13 @@ def parse_broken_tests(data_to_parse) -> Set[MvnFailingTest]:
     unique_broken_tests = set()
     tmplate_dict = MvnFailingTest.get_template()
     for template_failing_category in tmplate_dict:
-        results_str = parse_to_json(data_to_parse.replace('\n', '\n' + '-'), tmplate_dict[template_failing_category])
-        parsed = MvnFailingTestsArray.parse_raw(results_str)
-        parsed.remove_invalid()
-        for p in parsed.__root__:
-            p.failing_category = template_failing_category
-        unique_broken_tests.update(parsed.__root__)
+        for template in tmplate_dict[template_failing_category]:
+            results_str = parse_to_json(data_to_parse.replace('\n', '\n' + '-'), template)
+            parsed = MvnFailingTestsArray.parse_raw(results_str)
+            parsed.remove_invalid()
+            for p in parsed.__root__:
+                p.failing_category = template_failing_category
+            unique_broken_tests.update(parsed.__root__)
     return unique_broken_tests
 
 
@@ -129,7 +133,8 @@ def exec_res_to_broken_tests_arr(data_to_parse) -> Set[MvnFailingTest]:
         tests_with_unkown_failing = {t for t in unique_broken_tests if t.failing_category == FailCategory.Ukn}
         if len(tests_with_unkown_failing) > 0:
             # if all expected Fail tests have been categorised Fail, the rest is Err.
-            if exec_summary.fa == 0 or exec_summary.fa == len({t for t in unique_broken_tests if t.failing_category == FailCategory.Fail}):
+            if exec_summary.fa == 0 or exec_summary.fa == len(
+                    {t for t in unique_broken_tests if t.failing_category == FailCategory.Fail}):
                 for t in tests_with_unkown_failing:
                     t.failing_category = FailCategory.Err
             # if all expected Err tests have been categorised Err, the rest is Fail.

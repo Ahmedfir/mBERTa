@@ -13,6 +13,7 @@ class TestMvnProject(TestCase):
         self.RES_PATH = join(self.TEST_PATH, 'res')
         self.failing_tests_example = load_file(join(self.RES_PATH, 'mavenrunner/failing_tests_mvn_output.txt'))
         self.failing_and_error_tests_example = load_file(join(self.RES_PATH, 'mavenrunner/error_failing_tests_mvn_output.txt'))
+        self.no_reason_failing_and_error_tests_example = load_file(join(self.RES_PATH, 'mavenrunner/no_reason_failing_test_maven_output.txt'))
         self.passing_tests_example = "\n".join(['[INFO]',
                                                 '[INFO] ----------------------< org.example:DummyProject '
                                                 '>----------------------',
@@ -193,3 +194,11 @@ class TestMvnProject(TestCase):
                                          reason=None, failing_category=FailCategory.Err)
                           },
                          exec_res_to_broken_tests_arr(self.failing_and_error_tests_example))
+
+    def test_exec_res_to_broken_tests_arr_fail_and_error_no_reason(self):
+        self.assertEqual({MvnFailingTest(method_name='WHEN_eventHasBigArrayAndLegacyFinderIsUsed_THEN_itWillCompleteSuccessfully_insteadOfCrashingOOM', class_name='software.amazon.event.ruler.BigEventTest',
+                                         failing_category=FailCategory.Fail),
+                          MvnFailingTest(method_name='testOtherMatchTypes', class_name='software.amazon.event.ruler.input.ParserTest',
+                                          failing_category=FailCategory.Err)
+                          },
+                         exec_res_to_broken_tests_arr(self.no_reason_failing_and_error_tests_example))
