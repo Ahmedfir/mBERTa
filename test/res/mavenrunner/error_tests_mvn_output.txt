@@ -1,0 +1,19 @@
+Results :
+
+Tests in error:
+  WHEN_JSONContainsArrays_THEN_RulerNoCompileMatchesWork(software.amazon.event.ruler.RulerTest)
+  WHEN_WeTryReallySimpleRules_THEN_TheyWork(software.amazon.event.ruler.RulerTest)
+
+Tests run: 18, Failures: 0, Errors: 2, Skipped: 0
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  21.652 s
+[INFO] Finished at: 2024-06-04T15:04:12+01:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:2.12.4:test (default-test) on project event-ruler: There are test failures.
+[ERROR]
+[ERROR] Please refer to /home/asmahamidi/code/mBERTa/tmp/mvn_projects/c_2/event-ruler/target/surefire-reports for the individual test results.
+[ERROR] -> [Help 1]
+[ERROR]

@@ -37,7 +37,7 @@ class MvnFailingTest(BaseModel):
         return hash((self.method_name, self.class_name, self.reason))
 
     @staticmethod
-    def get_template() -> Dict[FailCategory, str]:
+    def get_template() -> dict[FailCategory, list[str]]:
         return {
             FailCategory.Fail: ["""-Failed tests: {{ method_name }}({{ class_name }}): {{ reason | ORPHRASE }}""",
                                 """-Failed tests: {{ method_name }}({{ class_name }})"""],
