@@ -41,7 +41,7 @@ def get_args():
 def create_mbert_request(project: MvnProject, csv_path: str,
                          output_dir: str, max_processes_number: int = 4, all_lines=True,
                          simple_only=False, force_reload=False,
-                         mask_full_if_conditions=False, remove_project_on_exit=True) -> MvnRequest:
+                         mask_full_if_conditions=False, remove_project_on_exit=True, model=None) -> MvnRequest:
     if csv_path is None or not isfile(csv_path):
         logging.warning('No csv_path passed! You will run on all files!')
         reqs = None
@@ -54,11 +54,11 @@ def create_mbert_request(project: MvnProject, csv_path: str,
                       output_dir=output_dir,
                       max_processes_number=max_processes_number, simple_only=simple_only,
                       force_reload=force_reload, mask_full_if_conditions=mask_full_if_conditions,
-                      remove_project_on_exit=remove_project_on_exit)
+                      remove_project_on_exit=remove_project_on_exit, model=model)
 
 
 def create_request(config, cli_args, simple_only=False, no_comments=False, force_reload=False,
-                   mask_full_if_conditions=False, remove_project_on_exit=True) -> MvnRequest:
+                   mask_full_if_conditions=False, remove_project_on_exit=True, model=None) -> MvnRequest:
     mvn_project = MvnProject(repo_path=cli_args.repo_path,
                              repos_path=os.path.expanduser(config['tmp_large_memory']['repos_path']),
                              jdk_path=os.path.expanduser(config['java']['home8']),
@@ -77,7 +77,7 @@ def create_request(config, cli_args, simple_only=False, no_comments=False, force
                                 config['exec']['max_processes'], config['exec']['all_lines'],
                                 simple_only=simple_only, force_reload=force_reload,
                                 mask_full_if_conditions=mask_full_if_conditions,
-                                remove_project_on_exit=remove_project_on_exit)
+                                remove_project_on_exit=remove_project_on_exit, model=model)
 
 
 def main_function(conf, cli_args):
@@ -93,6 +93,10 @@ def main_function(conf, cli_args):
     mask_full_if_conditions = 'mask_full_if_conditions' in config['exec'] and config['exec']['mask_full_if_conditions']
     # this option limits the generation to generating only simple mutants without the condition seeding ones.
     simple_only = 'simple_only' in config['exec'] and config['exec']['simple_only']
+    # this option sets the model to use for predictions
+    if 'model_name' in config['exec']['language_model'] and config['exec']['language_model']['model_name']:
+        model = config['exec']['language_model']['model_name']
+
     # this option removes the project at the end when set to true.
     # by default, if a -git_url is given, the clone will be removed in the end, otherwise not.
     remove_project_on_exit = cli_args.git_url is not None
@@ -101,7 +105,7 @@ def main_function(conf, cli_args):
 
     request: MvnRequest = create_request(config, cli_args, simple_only=simple_only, no_comments=no_comments,
                                          mask_full_if_conditions=mask_full_if_conditions,
-                                         remove_project_on_exit=remove_project_on_exit)
+                                         remove_project_on_exit=remove_project_on_exit, model=model)
     request.call(os.path.expanduser(config['java']['home8']))
 
 
