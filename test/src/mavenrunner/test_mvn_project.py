@@ -10,6 +10,7 @@ class TestMvnProject(TestCase):
 
     def setUp(self):
         self.TEST_PATH = Path(__file__).parent.parent.parent
+        self.TMP_PATH = Path(__file__).parent.parent.parent.parent
         self.RES_PATH = join(self.TEST_PATH, 'res')
         self.DUMMY_REPO = join(self.RES_PATH, 'exampleclass/DummyProject')
 
@@ -66,3 +67,20 @@ class TestMvnProject(TestCase):
                              mvn_home=self.dummy_dir_as_mvn)
         result = project.test()
         self.assertEqual(set(), result)
+
+    def test_test_command_with_relevant_tests(self):
+        file_test_map = {
+            'src/main/software/amazon/event/ruler/input/DefaultParser.java': ['ACMachineTest',
+                                                                              'GenericMachineTest',
+                                                                              'RulerTest',
+                                                                              'CIDRTest',
+                                                                              'JsonRuleCompilerTest']}
+        target_file = join(self.TMP_PATH, '/mvn_projects/event-ruler/src/main/software/amazon/event/ruler/input/DefaultParser.java')
+
+        project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk,
+                             mvn_home=self.dummy_dir_as_mvn)
+        project.file_test_map = file_test_map
+
+        result = project.test_command(file=target_file)
+        tests = 'ACMachineTest,GenericMachineTest,RulerTest,CIDRTest,JsonRuleCompilerTest'
+        self.assertEqual("JAVA_HOME='" + str(self.dummy_dir_as_jdk) + "' M2_HOME='" + str(self.dummy_dir_as_mvn) + "'" + ' mvn test -Dparallel=classes -DprintSummary=false -Dtest=' + tests, result)

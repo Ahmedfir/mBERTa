@@ -50,6 +50,10 @@ def create_mbert_request(project: MvnProject, csv_path: str,
         reqs = {BusinessFileRequest(row['filename'], None if all_lines else str(row['lines']))
                 for index, row in df.iterrows() if row['filename'].endswith('.java')}
 
+        #map each file to relevant tests
+        df['tests_list'] = df['tests'].apply(lambda x: x.strip("[]").replace(" ", "").split(","))
+        project.file_test_map = df.set_index('filename')['tests_list'].to_dict()
+
     return MvnRequest(project=project, file_requests=reqs, repo_path=project.repo_path,
                       output_dir=output_dir,
                       max_processes_number=max_processes_number, simple_only=simple_only,

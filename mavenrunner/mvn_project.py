@@ -47,11 +47,11 @@ class MvnProject(MbertProject):
         self.rev_id = rev_id
         self.failing_tests = None
         self.lock = None
-        self.relevant_tests_exec_only_possible = False
+        self.relevant_tests_exec_only_possible = True
         self.source_dir = None
         self.bin_dir = None
         self.target_classes = None
-
+        self.file_test_map = None
     # todo add a maven preprocess mvn -v
 
     def cp(self, n):
@@ -129,7 +129,7 @@ class MvnProject(MbertProject):
     def coverage_command(self, relevant_tests=True) -> str:
         raise Exception('Not implemented yet!')
 
-    def test_command(self, relevant_tests=True) -> str:
+    def test_command(self, relevant_tests=True, file=None) -> str:
         # parallel=classes
         # -Dtest=pkg.SomeTest#testMethod
         # printSummary=false
@@ -137,8 +137,13 @@ class MvnProject(MbertProject):
 
         cmd = self.cmd_base() + " test -Dparallel=classes -DprintSummary=false"
         # todo implement this
-        if self.relevant_tests_exec_only_possible and relevant_tests:
-            cmd = cmd + " -r"
+        if self.relevant_tests_exec_only_possible and relevant_tests and file is not None:
+            tail = ''
+            if "src/" in file:
+                relative_file_path = file.split("src/", 1)[-1]
+                tests = self.file_test_map['src/' + relative_file_path]
+                tail = ','.join(tests)
+            cmd = cmd + ' -Dtest=' + tail
         return cmd
 
     def on_tests_run(self, test_exec_output) -> Set[MvnFailingTest]:
@@ -149,11 +154,11 @@ class MvnProject(MbertProject):
             text = test_exec_output.stderr
         return exec_res_to_broken_tests_arr(text)
 
-    def test(self, timeout=DEFAULT_TIMEOUT_S, relevant_tests=True) -> Set[MvnFailingTest]:
+    def test(self, timeout=DEFAULT_TIMEOUT_S, relevant_tests=True, file=None) -> Set[MvnFailingTest]:
         """test project"""
         with safe_chdir(self.repo_path):
             log.debug('testing {0} in {1}'.format(self.repo_path, self.rev_id))
-            cmd = self.test_command(relevant_tests)
+            cmd = self.test_command(relevant_tests, file)
             log.info('-- executing shell cmd = {0}'.format(cmd))
             try:
                 output = shell_call(cmd, timeout=timeout)
