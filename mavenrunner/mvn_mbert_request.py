@@ -42,6 +42,9 @@ def process_mutant(mutant: ReplacementMutant, repo_path, projects: List[MvnProje
     try:
         if mutant.broken_tests is None:
             res = res + [None, None]
+        elif len(mutant.broken_tests) == 1 and mutant.broken_tests[0] == "TESTS_TIME_OUT":
+
+            res = res + [mutant.broken_tests[0], None]
         else:
             res.append([t.class_name + '.' + t.method_name for t in mutant.broken_tests])
             res.append(json.dumps([t.json() for t in mutant.broken_tests]))
