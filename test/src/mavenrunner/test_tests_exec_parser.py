@@ -14,6 +14,7 @@ class TestMvnProject(TestCase):
         self.failing_tests_example = load_file(join(self.RES_PATH, 'mavenrunner/failing_tests_mvn_output.txt'))
         self.failing_and_error_tests_example = load_file(join(self.RES_PATH, 'mavenrunner/error_failing_tests_mvn_output.txt'))
         self.no_reason_failing_and_error_tests_example = load_file(join(self.RES_PATH, 'mavenrunner/no_reason_failing_test_maven_output.txt'))
+        self.error_tests_example = load_file(join(self.RES_PATH, 'mavenrunner/error_tests_mvn_output.txt'))
         self.passing_tests_example = "\n".join(['[INFO]',
                                                 '[INFO] ----------------------< org.example:DummyProject '
                                                 '>----------------------',
@@ -202,3 +203,13 @@ class TestMvnProject(TestCase):
                                           failing_category=FailCategory.Err)
                           },
                          exec_res_to_broken_tests_arr(self.no_reason_failing_and_error_tests_example))
+
+    def test_exec_res_to_broken_tests_arr_errors(self):
+        self.assertEqual({MvnFailingTest(method_name='WHEN_JSONContainsArrays_THEN_RulerNoCompileMatchesWork',
+                                         class_name='software.amazon.event.ruler.RulerTest',
+                                         failing_category=FailCategory.Err),
+                          MvnFailingTest(method_name='WHEN_WeTryReallySimpleRules_THEN_TheyWork',
+                                         class_name='software.amazon.event.ruler.RulerTest',
+                                         failing_category=FailCategory.Err)
+                          },
+                         exec_res_to_broken_tests_arr(self.error_tests_example))
