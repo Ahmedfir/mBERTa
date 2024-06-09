@@ -102,7 +102,7 @@ def parse_to_json(data_to_parse, template) -> str:
 def parse_broken_tests(data_to_parse) -> Set[MvnFailingTest]:
     unique_broken_tests = set()
     # adding a minus to the start of every line to simplify the templates and enable the parsing with ttp lib.
-    data_to_parse_with_suff =  data_to_parse.replace('\n', '\n' + '-')
+    data_to_parse_with_suff = data_to_parse.replace('\n', '\n' + '-')
     tmplate_dict = MvnFailingTest.get_template()
     for template_failing_category in tmplate_dict:
         for template in tmplate_dict[template_failing_category]:
@@ -112,10 +112,15 @@ def parse_broken_tests(data_to_parse) -> Set[MvnFailingTest]:
             if len(parsed.__root__) == 0:
                 # quick fix for when we get an array of array for no reason.
                 results_json = json.loads(results_str)
+                parsed_arr = []
                 for rj in results_json:
                     if len(rj) > 0:
-                        parsed = MvnFailingTestsArray.parse_raw(json.dumps(rj))
-                parsed.remove_invalid()
+                        pa = MvnFailingTestsArray.parse_raw(json.dumps(rj))
+                        pa.remove_invalid()
+                        if len(pa.__root__) > 0:
+                            parsed_arr.append(pa)
+                if len(parsed_arr) > 0:
+                    parsed.__root__ = [pa_i for pa in parsed_arr for pa_i in pa.__root__]
             for p in parsed.__root__:
                 p.failing_category = template_failing_category
             unique_broken_tests.update(parsed.__root__)
