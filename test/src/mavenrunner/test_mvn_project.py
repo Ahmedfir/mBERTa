@@ -66,3 +66,10 @@ class TestMvnProject(TestCase):
                              mvn_home=self.dummy_dir_as_mvn)
         result = project.test()
         self.assertEqual(set(), result)
+
+    def test_test_timeout(self):
+        project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk,
+                             mvn_home=self.dummy_dir_as_mvn, tests_timeout=200)
+        self.assertEqual(200, project.tests_timeout)
+        result = project.test()
+        self.assertEqual(set(), result)

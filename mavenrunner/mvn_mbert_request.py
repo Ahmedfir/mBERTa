@@ -12,7 +12,7 @@ from typing import List
 
 from tqdm import tqdm
 
-from cb.replacement_mutants import ReplacementMutant, TESTS_TIME_OUT_RESULT
+from cb.replacement_mutants import ReplacementMutant
 from codebertnt.locs_request import BusinessFileRequest
 from mavenrunner.mvn_project import MvnProject
 from mbertntcall.mbert_ext_request_impl import MbertRequestImpl

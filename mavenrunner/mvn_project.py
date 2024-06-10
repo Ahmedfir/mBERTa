@@ -35,8 +35,8 @@ class MvnProject(MbertProject):
     def get_project_name_from_git_url(vcs_url):
         return vcs_url.replace('.git', '').split('/')[-1]
 
-    def __init__(self, repo_path, repos_path, jdk_path=None, mvn_home=None, vcs_url=None, rev_id=None, no_comments=False):
-        super(MvnProject, self).__init__(repo_path, jdk_path, None, None, repos_path, no_comments)
+    def __init__(self, repo_path, repos_path, jdk_path=None, mvn_home=None, vcs_url=None, rev_id=None, no_comments=False, tests_timeout= DEFAULT_TIMEOUT_S):
+        super(MvnProject, self).__init__(repo_path, jdk_path, None, None, repos_path, no_comments, tests_timeout=tests_timeout)
         if self.repo_path is None or not isdir(self.repo_path):
             if vcs_url is None:
                 raise Exception("Pleas pass a valid git url or repo path.")
@@ -52,7 +52,7 @@ class MvnProject(MbertProject):
         self.bin_dir = None
         self.target_classes = None
 
-    # todo add a maven preprocess mvn -v
+    # todo add a maven preprocess mvn -v to check that mvn is well setup.
 
     def cp(self, n):
         copy = super(MvnProject, self).cp(n)
@@ -134,6 +134,7 @@ class MvnProject(MbertProject):
         # -Dtest=pkg.SomeTest#testMethod
         # printSummary=false
         # -Dtest=TestSquare,TestCi*le test
+        # todo just some tests
 
         cmd = self.cmd_base() + " test -Dparallel=classes -DprintSummary=false"
         # todo implement this
@@ -149,14 +150,14 @@ class MvnProject(MbertProject):
             text = test_exec_output.stderr
         return exec_res_to_broken_tests_arr(text)
 
-    def test(self, timeout=DEFAULT_TIMEOUT_S, relevant_tests=True) -> Set[MvnFailingTest]:
+    def test(self, relevant_tests=True) -> Set[MvnFailingTest]:
         """test project"""
         with safe_chdir(self.repo_path):
             log.debug('testing {0} in {1}'.format(self.repo_path, self.rev_id))
             cmd = self.test_command(relevant_tests)
             log.info('-- executing shell cmd = {0}'.format(cmd))
             try:
-                output = shell_call(cmd, timeout=timeout)
+                output = shell_call(cmd, timeout=self.tests_timeout)
                 return self.on_tests_run(output)
             except TimeoutExpired as te:
                 log.debug('timeout')

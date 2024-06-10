@@ -63,7 +63,8 @@ def create_request(config, cli_args, simple_only=False, no_comments=False, force
                              repos_path=os.path.expanduser(config['tmp_large_memory']['repos_path']),
                              jdk_path=os.path.expanduser(config['java']['home8']),
                              mvn_home=os.path.expanduser(config['maven']), vcs_url=cli_args.git_url,
-                             rev_id=cli_args.rev_id, no_comments=no_comments)
+                             rev_id=cli_args.rev_id, no_comments=no_comments,
+                             tests_timeout=config['exec']['tests_timeout'])
 
     csv_path = cli_args.target_files
     output_dir = join(os.path.expanduser(config['output_dir']), Path(mvn_project.repo_path).name)
