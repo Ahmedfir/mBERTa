@@ -42,7 +42,8 @@ def process_mutant(mutant: ReplacementMutant, repo_path, projects: List[MvnProje
     try:
         if mutant.broken_tests is None:
             res = res + [None, None]
-        elif len(mutant.broken_tests) == 1 and mutant.broken_tests[0] == "TESTS_TIME_OUT":
+        elif mutant.broken_tests == TESTS_TIME_OUT_RESULT:
+            print('broken tests : ', mutant.broken_tests)
 
             res = res + [mutant.broken_tests[0], None]
         else:

@@ -13,7 +13,6 @@ class TestMvnProject(TestCase):
         self.TMP_PATH = Path(__file__).parent.parent.parent.parent
         self.RES_PATH = join(self.TEST_PATH, 'res')
         self.DUMMY_REPO = join(self.RES_PATH, 'exampleclass/DummyProject')
-
         self.CONFIG = load_config(join(Path(__file__).parent, 'mbert_test_config.yml'))
 
         self.dummy_dir_as_jdk = self.CONFIG['java']['home8']
@@ -44,19 +43,23 @@ class TestMvnProject(TestCase):
 
     def test_cmd_base__with_mvn_and_jdk(self):
         project = MvnProject(self.DUMMY_REPO, "ignore_repos", self.dummy_dir_as_jdk, mvn_home=self.dummy_dir_as_mvn)
-        self.assertEqual("JAVA_HOME='" + str(self.dummy_dir_as_jdk) + "' M2_HOME='" + str(self.dummy_dir_as_mvn) + "'" + ' mvn',
-                          project.cmd_base())
+        self.assertEqual(
+            "JAVA_HOME='" + str(self.dummy_dir_as_jdk) + "' M2_HOME='" + str(self.dummy_dir_as_mvn) + "'" + ' mvn',
+            project.cmd_base())
 
     def test_get_project_name_from_git_url(self):
         dummy_url = 'https://github.com/Ahmedfir/mBERTa.git'
         self.assertEqual('mBERTa', MvnProject.get_project_name_from_git_url(dummy_url))
 
     def test_compile(self):
-        project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk, mvn_home=self.dummy_dir_as_mvn)
+        project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk,
+                             mvn_home=self.dummy_dir_as_mvn)
         result = project.compile()
         self.assertTrue(result)
+
     def test_compile_no_comments(self):
-        project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk, mvn_home=self.dummy_dir_as_mvn)
+        project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk,
+                             mvn_home=self.dummy_dir_as_mvn)
         project.no_comments = True
         project.remove_comments_from_repo()
         result = project.compile()

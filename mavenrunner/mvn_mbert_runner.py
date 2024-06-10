@@ -11,6 +11,10 @@ from mavenrunner.mvn_mbert_request import MvnRequest
 from mavenrunner.mvn_project import MvnProject
 from mbertnteval.d4jeval.yaml_utils import load_config
 
+git_url = "https://github.com/aws/event-ruler.git"
+rev_id = "48db0b03449451ee02723f8e648f2f4aef18cbdb"
+csv_file = "/home/asmahamidi/code/mBERTa/mavenrunner/gitbug-projects/aws-event-ruler.csv"
+
 
 def _get_test_dummy_project_path():
     logging.critical("!!! DUMMY PROJECT SELECTED !!! You have to pass YOUR repo path or a git_url.")
@@ -20,11 +24,12 @@ def _get_test_dummy_project_path():
 def get_args():
     import argparse
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument('-target_files', dest='target_files',
+    parser.add_argument('-target_files', dest='target_files', default=csv_file,
                         help="optional: csv file containing a list of java files and lines to mutate: one file per row. Columns are 'filename','lines'. Note that when 'all_lines' is set True in the config file, the 'lines' column will be ignored.")
-    parser.add_argument('-git_url', dest='git_url', help='optional if a repo_path is given: git url to your repo.')
-    parser.add_argument('-rev_id', dest='rev_id', help='optional: rev_id (commit-hash) to checkout.')
-    parser.add_argument('-repo_path', dest='repo_path', default=_get_test_dummy_project_path(),
+    parser.add_argument('-git_url', dest='git_url', default=git_url,
+                        help='optional if a repo_path is given: git url to your repo.')
+    parser.add_argument('-rev_id', dest='rev_id', default=rev_id, help='optional: rev_id (commit-hash) to checkout.')
+    parser.add_argument('-repo_path', dest='repo_path',
                         help='optional if a git_url is given: the path to your maven project.')
     parser.add_argument('-config', dest='config',
                         help='required: config yaml file.', default=join(Path(__file__).parent,
