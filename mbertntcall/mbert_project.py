@@ -18,7 +18,7 @@ log.addHandler(logging.StreamHandler(sys.stdout))
 class MbertProject:
 
     def __init__(self, repo_path, jdk_path, class_path, test_class_path, repos_path='/tmp_large_mem',
-                 no_comments=False):
+                 no_comments=False, tests_timeout=DEFAULT_TIMEOUT_S):
         self.repos_path = repos_path
         self.repo_path = repo_path
         self.jdk = jdk_path
@@ -26,6 +26,7 @@ class MbertProject:
         self.class_path = class_path
         self.test_class_path = test_class_path
         self.no_comments = no_comments
+        self.tests_timeout = tests_timeout
 
     def remove_comments_from_repo(self, check_compile=True,
                                   vm_options="-Xms1024m -Xmx1024m -Xss512m"):
@@ -111,14 +112,14 @@ class MbertProject:
             broken_tests = [t.replace('  - ', '').strip() for t in text.split('\n')[1:] if len(t.strip()) > 0]
         return broken_tests
 
-    def test(self, timeout=DEFAULT_TIMEOUT_S) -> List[str]:
+    def test(self) -> List[str]:
         """test project"""
         with safe_chdir(self.repo_path):
             log.debug('testing {0}'.format(self.repo_path))
             cmd = self.test_command()
             log.info('-- executing shell cmd = {0}'.format(cmd))
             try:
-                output = shell_call(cmd, timeout=timeout)
+                output = shell_call(cmd, timeout=self.tests_timeout)
                 return self.on_tests_run(output)
             except TimeoutExpired as te:
                 log.debug('timeout')

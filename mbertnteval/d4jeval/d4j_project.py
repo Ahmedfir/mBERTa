@@ -72,8 +72,8 @@ def coverage_to_csv(output: CompletedProcess, csv_file):
 
 
 class D4jProject(MbertProject):
-    def __init__(self, d4j_path, repos_path, pid, bid, jdk8, jdk7=None, version='f', no_comments=False):
-        super(D4jProject, self).__init__(None, None, None, None, repos_path, no_comments)
+    def __init__(self, d4j_path, repos_path, pid, bid, jdk8, jdk7=None, version='f', no_comments=False, tests_timeout=DEFAULT_TIMEOUT_S):
+        super(D4jProject, self).__init__(None, None, None, None, repos_path, no_comments, tests_timeout=tests_timeout)
         self.d4j_path = d4j_path
         self.pid = pid
         self.bid = bid
@@ -208,14 +208,14 @@ class D4jProject(MbertProject):
             cmd = cmd + " -r"
         return cmd
 
-    def test(self, timeout=DEFAULT_TIMEOUT_S, relevant_tests=True) -> List[str]:
+    def test(self, relevant_tests=True) -> List[str]:
         """test project"""
         with safe_chdir(self.repo_path):
             log.debug('testing {0} in {1}'.format(self.pid_bid, self.repo_path))
             cmd = self.test_command(relevant_tests)
             log.info('-- executing shell cmd = {0}'.format(cmd))
             try:
-                output = shell_call(cmd, timeout=timeout)
+                output = shell_call(cmd, timeout=self.tests_timeout)
                 return self.on_tests_run(output)
             except TimeoutExpired as te:
                 log.debug('timeout')

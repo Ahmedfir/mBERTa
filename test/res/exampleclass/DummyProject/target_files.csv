@@ -1,0 +1,2 @@
+filename;tests
+src/main/java/example/DummyClass.java;example.DummyClassTest#parseStringToInt_str,example.DummyClassTest#parseStringToInt_float

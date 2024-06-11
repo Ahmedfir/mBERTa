@@ -2,11 +2,13 @@ import logging
 import os
 from os.path import isfile, join, isdir
 from pathlib import Path
+from typing import Dict
 
 import pandas as pd
 import torch
 
 from codebertnt.locs_request import BusinessFileRequest
+from mavenrunner.cli_target_files_tests_parser import parse_target_files_tests
 from mavenrunner.mvn_mbert_request import MvnRequest
 from mavenrunner.mvn_project import MvnProject
 from mbertnteval.d4jeval.yaml_utils import load_config
@@ -24,12 +26,17 @@ def _get_test_dummy_project_path():
 def get_args():
     import argparse
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument('-target_files', dest='target_files', default=csv_file,
-                        help="optional: csv file containing a list of java files and lines to mutate: one file per row. Columns are 'filename','lines'. Note that when 'all_lines' is set True in the config file, the 'lines' column will be ignored.")
-    parser.add_argument('-git_url', dest='git_url', default=git_url,
-                        help='optional if a repo_path is given: git url to your repo.')
-    parser.add_argument('-rev_id', dest='rev_id', default=rev_id, help='optional: rev_id (commit-hash) to checkout.')
-    parser.add_argument('-repo_path', dest='repo_path',
+    parser.add_argument('-target_files_csv', dest='target_files_csv',
+                        help="optional: csv file containing a list of java files and lines to mutate: one file per row. Also you can pass the tests to run. \nColumns are 'filename';'lines';'tests' and the separator is ';'. \nThe tests must be separated by a ',' and formatted as follows:\n pkg.cls#method\n Note that when 'all_lines' is set True in the config file, the 'lines' column will be ignored.")
+    parser.add_argument('-target_files', dest='target_files',
+                        help="optional: list of java files to mutate separated by a coma. ")
+    parser.add_argument('-tests', dest='tests',
+                        help="optional: list of tests to target separated by a coma. "
+                             "The tests should be of this format: pkg.cls#method ")
+
+    parser.add_argument('-git_url', dest='git_url', help='optional if a repo_path is given: git url to your repo.')
+    parser.add_argument('-rev_id', dest='rev_id', help='optional: rev_id (commit-hash) to checkout.')
+    parser.add_argument('-repo_path', dest='repo_path', default=_get_test_dummy_project_path(),
                         help='optional if a git_url is given: the path to your maven project.')
     parser.add_argument('-config', dest='config',
                         help='required: config yaml file.', default=join(Path(__file__).parent,
@@ -40,26 +47,17 @@ def get_args():
             args.repo_path is None and args.git_url is None):
         parser.print_help()
         raise AttributeError
+    if args.target_files_csv is not None and args.target_files is not None:
+        parser.print_help()
+        raise AttributeError('Use -target_files_csv or -target_files to pass the target files.')
     return args
 
 
-def create_mbert_request(project: MvnProject, csv_path: str,
-                         output_dir: str, max_processes_number: int = 4, all_lines=True,
+def create_mbert_request(project: MvnProject, files_tests: Dict[BusinessFileRequest, str], tests: str,
+                         output_dir: str, max_processes_number: int = 4,
                          simple_only=False, force_reload=False,
                          mask_full_if_conditions=False, remove_project_on_exit=True, model=None) -> MvnRequest:
-    if csv_path is None or not isfile(csv_path):
-        logging.warning('No csv_path passed! You will run on all files!')
-        reqs = None
-    else:
-        df = pd.read_csv(csv_path)
-        reqs = {BusinessFileRequest(row['filename'], None if all_lines else str(row['lines']))
-                for index, row in df.iterrows() if row['filename'].endswith('.java')}
-
-        #map each file to relevant tests
-        df['tests_list'] = df['tests'].apply(lambda x: x.strip("[]").replace(" ", "").split(","))
-        project.file_test_map = df.set_index('filename')['tests_list'].to_dict()
-
-    return MvnRequest(project=project, file_requests=reqs, repo_path=project.repo_path,
+    return MvnRequest(project=project, files_tests_map=files_tests, tests=tests, repo_path=project.repo_path,
                       output_dir=output_dir,
                       max_processes_number=max_processes_number, simple_only=simple_only,
                       force_reload=force_reload, mask_full_if_conditions=mask_full_if_conditions,
@@ -72,9 +70,13 @@ def create_request(config, cli_args, simple_only=False, no_comments=False, force
                              repos_path=os.path.expanduser(config['tmp_large_memory']['repos_path']),
                              jdk_path=os.path.expanduser(config['java']['home8']),
                              mvn_home=os.path.expanduser(config['maven']), vcs_url=cli_args.git_url,
-                             rev_id=cli_args.rev_id, no_comments=no_comments)
+                             rev_id=cli_args.rev_id, no_comments=no_comments,
+                             tests_timeout=config['exec']['tests_timeout'])
 
-    csv_path = cli_args.target_files
+    reqs = parse_target_files_tests(cli_args, config['exec']['all_lines'])
+    # won't be used if tests are already set in the csv passed via -target_files_csv.
+    tests = cli_args.tests
+
     output_dir = join(os.path.expanduser(config['output_dir']), Path(mvn_project.repo_path).name)
     if not isdir(output_dir):
         try:
@@ -82,8 +84,7 @@ def create_request(config, cli_args, simple_only=False, no_comments=False, force
         except FileExistsError:
             print("two threads created the directory concurrently.")
 
-    return create_mbert_request(mvn_project, csv_path, output_dir,
-                                config['exec']['max_processes'], config['exec']['all_lines'],
+    return create_mbert_request(mvn_project, reqs, tests, output_dir, config['exec']['max_processes'],
                                 simple_only=simple_only, force_reload=force_reload,
                                 mask_full_if_conditions=mask_full_if_conditions,
                                 remove_project_on_exit=remove_project_on_exit, model=model)

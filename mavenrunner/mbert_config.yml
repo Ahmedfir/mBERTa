@@ -27,6 +27,8 @@
     language_model:
         model_name: codeBERT
         context_size: 512
+    # Maximum time to run tests on a mutant. Default is 5 minutes.
+    tests_timeout: 300
     # Turn this to true to remove the cloned repo on exit. This is useful when you are conducting a study on remote repositories.
     # Make sure this is False if you are targeting a local repository.
     # by default, if a -git_url is given, the clone will be removed in the end, otherwise not.

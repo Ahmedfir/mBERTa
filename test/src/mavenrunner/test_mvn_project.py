@@ -13,6 +13,7 @@ class TestMvnProject(TestCase):
         self.TMP_PATH = Path(__file__).parent.parent.parent.parent
         self.RES_PATH = join(self.TEST_PATH, 'res')
         self.DUMMY_REPO = join(self.RES_PATH, 'exampleclass/DummyProject')
+
         self.CONFIG = load_config(join(Path(__file__).parent, 'mbert_test_config.yml'))
 
         self.dummy_dir_as_jdk = self.CONFIG['java']['home8']
@@ -56,7 +57,6 @@ class TestMvnProject(TestCase):
                              mvn_home=self.dummy_dir_as_mvn)
         result = project.compile()
         self.assertTrue(result)
-
     def test_compile_no_comments(self):
         project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk,
                              mvn_home=self.dummy_dir_as_mvn)
@@ -71,19 +71,23 @@ class TestMvnProject(TestCase):
         result = project.test()
         self.assertEqual(set(), result)
 
-    def test_test_command_with_relevant_tests(self):
-        file_test_map = {
-            'src/main/software/amazon/event/ruler/input/DefaultParser.java': ['ACMachineTest',
-                                                                              'GenericMachineTest',
-                                                                              'RulerTest',
-                                                                              'CIDRTest',
-                                                                              'JsonRuleCompilerTest']}
-        target_file = join(self.TMP_PATH, '/mvn_projects/event-ruler/src/main/software/amazon/event/ruler/input/DefaultParser.java')
-
+    def test_test_timeout(self):
         project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk,
-                             mvn_home=self.dummy_dir_as_mvn)
-        project.file_test_map = file_test_map
+                             mvn_home=self.dummy_dir_as_mvn, tests_timeout=200)
+        self.assertEqual(200, project.tests_timeout)
+        result = project.test()
+        self.assertEqual(set(), result)
 
-        result = project.test_command(file=target_file)
-        tests = 'ACMachineTest,GenericMachineTest,RulerTest,CIDRTest,JsonRuleCompilerTest'
-        self.assertEqual("JAVA_HOME='" + str(self.dummy_dir_as_jdk) + "' M2_HOME='" + str(self.dummy_dir_as_mvn) + "'" + ' mvn test -Dparallel=classes -DprintSummary=false -Dtest=' + tests, result)
+    def test_test_one_test(self):
+        project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk,
+                             mvn_home=self.dummy_dir_as_mvn, tests_timeout=200)
+        self.assertEqual(200, project.tests_timeout)
+        result = project.test(target_tests='example.DummyClassTest#parseStringToInt_str')
+        self.assertEqual(set(), result)
+
+    def test_test_two_test(self):
+        project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk,
+                             mvn_home=self.dummy_dir_as_mvn, tests_timeout=200)
+        self.assertEqual(200, project.tests_timeout)
+        result = project.test(target_tests='example.DummyClassTest#parseStringToInt_str,example.DummyClassTest#parseStringToInt_float')
+        self.assertEqual(set(), result)

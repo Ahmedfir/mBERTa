@@ -5,14 +5,15 @@ import logging
 import multiprocessing
 import sys
 from concurrent.futures import ProcessPoolExecutor
+from functools import lru_cache
 from os import listdir
 from os.path import isdir
 from pathlib import Path
-from typing import List
+from typing import List, Dict
 
 from tqdm import tqdm
 
-from cb.replacement_mutants import ReplacementMutant, TESTS_TIME_OUT_RESULT
+from cb.replacement_mutants import ReplacementMutant
 from codebertnt.locs_request import BusinessFileRequest
 from mavenrunner.mvn_project import MvnProject
 from mbertntcall.mbert_ext_request_impl import MbertRequestImpl
@@ -23,7 +24,7 @@ log.addHandler(logging.StreamHandler(sys.stdout))
 
 
 def process_mutant(mutant: ReplacementMutant, repo_path, projects: List[MvnProject], mutants_csv_file,
-                   output_csv_lock, mutant_classes_output_dir, patch_diff, java_file):
+                   output_csv_lock, mutant_classes_output_dir, patch_diff, java_file, target_tests):
     # select project that is not locked and lock it
     p = next(x for x in projects if x.acquire())
     log.debug('{0} - in {1}'.format(str(mutant.id), p.repo_path))
@@ -31,7 +32,8 @@ def process_mutant(mutant: ReplacementMutant, repo_path, projects: List[MvnProje
     mutant.file_path = mutant.file_path.replace(repo_path, p.repo_path)
     try:
         #  compile and execute the mutant
-        mutant.compile_execute(p, mutant_classes_output_dir, patch_diff=patch_diff, java_file=java_file)
+        mutant.compile_execute(p, mutant_classes_output_dir, patch_diff=patch_diff, java_file=java_file,
+                               target_tests=target_tests)
     finally:
         #  unlock project
         p.lock.release()
@@ -64,8 +66,11 @@ def process_mutant(mutant: ReplacementMutant, repo_path, projects: List[MvnProje
 
 class MvnRequest(MbertRequestImpl):
 
-    def __init__(self, project: MvnProject, *args, **kargs):
-        super(MvnRequest, self).__init__(project, *args, **kargs)
+    def __init__(self, project: MvnProject, files_tests_map: Dict[BusinessFileRequest, str], tests: str, *args,
+                 **kargs):
+        super(MvnRequest, self).__init__(project, file_requests=files_tests_map.keys() if files_tests_map is not None else None, *args, **kargs)
+        self.files_tests_map = {f.file_path: t for f, t in files_tests_map.items()} if files_tests_map is not None else None
+        self.tests = tests
 
     def preprocess(self) -> bool:
         if not isdir(self.project.repo_path) or len(listdir(self.project.repo_path)) == 0 or (
@@ -105,6 +110,18 @@ class MvnRequest(MbertRequestImpl):
         else:
             log.warning("Currently parallel mutants testing is only enabled when a -git_url is given.")
 
+    def get_mutant_target_tests(self, m: ReplacementMutant) -> str:
+        mutant_file = m.file_path.split(self.repo_path + '/')[-1]
+        return self.get_file_target_tests(mutant_file)
+
+    @lru_cache(maxsize=20)
+    def get_file_target_tests(self, mutant_file: str) -> str:
+        tests = self.tests
+        if self.files_tests_map is not None and mutant_file in self.files_tests_map.keys():
+            tests = self.files_tests_map[mutant_file]
+            log.debug('loaded tests for file {0}:\n{1}'.format(mutant_file, str(tests)))
+        return tests
+
     def process_mutants(self, mutants: List[ReplacementMutant], mutant_classes_output_dir=None, patch_diff=False,
                         java_file=False):
         self.projects = [self.project]
@@ -126,8 +143,8 @@ class MvnRequest(MbertRequestImpl):
 
                 futures = {
                     executor.submit(process_mutant, mutant, self.repo_path, self.projects, self.mutants_csv_file,
-                                    output_csv_lock
-                                    , mutant_classes_output_dir, patch_diff, java_file): mutant.id
+                                    output_csv_lock, mutant_classes_output_dir, patch_diff, java_file,
+                                    self.get_mutant_target_tests(mutant)): mutant.id
                     for mutant in mutants}
                 for future in concurrent.futures.as_completed(futures):
                     kwargs = {
