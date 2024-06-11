@@ -34,7 +34,7 @@ class TestMvnProject(TestCase):
         self.assertEqual('mvn', project.cmd_base())
 
     def test_cmd_base__no_mvn_with_jdk(self):
-        project = MvnProject(self.DUMMY_REPO, "ignore_repos", str(self.dummy_dir_as_jdk))
+        project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=str(self.dummy_dir_as_jdk))
         self.assertEqual("JAVA_HOME='" + str(self.dummy_dir_as_jdk) + "'" + ' mvn', project.cmd_base())
 
     def test_cmd_base__with_mvn_no_jdk(self):
@@ -42,7 +42,7 @@ class TestMvnProject(TestCase):
         self.assertEqual("M2_HOME='" + str(self.dummy_dir_as_mvn) + "'" + ' mvn', project.cmd_base())
 
     def test_cmd_base__with_mvn_and_jdk(self):
-        project = MvnProject(self.DUMMY_REPO, "ignore_repos", self.dummy_dir_as_jdk, mvn_home=self.dummy_dir_as_mvn)
+        project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk, mvn_home=self.dummy_dir_as_mvn)
         self.assertEqual("JAVA_HOME='" + str(self.dummy_dir_as_jdk) + "' M2_HOME='" + str(self.dummy_dir_as_mvn) + "'" + ' mvn',
                           project.cmd_base())
 
