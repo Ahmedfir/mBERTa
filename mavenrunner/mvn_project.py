@@ -35,8 +35,10 @@ class MvnProject(MbertProject):
     def get_project_name_from_git_url(vcs_url):
         return vcs_url.replace('.git', '').split('/')[-1]
 
-    def __init__(self, repo_path, repos_path, jdk_path=None, mvn_home=None, vcs_url=None, rev_id=None, no_comments=False, tests_timeout= DEFAULT_TIMEOUT_S):
-        super(MvnProject, self).__init__(repo_path, jdk_path, None, None, repos_path, no_comments, tests_timeout=tests_timeout)
+    def __init__(self, repo_path, repos_path, jdk_path=None, mvn_home=None, vcs_url=None, rev_id=None,
+                 no_comments=False, tests_timeout=DEFAULT_TIMEOUT_S):
+        super(MvnProject, self).__init__(repo_path, jdk_path, None, None, repos_path, no_comments,
+                                         tests_timeout=tests_timeout)
         if self.repo_path is None or not isdir(self.repo_path):
             if vcs_url is None:
                 raise Exception("Pleas pass a valid git url or repo path.")
@@ -47,7 +49,7 @@ class MvnProject(MbertProject):
         self.rev_id = rev_id
         self.failing_tests = None
         self.lock = None
-        self.relevant_tests_exec_only_possible = False
+        self.parallel_possible = True
         self.source_dir = None
         self.bin_dir = None
         self.target_classes = None
@@ -81,7 +83,7 @@ class MvnProject(MbertProject):
                     broken_tests = self.test()
                     failed = len(broken_tests) > 0
                 except SubprocessError:
-                    self.relevant_tests_exec_only_possible = False
+                    self.parallel_possible = False
                     broken_tests = self.test()
                     failed = len(broken_tests) > 0
         except SubprocessError:
@@ -129,18 +131,16 @@ class MvnProject(MbertProject):
     def coverage_command(self, relevant_tests=True) -> str:
         raise Exception('Not implemented yet!')
 
-    def test_command(self, relevant_tests=True) -> str:
-        # parallel=classes
-        # -Dtest=pkg.SomeTest#testMethod
-        # printSummary=false
-        # -Dtest=TestSquare,TestCi*le test
-        # todo just some tests
+    def test_command(self, target_tests) -> str:
 
-        cmd = self.cmd_base() + " test -Dparallel=classes -DprintSummary=false"
-        # todo implement this
-        if self.relevant_tests_exec_only_possible and relevant_tests:
-            cmd = cmd + " -r"
-        return cmd
+        args_arr = ['-DprintSummary=false']
+        if self.parallel_possible:
+            args_arr.append('-Dparallel=classes')
+        if target_tests is not None:
+            args_arr.append('-Dtest=' + target_tests)
+
+        cmd_arr = [self.cmd_base(), "'" + ' '.join(args_arr) + "'", 'test']
+        return ' '.join(cmd_arr)
 
     def on_tests_run(self, test_exec_output) -> Set[MvnFailingTest]:
         text = test_exec_output.stdout
@@ -150,11 +150,11 @@ class MvnProject(MbertProject):
             text = test_exec_output.stderr
         return exec_res_to_broken_tests_arr(text)
 
-    def test(self, relevant_tests=True) -> Set[MvnFailingTest]:
+    def test(self, target_tests=None) -> Set[MvnFailingTest]:
         """test project"""
         with safe_chdir(self.repo_path):
             log.debug('testing {0} in {1}'.format(self.repo_path, self.rev_id))
-            cmd = self.test_command(relevant_tests)
+            cmd = self.test_command(target_tests)
             log.info('-- executing shell cmd = {0}'.format(cmd))
             try:
                 output = shell_call(cmd, timeout=self.tests_timeout)

@@ -73,3 +73,17 @@ class TestMvnProject(TestCase):
         self.assertEqual(200, project.tests_timeout)
         result = project.test()
         self.assertEqual(set(), result)
+
+    def test_test_one_test(self):
+        project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk,
+                             mvn_home=self.dummy_dir_as_mvn, tests_timeout=200)
+        self.assertEqual(200, project.tests_timeout)
+        result = project.test(target_tests='example.DummyClassTest#parseStringToInt_str')
+        self.assertEqual(set(), result)
+
+    def test_test_two_test(self):
+        project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk,
+                             mvn_home=self.dummy_dir_as_mvn, tests_timeout=200)
+        self.assertEqual(200, project.tests_timeout)
+        result = project.test(target_tests='example.DummyClassTest#parseStringToInt_str,example.DummyClassTest#parseStringToInt_float')
+        self.assertEqual(set(), result)
