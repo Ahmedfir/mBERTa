@@ -28,7 +28,7 @@ def get_args():
 def create_mbert_request(project: D4jProject, csv_path: str,
                          output_dir: str, max_processes_number: int = 4, all_lines=True,
                          simple_only=False, force_reload=False,
-                         mask_full_if_conditions=False) -> D4jRequest:
+                         mask_full_conditions=False) -> D4jRequest:
     df = pd.read_csv(csv_path)
     if project.version == 'b':
         v = 0
@@ -41,11 +41,11 @@ def create_mbert_request(project: D4jProject, csv_path: str,
 
     return D4jRequest(project=project, file_requests=reqs, repo_path=project.repo_path, output_dir=output_dir,
                       max_processes_number=max_processes_number, simple_only=simple_only,
-                      force_reload=force_reload, mask_full_if_conditions=mask_full_if_conditions)
+                      force_reload=force_reload, mask_full_conditions=mask_full_conditions)
 
 
 def create_request(config, job_name, simple_only=False, no_comments=False, force_reload=False,
-                   mask_full_if_conditions=False) -> D4jRequest:
+                   mask_full_conditions=False) -> D4jRequest:
     #  job_name = Math_2.src.patch.csv -> pid_bid = Math_2
     pid_bid = job_name.split(".")[0]
     pid_bid_splits = pid_bid.split('_')
@@ -66,7 +66,7 @@ def create_request(config, job_name, simple_only=False, no_comments=False, force
     return create_mbert_request(d4j_project, fix_commit_changes_csv, str(output_dir),
                                 config['exec']['max_processes'], config['exec']['all_lines'],
                                 simple_only=simple_only, force_reload=force_reload,
-                                mask_full_if_conditions=mask_full_if_conditions)
+                                mask_full_conditions=mask_full_conditions)
 
 
 def main_function(conf, changes_csv):
@@ -77,11 +77,11 @@ def main_function(conf, changes_csv):
     # this option removes all comments from the repo before the mutation.
     no_comments = 'no_comments' in config['exec'] and config['exec']['no_comments']
     # this option adds extra mutants where the full if condition is masked.
-    mask_full_if_conditions = 'mask_full_if_conditions' in config['exec'] and config['exec']['mask_full_if_conditions']
+    mask_full_conditions = 'mask_full_conditions' in config['exec'] and config['exec']['mask_full_conditions']
     # this option limits the generation to generating only simple mutants without the condition seeding ones.
-    simple_only = 'mask_full_if_conditions' in config['exec'] and config['exec']['mask_full_if_conditions']
+    simple_only = 'mask_full_conditions' in config['exec'] and config['exec']['mask_full_conditions']
     request: D4jRequest = create_request(config, changes_csv, simple_only=simple_only, no_comments=no_comments,
-                                         mask_full_if_conditions=mask_full_if_conditions)
+                                         mask_full_conditions=mask_full_conditions)
     request.call(os.path.expanduser(config['java']['home8']))
 
 

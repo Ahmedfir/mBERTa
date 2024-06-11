@@ -49,9 +49,9 @@ class MbertAdditivePatternsLocationsRequest:
                  auto_path_adapt=True,
                  simple_only=False,
                  max_size=MAX_TOKENS,
-                 mutant_classes_output_dir=None, patch_diff=False, java_file=False, mask_full_if_conditions=False,
+                 mutant_classes_output_dir=None, patch_diff=False, java_file=False, mask_full_conditions=False,
                  model=None):
-        self.mask_full_if_conditions = mask_full_if_conditions
+        self.mask_full_conditions = mask_full_conditions
         self.repo_path: str = str(Path(repo_path).absolute())
         self.file_requests: List[BusinessFileRequest] = file_requests
         self.output_dir = output_dir
@@ -125,8 +125,8 @@ class MbertAdditivePatternsLocationsRequest:
         if request is None:
             log.error('Empty request {0}'.format(self.repo_path))
             return False
-        if self.mask_full_if_conditions:
-            output = self._call_jar(request, jdk_path, mbert_locs_jar_path, vm_options="-DIF_CONDITIONS_AS_TKN=True")
+        if self.mask_full_conditions:
+            output = self._call_jar(request, jdk_path, mbert_locs_jar_path, vm_options="-DCONDITIONS_AS_TKN==True")
         else:
             output = self._call_jar(request, jdk_path, mbert_locs_jar_path)
         log.info(output)

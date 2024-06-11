@@ -56,16 +56,16 @@ def get_args():
 def create_mbert_request(project: MvnProject, files_tests: Dict[BusinessFileRequest, str], tests: str,
                          output_dir: str, max_processes_number: int = 4,
                          simple_only=False, force_reload=False,
-                         mask_full_if_conditions=False, remove_project_on_exit=True, model=None) -> MvnRequest:
+                         mask_full_conditions=False, remove_project_on_exit=True, model=None) -> MvnRequest:
     return MvnRequest(project=project, files_tests_map=files_tests, tests=tests, repo_path=project.repo_path,
                       output_dir=output_dir,
                       max_processes_number=max_processes_number, simple_only=simple_only,
-                      force_reload=force_reload, mask_full_if_conditions=mask_full_if_conditions,
+                      force_reload=force_reload, mask_full_conditions=mask_full_conditions,
                       remove_project_on_exit=remove_project_on_exit, model=model)
 
 
 def create_request(config, cli_args, simple_only=False, no_comments=False, force_reload=False,
-                   mask_full_if_conditions=False, remove_project_on_exit=True, model=None) -> MvnRequest:
+                   mask_full_conditions=False, remove_project_on_exit=True, model=None) -> MvnRequest:
     mvn_project = MvnProject(repo_path=cli_args.repo_path,
                              repos_path=os.path.expanduser(config['tmp_large_memory']['repos_path']),
                              jdk_path=os.path.expanduser(config['java']['home8']),
@@ -86,7 +86,7 @@ def create_request(config, cli_args, simple_only=False, no_comments=False, force
 
     return create_mbert_request(mvn_project, reqs, tests, output_dir, config['exec']['max_processes'],
                                 simple_only=simple_only, force_reload=force_reload,
-                                mask_full_if_conditions=mask_full_if_conditions,
+                                mask_full_conditions=mask_full_conditions,
                                 remove_project_on_exit=remove_project_on_exit, model=model)
 
 
@@ -100,7 +100,7 @@ def main_function(conf, cli_args):
     if no_comments and cli_args.git_url is None:
         logging.warning("You are about to remove all the comments from your repo!")
     # this option adds extra mutants where the full if condition is masked.
-    mask_full_if_conditions = 'mask_full_if_conditions' in config['exec'] and config['exec']['mask_full_if_conditions']
+    mask_full_conditions = 'mask_full_conditions' in config['exec'] and config['exec']['mask_full_conditions']
     # this option limits the generation to generating only simple mutants without the condition seeding ones.
     simple_only = 'simple_only' in config['exec'] and config['exec']['simple_only']
     # this option sets the model to use for predictions
@@ -114,7 +114,7 @@ def main_function(conf, cli_args):
         remove_project_on_exit = config['exec']['remove_project_on_exit']
 
     request: MvnRequest = create_request(config, cli_args, simple_only=simple_only, no_comments=no_comments,
-                                         mask_full_if_conditions=mask_full_if_conditions,
+                                         mask_full_conditions=mask_full_conditions,
                                          remove_project_on_exit=remove_project_on_exit, model=model)
     request.call(os.path.expanduser(config['java']['home8']))
 
