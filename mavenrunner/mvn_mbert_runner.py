@@ -68,7 +68,7 @@ def create_request(config, cli_args, simple_only=False, no_comments=False, force
                    mask_full_conditions=False, remove_project_on_exit=True, model=None) -> MvnRequest:
     mvn_project = MvnProject(repo_path=cli_args.repo_path,
                              repos_path=os.path.expanduser(config['tmp_large_memory']['repos_path']),
-                             jdk_path=os.path.expanduser(config['java']['home8']),
+                             jdk_path=os.path.expanduser(config['java']['home11']),
                              mvn_home=os.path.expanduser(config['maven']), vcs_url=cli_args.git_url,
                              rev_id=cli_args.rev_id, no_comments=no_comments,
                              tests_timeout=config['exec']['tests_timeout'])
@@ -76,8 +76,12 @@ def create_request(config, cli_args, simple_only=False, no_comments=False, force
     reqs = parse_target_files_tests(cli_args, config['exec']['all_lines'])
     # won't be used if tests are already set in the csv passed via -target_files_csv.
     tests = cli_args.tests
+    if cli_args.target_files_csv is not None and isfile(cli_args.target_files_csv):
+        subject = cli_args.target_files_csv.split('/')[-1].replace('.csv', '')
+        output_dir = join(os.path.expanduser(config['output_dir']), Path(mvn_project.repo_path).name, subject)
+    else:
+        output_dir = join(os.path.expanduser(config['output_dir']), Path(mvn_project.repo_path).name)
 
-    output_dir = join(os.path.expanduser(config['output_dir']), Path(mvn_project.repo_path).name)
     if not isdir(output_dir):
         try:
             os.makedirs(output_dir)

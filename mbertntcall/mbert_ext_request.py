@@ -126,9 +126,9 @@ class MbertAdditivePatternsLocationsRequest:
             log.error('Empty request {0}'.format(self.repo_path))
             return False
         if self.mask_full_conditions:
-            output = self._call_jar(request, jdk_path, mbert_locs_jar_path, vm_options="-DCONDITIONS_AS_TKN==True")
+            output = self._call_jar(request, jdk_path, mbert_locs_jar_path, vm_options="-DCONDITIONS_AS_TKN=True")
         else:
-            output = self._call_jar(request, jdk_path, mbert_locs_jar_path)
+            output = self._call_jar(request, jdk_path, mbert_locs_jar_path, vm_options="-DCONDITIONS_AS_TKN=False")
         log.info(output)
         return self.has_locs_output()
 

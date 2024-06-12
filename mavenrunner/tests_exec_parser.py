@@ -74,7 +74,7 @@ class MvnTestExecSummary(BaseModel):
 
     @staticmethod
     def get_template():
-        return """Tests run: {{ run }}, Failures: {{ fa }}, Errors: {{ err }}, Skipped: {{ sk }}"""
+        return """[INFO] Tests run: {{ run }}, Failures: {{ fa }}, Errors: {{ err }}, Skipped: {{ sk }}"""
 
 
 class MvnSummaryArray(BaseModel):

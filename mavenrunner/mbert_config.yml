@@ -4,6 +4,7 @@
   java:
     # path to your JAVA_HOME. optional if you have JAVA_HOME in your path
     home8:  /usr/lib/jvm/java-8-openjdk-amd64/
+    home11:  /usr/lib/jvm/java-11-openjdk-amd64/
   tmp_large_memory:
     # where the repository will be cloned.
     repos_path:  ~/code/mBERTa/tmp/mvn_projects
@@ -28,7 +29,7 @@
         model_name: codeBERT
         context_size: 512
     # Maximum time to run tests on a mutant. Default is 5 minutes.
-    tests_timeout: 300
+    tests_timeout: 900
     # Turn this to true to remove the cloned repo on exit. This is useful when you are conducting a study on remote repositories.
     # Make sure this is False if you are targeting a local repository.
     # by default, if a -git_url is given, the clone will be removed in the end, otherwise not.
