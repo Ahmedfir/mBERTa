@@ -74,7 +74,7 @@ def create_request(config, project_cli_infos: RepoCliInfos, reqs: Dict[BusinessF
                    mask_full_if_conditions=False, remove_project_on_exit=True) -> MvnRequest:
     mvn_project = MvnProject(repo_path=project_cli_infos.repo_path,
                              repos_path=os.path.expanduser(config['tmp_large_memory']['repos_path']),
-                             project_name = project_cli_infos.project_name,
+                             project_name=project_cli_infos.project_name,
                              jdk_path=os.path.expanduser(config['java']['home8']),
                              mvn_home=os.path.expanduser(config['maven']), vcs_url=project_cli_infos.git_url,
                              rev_id=project_cli_infos.rev_id, no_comments=no_comments,
@@ -104,7 +104,9 @@ def main_function(conf, cli_args):
     config = load_config(conf)
 
     reqs: Dict[BusinessFileRequest, str] = parse_target_files_tests(cli_args, config['exec']['all_lines'])
-    print(json.dumps(reqs, indent=4, sort_keys=True))
+    print(json.dumps(
+        {json.dumps({b.file_path: (b.lines if b.lines is not None else "")}): (t if t is not None else "") for b, t in
+         reqs.items()}, indent=4, sort_keys=True))
     # won't be used if tests are already set in the csv passed via -target_files_csv.
     tests: str = cli_args.tests
     if tests is not None:
