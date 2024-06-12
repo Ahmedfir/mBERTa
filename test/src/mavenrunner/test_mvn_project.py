@@ -10,7 +10,6 @@ class TestMvnProject(TestCase):
 
     def setUp(self):
         self.TEST_PATH = Path(__file__).parent.parent.parent
-        self.TMP_PATH = Path(__file__).parent.parent.parent.parent
         self.RES_PATH = join(self.TEST_PATH, 'res')
         self.DUMMY_REPO = join(self.RES_PATH, 'exampleclass/DummyProject')
 
@@ -35,7 +34,7 @@ class TestMvnProject(TestCase):
         self.assertEqual('mvn', project.cmd_base())
 
     def test_cmd_base__no_mvn_with_jdk(self):
-        project = MvnProject(self.DUMMY_REPO, "ignore_repos", str(self.dummy_dir_as_jdk))
+        project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=str(self.dummy_dir_as_jdk))
         self.assertEqual("JAVA_HOME='" + str(self.dummy_dir_as_jdk) + "'" + ' mvn', project.cmd_base())
 
     def test_cmd_base__with_mvn_no_jdk(self):
@@ -43,23 +42,20 @@ class TestMvnProject(TestCase):
         self.assertEqual("M2_HOME='" + str(self.dummy_dir_as_mvn) + "'" + ' mvn', project.cmd_base())
 
     def test_cmd_base__with_mvn_and_jdk(self):
-        project = MvnProject(self.DUMMY_REPO, "ignore_repos", self.dummy_dir_as_jdk, mvn_home=self.dummy_dir_as_mvn)
-        self.assertEqual(
-            "JAVA_HOME='" + str(self.dummy_dir_as_jdk) + "' M2_HOME='" + str(self.dummy_dir_as_mvn) + "'" + ' mvn',
-            project.cmd_base())
+        project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk, mvn_home=self.dummy_dir_as_mvn)
+        self.assertEqual("JAVA_HOME='" + str(self.dummy_dir_as_jdk) + "' M2_HOME='" + str(self.dummy_dir_as_mvn) + "'" + ' mvn',
+                          project.cmd_base())
 
     def test_get_project_name_from_git_url(self):
         dummy_url = 'https://github.com/Ahmedfir/mBERTa.git'
         self.assertEqual('mBERTa', MvnProject.get_project_name_from_git_url(dummy_url))
 
     def test_compile(self):
-        project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk,
-                             mvn_home=self.dummy_dir_as_mvn)
+        project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk, mvn_home=self.dummy_dir_as_mvn)
         result = project.compile()
         self.assertTrue(result)
     def test_compile_no_comments(self):
-        project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk,
-                             mvn_home=self.dummy_dir_as_mvn)
+        project = MvnProject(self.DUMMY_REPO, "ignore_repos", jdk_path=self.dummy_dir_as_jdk, mvn_home=self.dummy_dir_as_mvn)
         project.no_comments = True
         project.remove_comments_from_repo()
         result = project.compile()

@@ -17,32 +17,22 @@ log.setLevel(logging.INFO)
 log.addHandler(logging.StreamHandler(sys.stdout))
 
 
-def adapt_tests(x):
-    return x.replace('::', '.').replace(
-        "'", "").replace("[", '').replace(']', '')
-
-
-def string_to_array(x, test_splitter=','):
-    tests = [] if not x or x is None or x == 'nan' or x == ['nan'] or x == "['nan']" or len(x) == 0 else adapt_tests(
-        x).split(
-        test_splitter)
-    return [t.strip() for t in tests if t is not None and len(t.strip()) > 0]
-
-
 class MvnProject(MbertProject):
 
     @staticmethod
     def get_project_name_from_git_url(vcs_url):
         return vcs_url.replace('.git', '').split('/')[-1]
 
-    def __init__(self, repo_path, repos_path, jdk_path=None, mvn_home=None, vcs_url=None, rev_id=None,
-                 no_comments=False, tests_timeout=DEFAULT_TIMEOUT_S):
+    def __init__(self, repo_path: str, repos_path: str, project_name: str = None, jdk_path=None, mvn_home=None,
+                 vcs_url=None, rev_id=None, no_comments=False, tests_timeout=DEFAULT_TIMEOUT_S):
         super(MvnProject, self).__init__(repo_path, jdk_path, None, None, repos_path, no_comments,
                                          tests_timeout=tests_timeout)
         if self.repo_path is None or not isdir(self.repo_path):
             if vcs_url is None:
                 raise Exception("Pleas pass a valid git url or repo path.")
-            self.repo_path = str(join(repos_path, self.get_project_name_from_git_url(vcs_url)))
+            self.repo_path = str(join(repos_path,
+                                      project_name if project_name is not None else self.get_project_name_from_git_url(
+                                          vcs_url)))
             log.info("repo path will be: " + self.repo_path)
         self.mvn_home = mvn_home
         self.vcs_url = vcs_url
