@@ -162,27 +162,31 @@ class MbertAdditivePatternsLocationsRequest:
 
     def call(self, jdk_path: str, mbert_locs_jar_path: str = BUSINESS_LOCATIONS_JAR,
              mbert_ap_mc_jar_path: str = MBERT_ADDITIVE_PATTERNS_JAR) -> str:
-        self.print_progress('info', 'call')
-        if not self.force_reload and self.has_executed():
-            self.on_exit('has_treated_all_mutants')
-            return None
-        if not self.preprocess():
-            self.on_exit('exit_preprocess')
-            return None
-        if not self.has_locs_output():
-            if not self._call_mbert_locs(jdk_path, mbert_locs_jar_path):
-                self.on_exit('exit_call_mbert_locs')
+        try:
+            self.print_progress('info', 'call')
+            if not self.force_reload and self.has_executed():
+                self.on_exit('has_treated_all_mutants')
                 return None
-        if not self.simple_only and not self.has_ap_mc_output():
-            if not self._call_mbert_ap_mc(jdk_path, mbert_ap_mc_jar_path):
-                log.error("call_mbert_ap_mc failed!")
-        self.postprocess()
-        # self.postprocess() is comnpiling and executing the tests.
-        self.on_exit('done')
-        # next lines will make sure that "has_treated_all_mutants" flag is added to the progress file.
-        if self.has_treated_all_mutants(self.get_remaining_mutants_to_process()):
-            self.on_exit('has_treated_all_mutants')
-        return self.locs_output_file
+            if not self.preprocess():
+                self.on_exit('exit_preprocess')
+                return None
+            if not self.has_locs_output():
+                if not self._call_mbert_locs(jdk_path, mbert_locs_jar_path):
+                    self.on_exit('exit_call_mbert_locs')
+                    return None
+            if not self.simple_only and not self.has_ap_mc_output():
+                if not self._call_mbert_ap_mc(jdk_path, mbert_ap_mc_jar_path):
+                    log.error("call_mbert_ap_mc failed!")
+            self.postprocess()
+            # self.postprocess() is comnpiling and executing the tests.
+            self.on_exit('done')
+            # next lines will make sure that "has_treated_all_mutants" flag is added to the progress file.
+            if self.has_treated_all_mutants(self.get_remaining_mutants_to_process()):
+                self.on_exit('has_treated_all_mutants')
+            return self.locs_output_file
+        except BaseException as e:
+            log.error(e)
+            raise e
 
     def predict_on_mbert_locs(self, batch_size=MAX_BATCH_SIZE) -> ListFileLocations:
         results: ListFileLocations = None
