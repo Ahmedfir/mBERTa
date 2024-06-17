@@ -19,7 +19,7 @@
     # Keep this to true if you want to include all the business-logic lines of code.
     all_lines: True
     # Turn this to True if you want to remove the comments and javadoc before the mutation.
-    no_comments: False
+    no_comments: True
     # Turn this to True if you want to mask the full if conditions.
     mask_full_conditions: False
     # Turn this to True if you want to generate only simple mutants without the condition seeding ones.
@@ -29,7 +29,7 @@
         model_name: codeBERT
         context_size: 512
     # Maximum time to run tests on a mutant. Default is 5 minutes.
-    tests_timeout: 900
+    tests_timeout: 300
     # Turn this to true to remove the cloned repo on exit. This is useful when you are conducting a study on remote repositories.
     # Make sure this is False if you are targeting a local repository.
     # by default, if a -git_url is given, the clone will be removed in the end, otherwise not.

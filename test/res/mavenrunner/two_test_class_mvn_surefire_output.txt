@@ -1,0 +1,58 @@
+[INFO] Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0 s - in org.assertj.vavr.api.OptionAssert_flatMap_Test
+[INFO] Running org.assertj.vavr.api.soft.AutoCloseableSoftVavrAssertionsTest
+[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.527 s <<< FAILURE! - in org.assertj.vavr.api.soft.AutoCloseableSoftVavrAssertionsTest
+[ERROR] should_be_able_to_catch_exceptions_thrown_by_all_proxied_methods  Time elapsed: 0.359 s  <<< FAILURE!
+java.lang.AssertionError:
+
+Expecting actual:
+  "java.lang.AssertionError:
+Expecting actual:
+  HashMap((Frodo, Baggins))
+to contain key:
+  null"
+to start with:
+  "java.lang.AssertionError:
+Expecting elements:
+  Some(Baggins)
+of
+  HashMap((Frodo, Baggins))
+to be starts with some"
+
+        at org.assertj.vavr.api.soft.AutoCloseableSoftVavrAssertionsTest.should_be_able_to_catch_exceptions_thrown_by_all_proxied_methods(AutoCloseableSoftVavrAssertionsTest.java:36)
+
+[INFO] Running org.assertj.vavr.api.soft.SoftVavrAssertionsTest
+[ERROR] Tests run: 2, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.013 s <<< FAILURE! - in org.assertj.vavr.api.soft.SoftVavrAssertionsTest
+[ERROR] should_be_able_to_catch_exceptions_thrown_by_all_proxied_methods  Time elapsed: 0.012 s  <<< FAILURE!
+java.lang.AssertionError:
+
+Expecting actual:
+  "java.lang.AssertionError:
+Expecting actual:
+  HashMap((Frodo, Baggins))
+to contain key:
+  null"
+to start with:
+  "java.lang.AssertionError:
+Expecting elements:
+  Some(Baggins)
+of
+  HashMap((Frodo, Baggins))
+to be starts with some"
+
+        at org.assertj.vavr.api.soft.SoftVavrAssertionsTest.should_be_able_to_catch_exceptions_thrown_by_all_proxied_methods(SoftVavrAssertionsTest.java:38)
+
+[INFO]
+[INFO] Results:
+[INFO]
+[ERROR] Failures:
+
+of
+  HashMap((Frodo, Baggins))
+to be starts with some"
+
+[INFO]
+[ERROR] Tests run: 4, Failures: 2, Errors: 0, Skipped: 0
+[INFO]
+[ERROR] There are test failures.
+
+

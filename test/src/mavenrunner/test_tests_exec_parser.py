@@ -12,6 +12,9 @@ class TestMvnProject(TestCase):
         self.TEST_PATH = Path(__file__).parent.parent.parent
         self.RES_PATH = join(self.TEST_PATH, 'res')
         self.failing_tests_example = load_file(join(self.RES_PATH, 'mavenrunner/failing_tests_mvn_output.txt'))
+        self.surefire_one_test_class = load_file(join(self.RES_PATH, 'mavenrunner/one_test_class_mvn_surefire_output.txt'))
+        self.surefire_two_test_class = load_file(
+            join(self.RES_PATH, 'mavenrunner/two_test_class_mvn_surefire_output.txt'))
         self.failing_and_error_tests_example = load_file(join(self.RES_PATH, 'mavenrunner/error_failing_tests_mvn_output.txt'))
         self.no_reason_failing_and_error_tests_example = load_file(join(self.RES_PATH, 'mavenrunner/no_reason_failing_test_maven_output.txt'))
         self.error_tests_example = load_file(join(self.RES_PATH, 'mavenrunner/error_tests_mvn_output.txt'))
@@ -213,3 +216,23 @@ class TestMvnProject(TestCase):
                                          failing_category=FailCategory.Err)
                           },
                          exec_res_to_broken_tests_arr(self.error_tests_example))
+
+    def test_exec_res_to_broken_tests_fail_errors_surefire_one_class(self):
+        self.assertEqual({MvnFailingTest(method_name='should_fail_if_entries_parameter_is_null',
+                                         class_name='org.assertj.vavr.api.MapAssert_doesNotContain_entries_Test',
+                                         failing_category=FailCategory.Fail),
+                          MvnFailingTest(method_name='should_fail_if_entries_parameter_are_empty',
+                                         class_name='org.assertj.vavr.api.MapAssert_doesNotContain_entries_Test',
+                                         failing_category=FailCategory.Fail)
+                          },
+                         exec_res_to_broken_tests_arr(self.surefire_one_test_class))
+
+    def test_exec_res_to_broken_tests_fail_errors_surefire_two_class(self):
+        self.assertEqual({MvnFailingTest(method_name='should_be_able_to_catch_exceptions_thrown_by_all_proxied_methods',
+                                         class_name='org.assertj.vavr.api.soft.AutoCloseableSoftVavrAssertionsTest',
+                                         failing_category=FailCategory.Fail),
+                          MvnFailingTest(method_name='should_be_able_to_catch_exceptions_thrown_by_all_proxied_methods',
+                                         class_name='org.assertj.vavr.api.soft.SoftVavrAssertionsTest',
+                                         failing_category=FailCategory.Fail),
+                          },
+                         exec_res_to_broken_tests_arr(self.surefire_two_test_class))

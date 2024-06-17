@@ -70,11 +70,11 @@ def create_mbert_request(project: MvnProject, files_tests: Dict[BusinessFileRequ
 
 def create_request(config, project_cli_infos: RepoCliInfos, reqs: Dict[BusinessFileRequest, str], tests: str,
                    simple_only=False, no_comments=False, force_reload=False,
-                   mask_full_if_conditions=False, remove_project_on_exit=True) -> MvnRequest:
+                   mask_full_conditions=False, remove_project_on_exit=True, model=None) -> MvnRequest:
     mvn_project = MvnProject(repo_path=project_cli_infos.repo_path,
                              repos_path=os.path.expanduser(config['tmp_large_memory']['repos_path']),
-                             project_name = project_cli_infos.project_name,
-                             jdk_path=os.path.expanduser(config['java']['home8']),
+                             project_name=project_cli_infos.project_name,
+                             jdk_path=os.path.expanduser(config['java']['home11']),
                              mvn_home=os.path.expanduser(config['maven']), vcs_url=project_cli_infos.git_url,
                              rev_id=project_cli_infos.rev_id, no_comments=no_comments,
                              tests_timeout=config['exec']['tests_timeout'])
@@ -103,7 +103,7 @@ def main_function(conf, cli_args):
     config = load_config(conf)
 
     reqs: Dict[BusinessFileRequest, str] = parse_target_files_tests(cli_args, config['exec']['all_lines'])
-    print(json.dumps(reqs, indent=4, sort_keys=True))
+    #print(json.dumps(reqs, indent=4, sort_keys=True))
     # won't be used if tests are already set in the csv passed via -target_files_csv.
     tests: str = cli_args.tests
     if tests is not None:
@@ -134,7 +134,7 @@ def main_function(conf, cli_args):
                                          no_comments=no_comments,
                                          mask_full_conditions=mask_full_conditions,
                                          remove_project_on_exit=remove_project_on_exit, model=model)
-    request.call(os.path.expanduser(config['java']['home8']))
+    request.call(os.path.expanduser(config['java']['home11']))
 
 
 if __name__ == '__main__':
