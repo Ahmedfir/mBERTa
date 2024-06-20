@@ -12,11 +12,18 @@ class TestMvnProject(TestCase):
         self.TEST_PATH = Path(__file__).parent.parent.parent
         self.RES_PATH = join(self.TEST_PATH, 'res')
         self.failing_tests_example = load_file(join(self.RES_PATH, 'mavenrunner/failing_tests_mvn_output.txt'))
-        self.surefire_one_test_class = load_file(join(self.RES_PATH, 'mavenrunner/one_test_class_mvn_surefire_output.txt'))
+        self.surefire_one_test_class = load_file(
+            join(self.RES_PATH, 'mavenrunner/one_test_class_mvn_surefire_output.txt'))
+        self.surefire_no_errors = load_file(
+            join(self.RES_PATH, 'mavenrunner/no_error_mvn_surefire_output.txt'))
         self.surefire_two_test_class = load_file(
             join(self.RES_PATH, 'mavenrunner/two_test_class_mvn_surefire_output.txt'))
-        self.failing_and_error_tests_example = load_file(join(self.RES_PATH, 'mavenrunner/error_failing_tests_mvn_output.txt'))
-        self.no_reason_failing_and_error_tests_example = load_file(join(self.RES_PATH, 'mavenrunner/no_reason_failing_test_maven_output.txt'))
+        self.surefire_three_error_three_fail = load_file(
+            join(self.RES_PATH, 'mavenrunner/three_error_three_failure_surefire_mvn_ouput.txt'))
+        self.failing_and_error_tests_example = load_file(
+            join(self.RES_PATH, 'mavenrunner/error_failing_tests_mvn_output.txt'))
+        self.no_reason_failing_and_error_tests_example = load_file(
+            join(self.RES_PATH, 'mavenrunner/no_reason_failing_test_maven_output.txt'))
         self.error_tests_example = load_file(join(self.RES_PATH, 'mavenrunner/error_tests_mvn_output.txt'))
         self.passing_tests_example = "\n".join(['[INFO]',
                                                 '[INFO] ----------------------< org.example:DummyProject '
@@ -236,3 +243,32 @@ class TestMvnProject(TestCase):
                                          failing_category=FailCategory.Fail),
                           },
                          exec_res_to_broken_tests_arr(self.surefire_two_test_class))
+
+    def test_exec_res_to_broken_tests_fail_error_errors_surefire(self):
+        self.assertEqual(
+            {MvnFailingTest(method_name='should_fail_if_either_does_not_contain_same_instance_on_left_side',
+                            class_name='org.assertj.vavr.api.EitherAssert_containsLeftSame_Test',
+                            failing_category=FailCategory.Fail),
+             MvnFailingTest(method_name='should_pass_if_either_contains_same_instance_on_left_side',
+                            class_name='org.assertj.vavr.api.EitherAssert_containsLeftSame_Test',
+                            failing_category=FailCategory.Err),
+             MvnFailingTest(
+                 method_name='should_run_test_when_assumption_passes{AssumptionRunner}[7]',
+                 class_name='org.assertj.vavr.api.Either_assertion_methods_in_assumptions_Test',
+                 failing_category=FailCategory.Fail),
+             MvnFailingTest(method_name='should_ignore_test_when_assumption_fails{AssumptionRunner}[7]',
+                            class_name='org.assertj.vavr.api.Either_assertion_methods_in_assumptions_Test',
+                            failing_category=FailCategory.Err),
+             MvnFailingTest(
+                 method_name='should_be_able_to_catch_exceptions_thrown_by_all_proxied_methods',
+                 class_name='org.assertj.vavr.api.soft.AutoCloseableSoftVavrAssertionsTest',
+                 failing_category=FailCategory.Err),
+             MvnFailingTest(method_name='should_be_able_to_catch_exceptions_thrown_by_all_proxied_methods',
+                            class_name='org.assertj.vavr.api.soft.SoftVavrAssertionsTest',
+                            failing_category=FailCategory.Err),
+             },
+            exec_res_to_broken_tests_arr(self.surefire_three_error_three_fail))
+
+    def test_exec_res_to_broken_tests_no_errors_surefire(self):
+        self.assertEqual(set(),
+                         exec_res_to_broken_tests_arr(self.surefire_no_errors))

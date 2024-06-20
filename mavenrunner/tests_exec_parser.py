@@ -47,7 +47,7 @@ class MvnFailingTest(BaseModel):
         return {
             TestReportCategory.Surefire: {
                 FailCategory.Ukn: [
-                    """-[ERROR] Tests run: {{ ignore }}, Failures: {{ ignore }}, Errors: {{ ignore }}, Skipped: {{ ignore }}, Time elapsed: {{ ignore }} s *** FAILURE! - in {{class_name}}"""],
+                    """-[ERROR] Tests run: {{ ignore }}, Failures: {{ fa_class }}, Errors: {{ err_class }}, Skipped: {{ sk_class }}, Time elapsed: {{ ignore }} s *** FAILURE! - in {{class_name}}"""],
                 FailCategory.Fail: ["""-[ERROR] {{ method_name }}  Time elapsed: {{ ignore }} s *** FAILURE!"""],
                 FailCategory.Err: ["""-[ERROR] {{ method_name }} Time elapsed: {{ ignore }} s *** ERROR!"""],
 
@@ -91,7 +91,8 @@ class MvnTestExecSummary(BaseModel):
     def get_template():
         return ["""Tests run: {{ run }}, Failures: {{ fa }}, Errors: {{ err }}, Skipped: {{ sk }}""",
                 """[INFO] Tests run: {{ run }}, Failures: {{ fa }}, Errors: {{ err }}, Skipped: {{ sk }}""",
-                """[ERROR] Tests run: {{ run }}, Failures: {{ fa }}, Errors: {{ err }}, Skipped: {{ sk }}"""]
+                """[ERROR] Tests run: {{ run }}, Failures: {{ fa }}, Errors: {{ err }}, Skipped: {{ sk }}""",
+                """[WARNING] Tests run: {{ run }}, Failures: {{ fa }}, Errors: {{ err }}, Skipped: {{ sk }}"""]
 
 
 class MvnSummaryArray(BaseModel):
@@ -117,66 +118,109 @@ def parse_to_json(data_to_parse, template) -> str:
     return res
 
 
+def parse_junit_test_report(results_str, category):
+    parsed = MvnFailingTestsArray.parse_raw(results_str)
+    parsed.remove_invalid()
+    if len(parsed.__root__) == 0:
+        # quick fix for when we get an array of array for no reason.
+        results_json = json.loads(results_str)
+        parsed_arr = []
+        for rj in results_json:
+            if len(rj) > 0:
+                pa = MvnFailingTestsArray.parse_raw(json.dumps(rj))
+                pa.remove_invalid()
+                if len(pa.__root__) > 0:
+                    parsed_arr.append(pa)
+        if len(parsed_arr) > 0:
+            parsed.__root__ = [pa_i for pa in parsed_arr for pa_i in pa.__root__]
+    for p in parsed.__root__:
+        p.failing_category = category
+    return parsed.__root__
+
+
+def parse_surefire_test_classes(results_str):
+    classes = []
+    #get list of classes
+    results_json = json.loads(results_str)
+    for rj in results_json:
+        if isinstance(rj, dict):
+            classes.append({'class_name': rj['class_name'], 'total_fa': rj['fa_class'], 'total_sk': rj['sk_class'],
+                            'total_err': rj['err_class']})
+        elif isinstance(rj, list):
+            for c in rj:
+                    classes.append({'class_name': c['class_name'], 'total_fa': c['fa_class'], 'total_sk': c['sk_class'], 'total_err' : c['err_class']})
+
+    return classes
+
+def parse_surefire_test_failures(results_str, category, classes) :
+    # line contains method name
+    methods = []
+    results_json = json.loads(results_str)
+    for rj in results_json:
+        if len(rj) > 0:
+            if isinstance(rj, dict):
+                methods.append({'method_name': rj['method_name']})
+            elif isinstance(rj, list):
+                for m in rj:
+                    methods.append({'method_name': m['method_name']})
+
+    method_cpt = 0
+    for c in classes:
+        fa_cpt = 0
+        while fa_cpt < int(c['total_fa']):
+            method = methods[method_cpt]
+            method['class_name'] = c['class_name']
+            fa_cpt += 1
+            method_cpt += 1
+
+    results_str = json.dumps(methods, indent=2)
+    return parse_junit_test_report(results_str, category)
+
+def parse_surefire_test_errors(results_str, category, classes):
+    # line contains method name
+    methods = []
+    results_json = json.loads(results_str)
+    for rj in results_json:
+        if len(rj) > 0:
+            if isinstance(rj, dict):
+                methods.append({'method_name': rj['method_name']})
+            elif isinstance(rj, list) :
+                for m in rj:
+                    methods.append({'method_name': m['method_name']})
+
+    method_cpt = 0
+    for c in classes:
+        err_cpt = 0
+        while err_cpt < int(c['total_err']):
+            method = methods[method_cpt]
+            method['class_name'] = c['class_name']
+            err_cpt += 1
+            method_cpt += 1
+
+    results_str = json.dumps(methods, indent=2)
+    return parse_junit_test_report(results_str, category)
+
+
 def parse_broken_tests(data_to_parse) -> Set[MvnFailingTest]:
     unique_broken_tests = set()
     # adding a minus to the start of every line to simplify the templates and enable the parsing with ttp lib.
     data_to_parse_with_suff = data_to_parse.replace('\n', '\n' + '-')
     data_to_parse_without_less = data_to_parse_with_suff.replace('<<<', '***')
     template_dict = MvnFailingTest.get_template()
-    class_name = ""
     for group in template_dict:
         for category in template_dict[group]:
             for template in template_dict[group][category]:
                 results_str = parse_to_json(data_to_parse_without_less, template)
-                if group == TestReportCategory.Surefire:
-                    if 'class_name' in results_str:
-                        #line contains the classname
-                        results_json = json.loads(results_str)
-                        class_name = results_json[0]['class_name']
+                if group == TestReportCategory.Surefire and ('method_name' in results_str or 'class_name' in results_str):
+                    if category == FailCategory.Ukn:
+                        classes = parse_surefire_test_classes(results_str)
                     else:
-                        #line contains method name
-                        results_json = json.loads(results_str)
-                        for m in results_json[0]:
-                            m['class_name'] = class_name
-                        results_str = json.dumps(results_json, indent=2)
-                        parsed = MvnFailingTestsArray.parse_raw(results_str)
-                        parsed.remove_invalid()
-                        if len(parsed.__root__) == 0:
-                            # quick fix for when we get an array of array for no reason.
-                            results_json = json.loads(results_str)
-                            parsed_arr = []
-                            for rj in results_json:
-                                if len(rj) > 0:
-                                    pa = MvnFailingTestsArray.parse_raw(json.dumps(rj))
-                                    pa.remove_invalid()
-                                    if len(pa.__root__) > 0:
-                                        parsed_arr.append(pa)
-                            if len(parsed_arr) > 0:
-                                parsed.__root__ = [pa_i for pa in parsed_arr for pa_i in pa.__root__]
-                        for p in parsed.__root__:
-                            p.failing_category = category
-                        unique_broken_tests.update(parsed.__root__)
-
-                #normal junit report
+                        if category == FailCategory.Fail:
+                            unique_broken_tests.update(parse_surefire_test_failures(results_str, category, classes))
+                        elif category == FailCategory.Err:
+                            unique_broken_tests.update(parse_surefire_test_errors(results_str, category, classes))
                 else:
-                    results_str = parse_to_json(data_to_parse_with_suff, template)
-                    parsed = MvnFailingTestsArray.parse_raw(results_str)
-                    parsed.remove_invalid()
-                    if len(parsed.__root__) == 0:
-                        # quick fix for when we get an array of array for no reason.
-                        results_json = json.loads(results_str)
-                        parsed_arr = []
-                        for rj in results_json:
-                            if len(rj) > 0:
-                                pa = MvnFailingTestsArray.parse_raw(json.dumps(rj))
-                                pa.remove_invalid()
-                                if len(pa.__root__) > 0:
-                                    parsed_arr.append(pa)
-                        if len(parsed_arr) > 0:
-                            parsed.__root__ = [pa_i for pa in parsed_arr for pa_i in pa.__root__]
-                    for p in parsed.__root__:
-                        p.failing_category = category
-                    unique_broken_tests.update(parsed.__root__)
+                    unique_broken_tests.update(parse_junit_test_report(results_str, category))
 
         if len(unique_broken_tests) > 0:
             return unique_broken_tests
