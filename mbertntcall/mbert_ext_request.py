@@ -9,7 +9,7 @@ from typing import List
 import pandas as pd
 from pandas import DataFrame
 
-from cb import PREDICTIONS_FILE_NAME, predict_json_locs, CodeBertMlmFillMask, ListFileLocations, CodeT5FillMask
+from cb import PREDICTIONS_FILE_NAME, predict_json_locs, CodeBertMlmFillMask, ListFileLocations
 from cb.code_bert_mlm import MAX_TOKENS, MAX_BATCH_SIZE
 from cb.job_config import NOCOSINE_JOB_CONFIG
 from cb.replacement_mutants import ReplacementMutant
@@ -28,11 +28,6 @@ MBERT_ADDITIVE_PATTERNS_JAR = join(Path(__file__).parent,
                                    'mBERT-addconditions/mbert-additive-patterns-1.0-SNAPSHOT-jar-with-dependencies.jar')
 ADDITIVE_PATTERNS_FILE_NAME = 'add_predicates.json'
 
-LLM_MAP = {
-    "codeBERT": CodeBertMlmFillMask,
-    "codeT5": CodeT5FillMask
-}
-
 
 class MbertAdditivePatternsLocationsRequest:
 
@@ -49,8 +44,7 @@ class MbertAdditivePatternsLocationsRequest:
                  auto_path_adapt=True,
                  simple_only=False,
                  max_size=MAX_TOKENS,
-                 mutant_classes_output_dir=None, patch_diff=False, java_file=False, mask_full_conditions=False,
-                 model=None):
+                 mutant_classes_output_dir=None, patch_diff=False, java_file=False, mask_full_conditions=False):
         self.mask_full_conditions = mask_full_conditions
         self.repo_path: str = str(Path(repo_path).absolute())
         self.file_requests: List[BusinessFileRequest] = file_requests
@@ -75,7 +69,6 @@ class MbertAdditivePatternsLocationsRequest:
         self.mutated_classes_output_dir = mutant_classes_output_dir
         self.patch_diff = patch_diff
         self.java_file = java_file
-        self.model = model
 
     def has_call_output(self) -> bool:
         return self.has_locs_output() and (self.simple_only or self.has_ap_mc_output())
@@ -114,9 +107,8 @@ class MbertAdditivePatternsLocationsRequest:
 
     def _call_jar(self, request: str, jdk_path: str, jar_path: str, vm_options='') -> str:
 
-        vm_opt = ' ' + vm_options if len(vm_options) > 0 else ''
-        cmd = ("JAVA_HOME='" + jdk_path + "' " + join(jdk_path, 'bin',
-                                                      'java') + vm_opt + " -jar " + jar_path + " " + request)
+        vm_opt = ' '+vm_options if len(vm_options) > 0 else ''
+        cmd = ("JAVA_HOME='" + jdk_path + "' " + join(jdk_path, 'bin', 'java') + vm_opt + " -jar " + jar_path + " " + request)
         print("call jar cmd ... {0}".format(cmd))
         return shellCallTemplate(cmd)
 
@@ -197,11 +189,7 @@ class MbertAdditivePatternsLocationsRequest:
         if not self.has_locs_output() and not self.has_locs_preds_output():
             log.error('files not found : \n{0} \n{1}'.format(self.locs_output_file, self.locs_preds_pickle_file))
         elif self.force_reload or not self.has_locs_preds_output():
-            if self.model is None:
-                model_class = LLM_MAP.get("codeBERT")
-            else:
-                model_class = LLM_MAP.get(self.model)
-            cbm = model_class()
+            cbm = CodeBertMlmFillMask()
             if not isdir(self.preds_output_dir):
                 try:
                     makedirs(self.preds_output_dir)

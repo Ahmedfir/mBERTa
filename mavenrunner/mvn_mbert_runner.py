@@ -4,6 +4,7 @@ from os.path import isfile, join, isdir
 from pathlib import Path
 from typing import Dict
 
+import pandas as pd
 import torch
 
 from codebertnt.locs_request import BusinessFileRequest
@@ -60,17 +61,17 @@ def get_args():
 def create_mbert_request(project: MvnProject, files_tests: Dict[BusinessFileRequest, str], tests: str,
                          output_dir: str, max_processes_number: int = 4,
                          simple_only=False, force_reload=False,
-                         mask_full_conditions=False, remove_project_on_exit=True, model=None) -> MvnRequest:
+                         mask_full_conditions=False, remove_project_on_exit=True) -> MvnRequest:
     return MvnRequest(project=project, files_tests_map=files_tests, tests=tests, repo_path=project.repo_path,
                       output_dir=output_dir,
                       max_processes_number=max_processes_number, simple_only=simple_only,
                       force_reload=force_reload, mask_full_conditions=mask_full_conditions,
-                      remove_project_on_exit=remove_project_on_exit, model=model)
+                      remove_project_on_exit=remove_project_on_exit)
 
 
 def create_request(config, project_cli_infos: RepoCliInfos, reqs: Dict[BusinessFileRequest, str], tests: str,
                    simple_only=False, no_comments=False, force_reload=False,
-                   mask_full_conditions=False, remove_project_on_exit=True, model=None) -> MvnRequest:
+                   mask_full_conditions=False, remove_project_on_exit=True) -> MvnRequest:
     mvn_project = MvnProject(repo_path=project_cli_infos.repo_path,
                              repos_path=os.path.expanduser(config['tmp_large_memory']['repos_path']),
                              project_name=project_cli_infos.project_name,
@@ -89,10 +90,9 @@ def create_request(config, project_cli_infos: RepoCliInfos, reqs: Dict[BusinessF
     return create_mbert_request(mvn_project, reqs, tests, output_dir, config['exec']['max_processes'],
                                 simple_only=simple_only, force_reload=force_reload,
                                 mask_full_conditions=mask_full_conditions,
-                                remove_project_on_exit=remove_project_on_exit, model=model)
+                                remove_project_on_exit=remove_project_on_exit)
 
 
-# todo refactor config and args parsing, because it starts to get very complex to follow.
 
 def main_function(conf, cli_args):
     project_cli_infos: RepoCliInfos = parse_repo_cli_infos(cli_args)
@@ -133,7 +133,7 @@ def main_function(conf, cli_args):
     request: MvnRequest = create_request(config, project_cli_infos, reqs, tests, simple_only=simple_only,
                                          no_comments=no_comments,
                                          mask_full_conditions=mask_full_conditions,
-                                         remove_project_on_exit=remove_project_on_exit, model=model)
+                                         remove_project_on_exit=remove_project_on_exit)
     request.call(os.path.expanduser(config['java']['home11']))
 
 
