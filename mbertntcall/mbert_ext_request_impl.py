@@ -99,7 +99,7 @@ class MbertRequestImpl(MbertAdditivePatternsLocationsRequest):
                 log.error(e)
                 executor.shutdown()
                 self.on_failed("mutants_exec")
-                raise
+                raise e
 
     def has_executed(self) -> bool:
         return super(MbertRequestImpl, self).has_executed() or (

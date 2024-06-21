@@ -1,10 +1,10 @@
+import json
 import logging
 import os
 from os.path import isfile, join, isdir
 from pathlib import Path
 from typing import Dict
 
-import pandas as pd
 import torch
 
 from codebertnt.locs_request import BusinessFileRequest
@@ -103,7 +103,9 @@ def main_function(conf, cli_args):
     config = load_config(conf)
 
     reqs: Dict[BusinessFileRequest, str] = parse_target_files_tests(cli_args, config['exec']['all_lines'])
-    #print(json.dumps(reqs, indent=4, sort_keys=True))
+    print(json.dumps(
+        {json.dumps({b.file_path: (b.lines if b.lines is not None else "")}): (t if t is not None else "") for b, t in
+         reqs.items()}, indent=4, sort_keys=True))
     # won't be used if tests are already set in the csv passed via -target_files_csv.
     tests: str = cli_args.tests
     if tests is not None:

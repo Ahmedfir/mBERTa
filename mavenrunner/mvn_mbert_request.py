@@ -160,4 +160,4 @@ class MvnRequest(MbertRequestImpl):
                 log.error(e)
                 executor.shutdown()
                 self.on_failed("mutants_exec")
-                raise
+                raise e
