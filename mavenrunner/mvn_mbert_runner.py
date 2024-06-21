@@ -120,9 +120,6 @@ def main_function(conf, cli_args):
     mask_full_conditions = 'mask_full_conditions' in config['exec'] and config['exec']['mask_full_conditions']
     # this option limits the generation to generating only simple mutants without the condition seeding ones.
     simple_only = 'simple_only' in config['exec'] and config['exec']['simple_only']
-    # this option sets the model to use for predictions
-    if 'model_name' in config['exec']['language_model'] and config['exec']['language_model']['model_name']:
-        model = config['exec']['language_model']['model_name']
 
     # this option removes the project at the end when set to true.
     # by default, if a -git_url is given, the clone will be removed in the end, otherwise not.
