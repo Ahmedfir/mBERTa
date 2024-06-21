@@ -3,7 +3,8 @@
   maven: /usr/local/Cellar/maven/3.8.4
   java:
     # path to your JAVA_HOME. optional if you have JAVA_HOME in your path
-    home8: /Library/Java/JavaVirtualMachines/jdk1.8.0_341.jdk/Contents/Home/
+    home8 : /usr/lib/jvm/java-8-openjdk-amd64/
+    home11: /usr/lib/jvm/java-11-openjdk-amd64/
   tmp_large_memory:
     # where the repository will be cloned.
     repos_path:  ~/PycharmProjects/mBERTa/tmp/mvn_projects
@@ -22,7 +23,9 @@
     # Turn this to True if you want to mask the full if conditions.
     mask_full_conditions: False
     # Turn this to True if you want to generate only simple mutants without the condition seeding ones.
-    simple_only: False
+    simple_only: True
+
+    tests_timeout: 300
     # Turn this to true to remove the cloned repo on exit. This is useful when you are conducting a study on remote repositories.
     # Make sure this is False if you are targeting a local repository.
     # by default, if a -git_url is given, the clone will be removed in the end, otherwise not.
