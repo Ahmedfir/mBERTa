@@ -61,21 +61,21 @@ def get_args():
 def create_mbert_request(project: MvnProject, files_tests: Dict[BusinessFileRequest, str], tests: str,
                          output_dir: str, max_processes_number: int = 4,
                          simple_only=False, force_reload=False,
-                         mask_full_if_conditions=False, remove_project_on_exit=True) -> MvnRequest:
+                         mask_full_conditions=False, remove_project_on_exit=True) -> MvnRequest:
     return MvnRequest(project=project, files_tests_map=files_tests, tests=tests, repo_path=project.repo_path,
                       output_dir=output_dir,
                       max_processes_number=max_processes_number, simple_only=simple_only,
-                      force_reload=force_reload, mask_full_if_conditions=mask_full_if_conditions,
+                      force_reload=force_reload, mask_full_conditions=mask_full_conditions,
                       remove_project_on_exit=remove_project_on_exit)
 
 
 def create_request(config, project_cli_infos: RepoCliInfos, reqs: Dict[BusinessFileRequest, str], tests: str,
                    simple_only=False, no_comments=False, force_reload=False,
-                   mask_full_if_conditions=False, remove_project_on_exit=True) -> MvnRequest:
+                   mask_full_conditions=False, remove_project_on_exit=True) -> MvnRequest:
     mvn_project = MvnProject(repo_path=project_cli_infos.repo_path,
                              repos_path=os.path.expanduser(config['tmp_large_memory']['repos_path']),
                              project_name=project_cli_infos.project_name,
-                             jdk_path=os.path.expanduser(config['java']['home8']),
+                             jdk_path=os.path.expanduser(config['java']['home11']),
                              mvn_home=os.path.expanduser(config['maven']), vcs_url=project_cli_infos.git_url,
                              rev_id=project_cli_infos.rev_id, no_comments=no_comments,
                              tests_timeout=config['exec']['tests_timeout'])
@@ -89,11 +89,10 @@ def create_request(config, project_cli_infos: RepoCliInfos, reqs: Dict[BusinessF
 
     return create_mbert_request(mvn_project, reqs, tests, output_dir, config['exec']['max_processes'],
                                 simple_only=simple_only, force_reload=force_reload,
-                                mask_full_if_conditions=mask_full_if_conditions,
+                                mask_full_conditions=mask_full_conditions,
                                 remove_project_on_exit=remove_project_on_exit)
 
 
-# todo refactor config and args parsing, because it starts to get very complex to follow.
 
 def main_function(conf, cli_args):
     project_cli_infos: RepoCliInfos = parse_repo_cli_infos(cli_args)
@@ -120,9 +119,10 @@ def main_function(conf, cli_args):
     if no_comments and project_cli_infos.git_url is None:
         logging.warning("You are about to remove all the comments from your repo!")
     # this option adds extra mutants where the full if condition is masked.
-    mask_full_if_conditions = 'mask_full_if_conditions' in config['exec'] and config['exec']['mask_full_if_conditions']
+    mask_full_conditions = 'mask_full_conditions' in config['exec'] and config['exec']['mask_full_conditions']
     # this option limits the generation to generating only simple mutants without the condition seeding ones.
     simple_only = 'simple_only' in config['exec'] and config['exec']['simple_only']
+
     # this option removes the project at the end when set to true.
     # by default, if a -git_url is given, the clone will be removed in the end, otherwise not.
     remove_project_on_exit = project_cli_infos.git_url is not None
@@ -131,9 +131,9 @@ def main_function(conf, cli_args):
 
     request: MvnRequest = create_request(config, project_cli_infos, reqs, tests, simple_only=simple_only,
                                          no_comments=no_comments,
-                                         mask_full_if_conditions=mask_full_if_conditions,
+                                         mask_full_conditions=mask_full_conditions,
                                          remove_project_on_exit=remove_project_on_exit)
-    request.call(os.path.expanduser(config['java']['home8']))
+    request.call(os.path.expanduser(config['java']['home11']))
 
 
 if __name__ == '__main__':

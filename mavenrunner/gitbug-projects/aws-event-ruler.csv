@@ -1,0 +1,2 @@
+filename,repository_dir,repository_url,tests
+src/main/software/amazon/event/ruler/input/DefaultParser.java,src/git-repositories/aws/event-ruler,https://github.com/aws/event-ruler.git,"[ACMachineTest,GenericMachineTest,RulerTest,CIDRTest,JsonRuleCompilerTest,ByteMachineTest,EventTest,BigEventTest,ParserTest,RuleCompilerTest,ComparableNumberTest,MachineComplexityEvaluatorTest,MachineTest]"

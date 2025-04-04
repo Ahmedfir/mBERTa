@@ -13,7 +13,7 @@ from typing import List, Dict
 
 from tqdm import tqdm
 
-from cb.replacement_mutants import ReplacementMutant
+from cb.replacement_mutants import ReplacementMutant, TESTS_TIME_OUT_RESULT
 from codebertnt.locs_request import BusinessFileRequest
 from mavenrunner.mvn_project import MvnProject
 from mbertntcall.mbert_ext_request_impl import MbertRequestImpl
@@ -44,6 +44,10 @@ def process_mutant(mutant: ReplacementMutant, repo_path, projects: List[MvnProje
     try:
         if mutant.broken_tests is None:
             res = res + [None, None]
+        elif mutant.broken_tests == TESTS_TIME_OUT_RESULT:
+            print('broken tests : ', mutant.broken_tests)
+
+            res = res + [mutant.broken_tests[0], None]
         else:
             res.append([t.class_name + '.' + t.method_name for t in mutant.broken_tests])
             res.append(json.dumps([t.json() for t in mutant.broken_tests]))

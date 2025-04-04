@@ -26,7 +26,7 @@
     # Turn this to True if you want to remove the comments and javadoc before the mutation.
     no_comments: False
     # Turn this to True if you want to mask the full if conditions.
-    mask_full_if_conditions: False
+    mask_full_conditions: False
     # Turn this to True if you want to generate only simple mutants without the condition seeding ones.
     simple_only: False
     # Turn this to true to remove the cloned repo on exit. This is useful when you are conducting a study on remote repositories.
