@@ -75,7 +75,7 @@ def create_request(config, project_cli_infos: RepoCliInfos, reqs: Dict[BusinessF
     mvn_project = MvnProject(repo_path=project_cli_infos.repo_path,
                              repos_path=os.path.expanduser(config['tmp_large_memory']['repos_path']),
                              project_name=project_cli_infos.project_name,
-                             jdk_path=os.path.expanduser(config['java']['home11']),
+                             jdk_path=os.path.expanduser(config['java']['home8']),
                              mvn_home=os.path.expanduser(config['maven']), vcs_url=project_cli_infos.git_url,
                              rev_id=project_cli_infos.rev_id, no_comments=no_comments,
                              tests_timeout=config['exec']['tests_timeout'])
