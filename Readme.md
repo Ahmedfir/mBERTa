@@ -70,7 +70,7 @@ https://github.com/Ahmedfir/a12stats
 - Python 3.7+: This code has only been tested with Python version 3.7 and above. You can try older versions if you want...
 - Python environment: you can use conda or pip to create an environement using `requirements.txt`. If you decide to use pip, just call `env_setup.sh`.
 - Java 8: This code has only been tested with Java 8 and above. You can try older versions if you want...
-- Dependencies: You will have to clone some repos or call `setup.sh` and it will be done. 
+- Dependencies: You will have to clone some repos or call `setup.sh` and it will be done.
 It depends on `https://github.com/Ahmedfir/cbnt`, `https://github.com/Ahmedfir/CodeBERT-nt` and `https://github.com/Ahmedfir/commons` implementations.
 So you will have to include them in your `$PYTHONPATH` i.e.:
   - if you want to use PyCharm: 

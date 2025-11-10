@@ -3,8 +3,7 @@
   maven: /usr/local/Cellar/maven/3.8.4
   java:
     # path to your JAVA_HOME. optional if you have JAVA_HOME in your path
-    home8 : /usr/lib/jvm/java-8-openjdk-amd64/
-    home11: /usr/lib/jvm/java-11-openjdk-amd64/
+    home8: /Library/Java/JavaVirtualMachines/jdk1.8.0_341.jdk/Contents/Home/
   tmp_large_memory:
     # where the repository will be cloned.
     repos_path:  ~/PycharmProjects/mBERTa/tmp/mvn_projects
@@ -19,7 +18,7 @@
     # Keep this to true if you want to include all the business-logic lines of code.
     all_lines: True
     # Turn this to True if you want to remove the comments and javadoc before the mutation.
-    no_comments: True
+    no_comments: False
     # Turn this to True if you want to mask the full if conditions.
     mask_full_conditions: False
     # Turn this to True if you want to generate only simple mutants without the condition seeding ones.

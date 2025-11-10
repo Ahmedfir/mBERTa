@@ -24,7 +24,12 @@ def get_args():
     import argparse
     parser = argparse.ArgumentParser(description='')
     parser.add_argument('-target_files_csv', dest='target_files_csv',
-                        help="optional: csv file containing a list of java files and lines to mutate: one file per row. Also you can pass the tests to run. \nColumns are 'filename';'lines';'tests' and the separator is ';'. \nThe tests must be separated by a ',' and formatted as follows:\n pkg.cls#method\n Note that when 'all_lines' is set True in the config file, the 'lines' column will be ignored.")
+                        help="optional: csv file containing a list of java files and lines to mutate: one file per row. Also you can pass the tests to run. \nColumns are 'filename';'lines';'tests' and the separator is ';'."
+                             "\nThe tests must be separated by a ',' and formatted as follows:\n pkg.cls#method\n"
+                             "Note that when 'all_lines' is set True in the config file, "
+                             "the 'lines' column will be ignored.",
+                        default='/Users/ahmed.khanfir/PycharmProjects/mBERTa/test/res/mavenrunner/example_mvn_git_runner.csv')
+
     parser.add_argument('-target_files', dest='target_files',
                         help="optional: list of java files to mutate separated by a coma. ")
     parser.add_argument('-tests', dest='tests',
@@ -35,10 +40,11 @@ def get_args():
                         help="optional: if a repo_path or a git_url is given.\nIt can contain the following columns:\n"
                              "'git_url': the git url of the project,\n"
                              "'rev_id': the commit-hash to checkout,\n"
-                             "'project_name': the name of directory to clone the project in.")
+                             "'project_name': the name of directory to clone the project in.",
+                        default='/Users/ahmed.khanfir/PycharmProjects/mBERTa/test/res/mavenrunner/example_mvn_git_runner.csv')
     parser.add_argument('-git_url', dest='git_url', help='optional if a repo_path is given: git url to your repo.')
     parser.add_argument('-rev_id', dest='rev_id', help='optional: rev_id (commit-hash) to checkout.')
-    parser.add_argument('-repo_path', dest='repo_path', default=_get_test_dummy_project_path(),
+    parser.add_argument('-repo_path', dest='repo_path',  # default=_get_test_dummy_project_path(),
                         help='optional if a git_url is given: the path to your maven project.')
 
     parser.add_argument('-config', dest='config',

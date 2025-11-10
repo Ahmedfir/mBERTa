@@ -141,7 +141,8 @@ class D4jProject(MbertProject):
         # compiles and tests pass for the fixed version.
         # set the jdk that works fine for this project.
         # this implementation tries only 1 jdk7 and 1 jdk8.
-        self.checkout(force_reload=force_reload)
+        if not self.checkout(force_reload=force_reload):
+            log.critical("checkout failed for " + self.pid + "_" + str(self.bid) + "with JDK = " + self.jdk)
 
         try:
             failed = not self.compile()
@@ -153,8 +154,12 @@ class D4jProject(MbertProject):
                     self.relevant_tests_exec_only_possible = False
                     broken_tests = self.test()
                     failed = len(broken_tests) > 0
+                    log.critical("test on fixed failed for " + self.pid + "_" + str(self.bid) + "with JDK = " + self.jdk)
+            else:
+                log.critical("Compilation failed for "+ self.pid + "_" + str(self.bid) + "with JDK = "+ self.jdk)
         except SubprocessError:
             failed = True
+            log.critical("Compilation or test on fixed failed  for " + self.pid + "_" + str(self.bid) + "with JDK = " + self.jdk)
 
         if failed:
             self.jdk = None

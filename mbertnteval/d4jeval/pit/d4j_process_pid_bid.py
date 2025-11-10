@@ -87,9 +87,12 @@ def main_func(fix_commit_changes_csv, config, max_mutants_per_class, output_form
         print_in_progress_file(progress_file, pid_bid + ',exit,project.checkout_validate_fixed_version')
         raise Exception
 
-    return d4j_pit_generate_mutants(d4j_project, os.path.expanduser(config['pit_jar']), output_dir,
+    res = d4j_pit_generate_mutants(d4j_project, os.path.expanduser(config['pit_jar']), output_dir,
                                     config['exec']['threads'], max_mutants_per_class=max_mutants_per_class,
                                     output_format=output_format)
+    # d4j_project.remove()
+
+    return res
 
 
 if __name__ == '__main__':
